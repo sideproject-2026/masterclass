@@ -14,13 +14,36 @@ This exists for one reason: [08 §2.3](../design/08-delivery-plan.md) re-baselin
 |---|---|---:|---:|---:|---|
 | 1 | Aug 10–16 | 5 | 5 | 5.0 | ✅ Both cards done. Started early (Aug 8) in one sitting, so this is **not** a valid velocity sample — see caveat. |
 | 2 | Aug 17–23 | 5 | 5 | 5.0 | ✅ `F-3` + `F-4`. Also completed early, same sitting. Estimates held on both. |
+| 3 | Aug 24–30 | 5 | 5 | 5.0 | ✅ `F-5` + `F-7` + `F-6`. Cards reordered within the sprint. |
 
-> **Caveat on Sprint 1.** These five points were completed in a single continuous session rather
-> than across a week of evenings. The estimate held, but it says nothing yet about sustained
-> pace under real conditions. Treat Sprints 2–3 as the actual calibration.
+**Rolling average:** 5.0 pts/sprint over 3 sprints — **read the re-baseline below before trusting it.**
+**Re-baseline checkpoints:** ~~end of Sprint 3~~ ✅ done · end of Sprint 9
 
-**Rolling average:** — (needs 3 sprints)
-**Re-baseline checkpoints:** end of Sprint 3, end of Sprint 9
+### Re-baseline — after Sprint 3
+
+[08 §2.3](../design/08-delivery-plan.md) says to divide points completed by three and re-date the plan. The honest reading:
+
+**15 of 15 points delivered. Every estimate held exactly.** No card carried, split, or descoped.
+
+**And it is still not a valid velocity sample.** All three sprints ran as single continuous
+sittings on 8 Aug, not across weeks of evenings. The plan's 5 pts/week assumes ~11h spread over
+Mon–Thu evenings plus a Saturday morning, with context lost and reloaded between sessions. These
+numbers measure **estimate accuracy**, not **sustained pace** — different things. Fatigue,
+interruption, and the cost of picking work back up after four days away are precisely what this
+sample excludes.
+
+**Recommendation: do not re-date the plan.** Keep the [08 §3.1](../design/08-delivery-plan.md)
+milestones as they stand — M1 11 Oct, M5 14 Mar — and treat **Sprints 4–6 as the real
+calibration**, being the first worked at the intended cadence. Re-dating on this sample would
+swap a stated assumption for false precision.
+
+**What the sample does support:**
+- Estimates have been accurate three sprints running, so the 1–5 point scale is well judged.
+- The foundation phase hid no work — nothing needed splitting or a follow-up card.
+- Four unplanned findings surfaced regardless (a CVE, two non-existent APIs, a licensing trap). Foundation cards attract that; feature cards from Sprint 4 should be less eventful, which is itself a reason not to extrapolate upward.
+
+**Trigger to act:** if Sprint 4 lands below 4 points at real cadence, re-date everything from the
+measured number and pull the [§8 descope levers](../design/08-delivery-plan.md) in order.
 
 ---
 
@@ -227,6 +250,98 @@ Migration process had already exited when the API came up; `/health/ready` → `
 
 ---
 
+## Sprint 3 — Aug 24–30, 2026
+
+**Goal:** *Guardrails up, frontend talking to the API.*
+
+> **Cards were reordered `F-5` → `F-7` → `F-6`.** The plan listed `F-6` second, but writing CI
+> before the web app existed would have landed a .NET-only workflow that `F-7` immediately
+> reopened. Same sprint, same points, one fewer revisit.
+
+### `F-5` Architecture tests
+
+| | |
+|---|---|
+| **Estimate** | 2 pts · **Actual** 2 pts |
+| **Area** | `api` |
+| **Branch** | `feat/f-5-architecture-tests` |
+| **Status** | ✅ Done |
+
+**Acceptance criteria**
+- [x] `tests/Lms.ArchitectureTests` with the rules from [01 §4](../design/01-architecture.md)
+- [x] **31 tests**, all green
+- [x] Failures name the offending type *and* its exact dependency
+- [x] **Proved the guardrail fails when violated** (see below)
+
+**Verified by breaking it on purpose.** Added an EF Core reference to `Lms.SharedKernel`; rule 1 went red with:
+```
+Offending types:
+  - Lms.SharedKernel.Results.DeliberateViolation  (Has dependency on: Microsoft.EntityFrameworkCore.DbContext)
+```
+Then reverted. A guardrail nobody has watched fail is not a guardrail.
+
+**Shipped** — 7 NetArchTest rules (SharedKernel purity, Contracts isolation, Domain free of EF/ASP.NET, no cross-module reach-in, no Aspire in modules, handlers `internal sealed`), plus `PagingConventionTests` scanning source for `Skip(`/`Take(` outside `SharedKernel.Persistence`. Assembly markers added to the three previously-empty Contracts projects.
+
+**Decisions**
+1. **`NetArchTest.eNhancedEdition`, not `NetArchTest.Rules`.** The original has been dormant since 1.3.2. Both target netstandard2.0 and neither couples to an assertion library.
+2. **A source scan for the paging rule.** NetArchTest works on types; `Skip(`/`Take(` is about call sites. Includes a self-check that the scan actually finds files, so a broken path cannot make the rule pass silently.
+
+**Gotchas worth remembering**
+- The package's XML docs advertise `Predicate.ResideInNamespaceStartingWith`, but the shipped assembly does not expose it. `ResideInNamespace` is the working equivalent.
+- **`nameof(DbContext)` does not trip a dependency rule** — `nameof` is compile-time and emits no IL reference. My first violation probe used it and the test passed, which briefly looked like a broken rule. These rules read IL, not source text.
+
+---
+
+### `F-7` TanStack Start scaffold
+
+| | |
+|---|---|
+| **Estimate** | 2 pts · **Actual** 2 pts |
+| **Area** | `web` |
+| **Branch** | `feat/f-7-web-scaffold` |
+| **Status** | ✅ Done |
+
+**Acceptance criteria**
+- [x] `web/` scaffolded — React 19, Tailwind v4, ESLint, no example pages
+- [x] `AddViteApp` in the AppHost, waiting on the API
+- [x] **Server function calls the API server-side and renders the result**
+- [x] `npm run build` and `npm run lint` clean
+- [x] `node_modules/` and `dist/` ignored; 19 files committed
+
+**Verified under the AppHost.** Page rendered **`Healthy`** with the API base resolved to `https://localhost:7197` — taken from `services__api__https__0`, injected by `WithReference(api)`. The browser made no direct call to the API. That is the BFF path [04](../design/04-adr-authentication.md) depends on, working before auth is built on it.
+
+**Decisions**
+1. **Scaffolded into a temp directory, then moved.** `web/CLAUDE.md` already existed and the CLI wants an empty target. Also removed the `.git` the template created.
+2. **`src/server/` as the single door to the API.** Never imported from a component; it is where the session cookie lands in Sprint 5.
+3. **Vite port from `PORT`**, falling back to 3000, so `npm run dev` still works without an AppHost.
+4. **TanStack Query, shadcn/ui and Zod deliberately not added yet** — they arrive with the cards that need them.
+
+**Deviation** — [06 §3.1](../design/06-tech-stack.md) called `.WithNpmPackageInstallation()`, which does not exist in `Aspire.Hosting.JavaScript`. Removed, and the package is now named in the doc (it was unnamed; `Aspire.Hosting.NodeJs` stopped at 9.5.2 and has no 13.x).
+
+---
+
+### `F-6` CI
+
+| | |
+|---|---|
+| **Estimate** | 1 pt · **Actual** 1 pt |
+| **Area** | `infra` |
+| **Branch** | `feat/f-6-ci` |
+| **Status** | ✅ Done |
+
+**Acceptance criteria**
+- [x] Two parallel jobs, on push to `main` and on PRs
+- [x] Backend: `global.json` SDK, `dotnet tool restore`, Release build, all 124 tests
+- [x] Frontend: `npm ci`, lint, build
+- [x] NuGet and npm caches; superseded runs cancelled
+- [x] **Every step run locally in Release first**
+
+**Decisions** — `npm ci` over `install` so a stale lock file fails the build; Release build inherits `TreatWarningsAsErrors`, which is also what makes NU1903 advisories fail; architecture tests run in CI, so boundaries are enforced mechanically rather than by review.
+
+**Not yet verified** — the workflow has not run on GitHub. It is verified locally step by step; the first real run happens when the branch is pushed.
+
+---
+
 ## Card template
 
 ```markdown
@@ -276,3 +391,11 @@ Implementation decisions worth finding later. Full context lives in the card ent
 | 2026-08-08 | `F-4` | Generated migrations exempt from house style in `.editorconfig`; never hand-edited |
 | 2026-08-08 | `F-4` | `dotnet-ef` pinned in `.config/dotnet-tools.json` — must match the EF Core major |
 | 2026-08-08 | `F-4` | Outbox **table** pulled forward from `P-7` so the migration pipeline is verifiable |
+| 2026-08-08 | `F-5` | `NetArchTest.eNhancedEdition` — the original has been dormant since 1.3.2 |
+| 2026-08-08 | `F-5` | Paging rule enforced by source scan; NetArchTest sees types, not call sites |
+| 2026-08-08 | `F-5` | Use `ResideInNamespace`; the advertised `ResideInNamespaceStartingWith` is not in the shipped assembly |
+| 2026-08-08 | `F-5` | Dependency rules read IL — `nameof(X)` emits no reference and will not trip them |
+| 2026-08-08 | `F-7` | `Aspire.Hosting.JavaScript` 13.4.6 for `AddViteApp`; `Aspire.Hosting.NodeJs` has no 13.x |
+| 2026-08-08 | `F-7` | `web/src/server/` is the single door to the API and never imported by a component |
+| 2026-08-08 | `F-7` | Vite port from `PORT` so the AppHost assigns it, 3000 standalone |
+| 2026-08-08 | `F-6` | `npm ci` not `install`, so a stale lock file fails CI |
