@@ -29,28 +29,39 @@ This exists for one reason: [08 §2.3](../design/08-delivery-plan.md) re-baselin
 | | |
 |---|---|
 | **Estimate** | 3 pts |
-| **Actual** | — |
+| **Actual** | 3 pts |
 | **Area** | `api` |
 | **Branch** | `feat/f-1-solution-skeleton` |
-| **PR** | — |
-| **Started / Finished** | — |
-| **Status** | Not started |
+| **PR** | pending — `gh` not yet installed |
+| **Started / Finished** | 2026-08-08 / 2026-08-08 |
+| **Status** | ✅ Done |
 
 **Acceptance criteria**
-- [ ] `dotnet build` clean with `TreatWarningsAsErrors`
-- [ ] `dotnet test` green
-- [ ] Solution contains all projects from [01 §3](../design/01-architecture.md)
-- [ ] `*.Contracts` projects have zero project references
-- [ ] SharedKernel covers Result, pagination, messaging contracts, events, clock, typed IDs
+- [x] `dotnet build` clean — 0 warnings, 0 errors, with `TreatWarningsAsErrors=true`
+- [x] `dotnet test` green — **60 passed**, 0 failed
+- [x] Solution contains all 12 projects from [01 §3](../design/01-architecture.md)
+- [x] `*.Contracts` projects reference only `Lms.SharedKernel` (see deviation below)
+- [x] SharedKernel covers Result, pagination, messaging contracts, events, clock, typed IDs
 
 **Shipped**
-—
+- Build config: `global.json` (SDK pinned), `Directory.Build.props` (net10.0, nullable, warnings-as-errors), `Directory.Packages.props` (central package management, 7 packages), `.editorconfig`, `.gitattributes`
+- 12 projects: `Lms.Api`, `Lms.SharedKernel`, `Lms.SharedKernel.Persistence`, 5 Modules, 3 Contracts, `Lms.UnitTests`
+- `Results/` — `Result`, `Result<T>`, `Error`, `ErrorType`, `Unit`, combinators `Map`/`Bind`/`Tap`/`Ensure` + async variants
+- `Pagination/` — `PageRequest` (clamping), `QueryResult<T>` (`Data` + `TotalCount`), `PagedResult<T>`; `ToQueryResultAsync` in `.Persistence`
+- `Messaging/` — `ICommand`/`IQuery`/handlers/`IIdempotent` (contracts only; decorators are `F-8`)
+- `Events/` — `IDomainEvent`, `IEventBus`, `IEventHandler<T>`, `InProcessEventBus`
+- `Time/`, `Authorization/`, `Identifiers/` — 5 UUIDv7 typed ids with a generic JSON converter
+- Module stubs with `AddXModule`/`MapXEndpoints`, wired into `Program.cs`
 
 **Decisions**
-—
+1. **`Lms.SharedKernel.Persistence` split out.** `ToQueryResultAsync` needs EF Core; putting it in `SharedKernel` would make EF transitively visible from every Module's `Domain`, weakening the arch rule in [01 §4.1](../design/01-architecture.md). One extra project, guardrail intact.
+2. **Shouldly, not FluentAssertions.** FluentAssertions v8+ is commercially licensed — the same trap as MediatR and AutoMapper. Caught at package-selection time.
+3. **xunit v3 (3.2.2), not v2.** The `dotnet new xunit` template still emits v2; project files were rewritten by hand.
+4. **Four CA analyzer rules disabled with written justification** in `.editorconfig` (CA1000, CA1711, CA1716 — library-author rules that do not fit a first-party app). `CA1805` was a fair catch and was fixed properly (`Unit.Value` became an expression-bodied property).
+5. **Typed ids live in `SharedKernel`, not per-Module Contracts.** `CourseId` is written by Catalog and referenced by Enrollment — shared vocabulary, not domain logic.
 
 **Deviations from the design docs**
-—
+- **`*.Contracts` projects reference `Lms.SharedKernel`.** [01 §2.2](../design/01-architecture.md) originally said Contracts have *no* project references. They cannot: DTOs are typed with `CourseId` and `PagedResult<T>`. Since `SharedKernel` is a leaf, the acyclicity argument is unaffected. **Doc updated in this PR** (`01-architecture.md` §2.2 and `src/CLAUDE.md`).
 
 ---
 
@@ -114,4 +125,9 @@ Implementation decisions worth finding later. Full context lives in the card ent
 
 | Date | Card | Decision |
 |---|---|---|
-| — | — | — |
+| 2026-08-08 | `F-1` | `Lms.SharedKernel.Persistence` split out so EF Core stays invisible to Module `Domain` folders |
+| 2026-08-08 | `F-1` | Shouldly over FluentAssertions — v8+ of the latter is commercially licensed |
+| 2026-08-08 | `F-1` | xunit v3; the `dotnet new xunit` template still emits v2 |
+| 2026-08-08 | `F-1` | CA1000/CA1711/CA1716 disabled with justification; they are library-author rules |
+| 2026-08-08 | `F-1` | Typed ids live in SharedKernel — shared vocabulary, not owned by one Module |
+| 2026-08-08 | `F-1` | `*.Contracts` may reference SharedKernel; design doc amended to match |

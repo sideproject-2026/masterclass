@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Deliberately narrow, and deliberately free of EF Core and ASP.NET Core.
+       EF-dependent helpers live in Lms.SharedKernel.Persistence. -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+
+</Project>

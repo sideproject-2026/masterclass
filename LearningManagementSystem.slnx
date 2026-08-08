@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Lms.Api/Lms.Api.csproj" />
+    <Project Path="src/Lms.SharedKernel.Persistence/Lms.SharedKernel.Persistence.csproj" />
+    <Project Path="src/Lms.SharedKernel/Lms.SharedKernel.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/">
+    <Project Path="src/Modules/Lms.Modules.Catalog.Contracts/Lms.Modules.Catalog.Contracts.csproj" />
+    <Project Path="src/Modules/Lms.Modules.Catalog/Lms.Modules.Catalog.csproj" />
+    <Project Path="src/Modules/Lms.Modules.Enrollment.Contracts/Lms.Modules.Enrollment.Contracts.csproj" />
+    <Project Path="src/Modules/Lms.Modules.Enrollment/Lms.Modules.Enrollment.csproj" />
+    <Project Path="src/Modules/Lms.Modules.Identity.Contracts/Lms.Modules.Identity.Contracts.csproj" />
+    <Project Path="src/Modules/Lms.Modules.Identity/Lms.Modules.Identity.csproj" />
+    <Project Path="src/Modules/Lms.Modules.Media/Lms.Modules.Media.csproj" />
+    <Project Path="src/Modules/Lms.Modules.Notifications/Lms.Modules.Notifications.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Lms.UnitTests/Lms.UnitTests.csproj" />
+  </Folder>
+</Solution>

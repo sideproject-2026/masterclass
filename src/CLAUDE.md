@@ -25,7 +25,7 @@ New use case → `/new-slice <Module> <UseCaseName> command|query`. Don't hand-r
 ## Module boundaries — the ones that break silently
 
 - Reference another Module only through its `*.Contracts`. Never `Domain`, `Features`, or `Infrastructure`.
-- `*.Contracts` projects have **no project references of their own** — that's what keeps mutual Catalog↔Enrollment references acyclic.
+- `*.Contracts` projects may reference **only `Lms.SharedKernel`** (a leaf) — never their owning Module, never another Module. That's what keeps mutual Catalog↔Enrollment references acyclic.
 - No cross-Module foreign keys. `Enrollment.CourseId` is an indexed `Guid`.
 - One `DbContext`, one schema per Module (`identity`, `catalog`, `enrollment`, `notifications`).
 - Cross-Module reaction → `IEventBus`. Cross-Module read → a Contracts interface (`ICourseCurriculumQuery`, `IEnrollmentLookup`).

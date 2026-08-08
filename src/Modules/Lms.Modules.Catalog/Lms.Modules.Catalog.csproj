@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lms.SharedKernel\Lms.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\Lms.SharedKernel.Persistence\Lms.SharedKernel.Persistence.csproj" />
+    <ProjectReference Include="..\Lms.Modules.Catalog.Contracts\Lms.Modules.Catalog.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -63,6 +63,11 @@ dotnet_naming_style.underscore_camel_style.required_prefix = _
 dotnet_naming_style.underscore_camel_style.capitalization = camel_case
 
 # --- Analyzer severities ---
+# These CA rules target *library* authors publishing to third parties in unknown languages.
+# This is a first-party application assembly; each is disabled with a reason, not silenced wholesale.
+dotnet_diagnostic.CA1000.severity = none      # static members on generic types — Result<T>.Success and QueryResult<T>.Empty are the idiom
+dotnet_diagnostic.CA1711.severity = none      # IEventHandler<T> is a domain-event handler, not the EventHandler delegate
+dotnet_diagnostic.CA1716.severity = none      # "Error" collides with a VB keyword; we do not write VB
 dotnet_diagnostic.CA1848.severity = none      # LoggerMessage delegates — Serilog structured logging is used instead
 dotnet_diagnostic.CA2007.severity = none      # ConfigureAwait — not needed in ASP.NET Core
 dotnet_diagnostic.CA1062.severity = none      # null checks on public args — nullable reference types cover this
