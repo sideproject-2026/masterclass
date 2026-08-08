@@ -182,16 +182,23 @@ These are what make it a *modular* monolith rather than a monolith with folders.
 
 ### 4.1 Enforcement
 
-A single architecture test file (`Lms.ArchitectureTests`) using **NetArchTest**:
+`tests/Lms.ArchitectureTests`, using **`NetArchTest.eNhancedEdition`** (the maintained fork; `NetArchTest.Rules` itself has been dormant since 1.3.2). Seven rules in `ModuleBoundaryTests.cs`:
 
-```
-Types in Lms.Modules.Enrollment
-  should not have dependency on "Lms.Modules.Catalog.Domain"
-Types in Lms.Modules.*.Domain
-  should not have dependency on "Microsoft.EntityFrameworkCore"
-Types in Lms.Modules.*.Domain
-  should not have dependency on "Microsoft.AspNetCore"
-```
+| # | Rule |
+|---|---|
+| 1 | `Lms.SharedKernel` depends on neither EF Core nor ASP.NET Core |
+| 2 | `*.Contracts` reference only `Lms.SharedKernel` — no other module, no infrastructure |
+| 3 | `Lms.Modules.*.Domain` does not depend on `Microsoft.EntityFrameworkCore` |
+| 4 | `Lms.Modules.*.Domain` does not depend on `Microsoft.AspNetCore` |
+| 5 | No module reaches into another module's `Domain`, `Features`, `Infrastructure` or `Endpoints` |
+| 6 | Nothing under `src/Modules` depends on Aspire (§7.3) |
+| 7 | Command and query handlers are `internal sealed` |
+
+Plus `PagingConventionTests.cs`, a source scan asserting `Skip(`/`Take(` appear only in `Lms.SharedKernel.Persistence` — a rule about call sites, which NetArchTest cannot express.
+
+Rule 1 is the most valuable: `Lms.SharedKernel.Persistence` and `Lms.SharedKernel.Http` exist *only* so the core stays clean, and without this rule that split silently erodes.
+
+> **Verify a guardrail by watching it fail.** Rule 1 was proved by temporarily adding an EF Core reference to `SharedKernel`; the test named the offending type and its exact dependency. Worth knowing: `nameof(DbContext)` does **not** trip it — `nameof` is compile-time and emits no IL reference. These rules see IL dependencies, not source text.
 
 Cheap to write, runs in CI, and is the only thing that actually stops the boundaries eroding under deadline pressure. Skip it and in six months you have a distributed ball of mud in one process.
 
