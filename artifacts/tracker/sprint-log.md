@@ -1,10 +1,79 @@
 # Sprint Log
 
-Recorded actuals per card. Updated as the **last action of every card**, before the PR is reported.
+Progress board and recorded actuals. Updated as the **last action of every card**.
 
-This exists for one reason: [08 §2.3](../design/08-delivery-plan.md) re-baselines the whole 33-sprint schedule on measured velocity after Sprint 3. The 5 pts/week figure is a hypothesis until this table disagrees with it.
+*Last updated: 2026-08-08 · after Sprint 3*
 
-> 1 point ≈ 2 focused hours. Record **actual** points as hours ÷ 2, honestly — an inflated actual hides a velocity problem until it is expensive.
+---
+
+## Status at a glance
+
+```
+Points   ███░░░░░░░░░░░░░░░░░░░░░░░░░░░   15 / 145   (10%)
+Sprints  ███░░░░░░░░░░░░░░░░░░░░░░░░░░░    3 / 31
+Cards    ███░░░░░░░░░░░░░░░░░░░░░░░░░░░    7 / 58
+```
+
+| | |
+|---|---|
+| **Phase** | 1 of 8 — Foundation ✅ complete |
+| **Last completed** | Sprint 3 — *Guardrails up, frontend talking to the API* |
+| **Up next** | **Sprint 4** — `A-1` Identity module (3) · `A-2` JWT + policies (2) |
+| **Next milestone** | **M1 Hello, deployed** — Sprint 9, **11 Oct 2026** |
+| **Schedule** | On plan. Not re-dated — see the re-baseline below. |
+| **Tests** | 124 green (93 unit · 31 architecture) |
+| **Build** | Clean, warnings-as-errors |
+
+### Phases
+
+| # | Phase | Sprints | Pts | Status |
+|---|---|---|---:|---|
+| 1 | Foundation | 1–3 | 15 | ✅ **Done** — `F-1`…`F-7` |
+| 2 | Auth & Design System | 4–7 | 20 | ⬜ Next — `A-1`…`A-6`, `W-1`, `SP-1` |
+| 3 | Deploy | 8–9 | 9 | ⬜ `D-1`…`D-3` → **M1** |
+| 4 | Instructor Studio | 10–16 | 35 | ⬜ `S-1`…`S-12`, `W-2` → **M2** |
+| 5 | Catalog & Enrollment | 17–19, 22 | 20 | ⬜ `C-1`…`C-9`, `W-3` → **M3** |
+| 6 | Player & Completion | 23–26 | 21 | ⬜ `P-1`…`P-8` → **M4** |
+| 7 | Design pass | 27–28 | 10 | ⬜ `W-4`, `W-5`, `C-8` |
+| 8 | Hardening & Launch | 29–31 | 15 | ⬜ `H-1`…`H-7` → **M5** |
+
+*Sprints 20–21 (21 Dec – 3 Jan) are planned at zero. Sprints 32–33 are buffer.*
+
+### Milestones
+
+| | Milestone | Sprint | Date | Status |
+|---|---|---|---|---|
+| **M1** | Hello, deployed | 9 | 11 Oct 2026 | ⬜ |
+| **M2** | An instructor can publish | 16 | 29 Nov 2026 | ⬜ |
+| **M3** | A student can find and enroll | 22 | 10 Jan 2027 | ⬜ |
+| **M4** | MVP feature-complete | 26 | 7 Feb 2027 | ⬜ |
+| **M5** | Launch-ready | 31 | 14 Mar 2027 | ⬜ |
+
+### Cards delivered
+
+| Card | Title | Pts | Branch | Merged |
+|---|---|---:|---|---|
+| `F-1` | Solution skeleton + SharedKernel | 3 | `feat/f-1-solution-skeleton` | ✅ PR #1 |
+| `F-2` | Aspire AppHost, persistent data | 2 | `feat/f-2-aspire-apphost` | ✅ PR #2 |
+| `F-3` | ServiceDefaults, health, OpenAPI | 3 | `feat/f-3-service-defaults` | ✅ PR #2 |
+| `F-4` | Migration job + EF conventions | 2 | `feat/f-4-migration-service` | ✅ PR #3 |
+| `F-5` | Architecture tests | 2 | `feat/f-5-architecture-tests` | ⬜ open |
+| `F-7` | TanStack Start scaffold | 2 | `feat/f-7-web-scaffold` | ⬜ open |
+| `F-6` | CI workflow | 1 | `feat/f-6-ci` | ⬜ open |
+
+> Branches are **stacked** — merge in the order listed above, or the diffs will show unrelated commits.
+> `F-6` adds the CI workflow, so its own PR is the first run of that workflow.
+
+### Open risks
+
+| Risk | State |
+|---|---|
+| **R1** BFF session/refresh pattern | 🟡 Partly retired — `F-7` proved the server-side API call works. The cookie and refresh loop is still Sprint 5. |
+| **R2** YouTube IFrame progress tracking | 🟡 Spike `SP-1` scheduled Sprint 7, four months before the real card |
+| **R3** Velocity below 5 pts/week | 🔴 **Unmeasured.** Sprints 1–3 ran in single sittings, not at real cadence. See re-baseline. |
+| **R4** Life happens | ⬜ 4 weeks of slack built in (2 holiday + 2 buffer) |
+| **R5** Scope creep | 🟢 Held — one deliberate pull-forward (`F-4` outbox table), recorded and offset against `P-7` |
+| **R8** Design rabbit hole | 🟢 Not yet applicable — no design work before `W-1` in Sprint 6 |
 
 ---
 
@@ -15,6 +84,10 @@ This exists for one reason: [08 §2.3](../design/08-delivery-plan.md) re-baselin
 | 1 | Aug 10–16 | 5 | 5 | 5.0 | ✅ Both cards done. Started early (Aug 8) in one sitting, so this is **not** a valid velocity sample — see caveat. |
 | 2 | Aug 17–23 | 5 | 5 | 5.0 | ✅ `F-3` + `F-4`. Also completed early, same sitting. Estimates held on both. |
 | 3 | Aug 24–30 | 5 | 5 | 5.0 | ✅ `F-5` + `F-7` + `F-6`. Cards reordered within the sprint. |
+| 4 | Aug 31–Sep 6 | 5 | — | — | ⬜ `A-1` Identity module (3) · `A-2` JWT + policies (2) |
+
+> 1 point ≈ 2 focused hours. Record **actual** points as hours ÷ 2, honestly — an inflated
+> actual hides a velocity problem until it is expensive to discover.
 
 **Rolling average:** 5.0 pts/sprint over 3 sprints — **read the re-baseline below before trusting it.**
 **Re-baseline checkpoints:** ~~end of Sprint 3~~ ✅ done · end of Sprint 9
@@ -60,7 +133,7 @@ measured number and pull the [§8 descope levers](../design/08-delivery-plan.md)
 | **Actual** | 3 pts |
 | **Area** | `api` |
 | **Branch** | `feat/f-1-solution-skeleton` |
-| **PR** | pending — `gh` not yet installed |
+| **PR** | ✅ #1 merged |
 | **Started / Finished** | 2026-08-08 / 2026-08-08 |
 | **Status** | ✅ Done |
 
@@ -101,7 +174,7 @@ measured number and pull the [§8 descope levers](../design/08-delivery-plan.md)
 | **Actual** | 2 pts |
 | **Area** | `infra` |
 | **Branch** | `feat/f-2-aspire-apphost` |
-| **PR** | pending — `gh` not yet installed |
+| **PR** | ✅ #2 merged |
 | **Started / Finished** | 2026-08-08 / 2026-08-08 |
 | **Status** | ✅ Done |
 
@@ -153,8 +226,8 @@ the AppHost leaves the containers running, so a normal restart skips container s
 | **Estimate** | 3 pts |
 | **Actual** | 3 pts |
 | **Area** | `api` |
-| **Branch** | `feat/f-3-service-defaults` (stacked on `feat/f-2-aspire-apphost`) |
-| **PR** | pending — `gh` not yet installed |
+| **Branch** | `feat/f-3-service-defaults` |
+| **PR** | ✅ #2 merged |
 | **Started / Finished** | 2026-08-08 / 2026-08-08 |
 | **Status** | ✅ Done |
 
@@ -203,8 +276,8 @@ the AppHost leaves the containers running, so a normal restart skips container s
 | **Estimate** | 2 pts |
 | **Actual** | 2 pts |
 | **Area** | `api` |
-| **Branch** | `feat/f-4-migration-service` (stacked on `feat/f-3-service-defaults`) |
-| **PR** | pending — `gh` not yet installed |
+| **Branch** | `feat/f-4-migration-service` |
+| **PR** | ✅ #3 merged |
 | **Started / Finished** | 2026-08-08 / 2026-08-08 |
 | **Status** | ✅ Done |
 
@@ -265,6 +338,7 @@ Migration process had already exited when the API came up; `/health/ready` → `
 | **Estimate** | 2 pts · **Actual** 2 pts |
 | **Area** | `api` |
 | **Branch** | `feat/f-5-architecture-tests` |
+| **PR** | ⬜ open — merge after `F-4` |
 | **Status** | ✅ Done |
 
 **Acceptance criteria**
@@ -299,6 +373,7 @@ Then reverted. A guardrail nobody has watched fail is not a guardrail.
 | **Estimate** | 2 pts · **Actual** 2 pts |
 | **Area** | `web` |
 | **Branch** | `feat/f-7-web-scaffold` |
+| **PR** | ⬜ open — merge after `F-5` |
 | **Status** | ✅ Done |
 
 **Acceptance criteria**
@@ -327,6 +402,7 @@ Then reverted. A guardrail nobody has watched fail is not a guardrail.
 | **Estimate** | 1 pt · **Actual** 1 pt |
 | **Area** | `infra` |
 | **Branch** | `feat/f-6-ci` |
+| **PR** | ⬜ open — merge after `F-7`; first run of the workflow |
 | **Status** | ✅ Done |
 
 **Acceptance criteria**
