@@ -12,7 +12,11 @@ This exists for one reason: [08 §2.3](../design/08-delivery-plan.md) re-baselin
 
 | Sprint | Dates | Planned | Completed | Velocity | Notes |
 |---|---|---:|---:|---:|---|
-| 1 | Aug 10–16 | 5 | — | — | In progress |
+| 1 | Aug 10–16 | 5 | 5 | 5.0 | ✅ Both cards done. Started early (Aug 8) in one sitting, so this is **not** a valid velocity sample — see caveat. |
+
+> **Caveat on Sprint 1.** These five points were completed in a single continuous session rather
+> than across a week of evenings. The estimate held, but it says nothing yet about sustained
+> pace under real conditions. Treat Sprints 2–3 as the actual calibration.
 
 **Rolling average:** — (needs 3 sprints)
 **Re-baseline checkpoints:** end of Sprint 3, end of Sprint 9
@@ -70,27 +74,47 @@ This exists for one reason: [08 §2.3](../design/08-delivery-plan.md) re-baselin
 | | |
 |---|---|
 | **Estimate** | 2 pts |
-| **Actual** | — |
+| **Actual** | 2 pts |
 | **Area** | `infra` |
 | **Branch** | `feat/f-2-aspire-apphost` |
-| **PR** | — |
-| **Started / Finished** | — |
-| **Status** | Not started |
+| **PR** | pending — `gh` not yet installed |
+| **Started / Finished** | 2026-08-08 / 2026-08-08 |
+| **Status** | ✅ Done |
 
 **Acceptance criteria**
-- [ ] Dashboard lists postgres, pgweb, azurite, api — all healthy
-- [ ] Blob containers `course-assets` and `lesson-attachments` exist
-- [ ] **Insert a row, stop the AppHost completely, restart — the row is still there**
-- [ ] `scripts/reset-local-data.ps1` documented and working
+- [x] Dashboard up at `https://localhost:17298`; postgres, pgweb, azurite and api all started
+- [x] `api` healthy — `GET /health/live` → `200 {"status":"healthy"}` on both http and https
+- [x] Blob containers `course-assets` and `lesson-attachments` created in Azurite (verified in `__azurite_db_blob__.json`)
+- [x] **Persistence proven the hard way** — see below
+- [x] `scripts/reset-local-data.ps1` written, with per-target flags and a confirmation prompt
+
+**Verification — persistence**
+Tested destructively rather than by restarting the process, because only the destructive
+version actually exercises `WithDataVolume()`:
+
+1. Inserted a row into `lmsdb` at `03:54:51`
+2. Killed the AppHost, then **`docker rm -f` on every container**
+3. Confirmed the named volumes survived
+4. Restarted the AppHost — a **new** container (`97f71b7ada52`, created `03:57:21`)
+5. Queried: the row was still there, **2.5 minutes older than the container holding it**
+
+Also confirmed the weaker property along the way: with `ContainerLifetime.Persistent`, killing
+the AppHost leaves the containers running, so a normal restart skips container startup entirely.
 
 **Shipped**
-—
+- `src/Lms.AppHost` — Aspire 13.4.6 AppHost, added to the solution
+- PostgreSQL 18.3 with `WithDataVolume("lms-postgres-data")` + `ContainerLifetime.Persistent` + pgweb; database `lmsdb`
+- Azurite 3.35.0 with `WithDataVolume("lms-azurite-data")` + `ContainerLifetime.Persistent`; both blob containers
+- `Lms.Api` wired with references to the database and both containers, `WaitFor(postgres)`
+- `scripts/reset-local-data.ps1` — removes containers holding the volumes first (they lock them), then the volumes
 
 **Decisions**
-—
+1. **`AddBlobContainer`, not `AddBlobs`.** `AddBlobs` only names the blob service endpoint; it does not create a container. Verified by inspecting the Aspire assembly, then confirmed against Azurite's metadata. The overload on `IResourceBuilder<AzureBlobStorageResource>` is obsolete — the current one hangs off `IResourceBuilder<AzureStorageResource>` directly, which `TreatWarningsAsErrors` caught at build time.
+2. **Named volumes rather than Aspire's generated names**, so `reset-local-data.ps1` can target them predictably.
+3. **`ServiceDefaults` deliberately excluded** — that is `F-3`. The AppHost grows with the migration service (`F-4`) and the Vite app (`F-7`).
 
 **Deviations from the design docs**
-—
+- None. [06 §3.1](../design/06-tech-stack.md) already specified `AddBlobContainer`; the first draft of `AppHost.cs` used `AddBlobs` by mistake and was corrected.
 
 ---
 
@@ -131,3 +155,5 @@ Implementation decisions worth finding later. Full context lives in the card ent
 | 2026-08-08 | `F-1` | CA1000/CA1711/CA1716 disabled with justification; they are library-author rules |
 | 2026-08-08 | `F-1` | Typed ids live in SharedKernel — shared vocabulary, not owned by one Module |
 | 2026-08-08 | `F-1` | `*.Contracts` may reference SharedKernel; design doc amended to match |
+| 2026-08-08 | `F-2` | `AddBlobContainer` on the storage resource — `AddBlobs` names an endpoint, it does not create a container |
+| 2026-08-08 | `F-2` | Named Docker volumes (`lms-postgres-data`, `lms-azurite-data`) so the reset script can target them |

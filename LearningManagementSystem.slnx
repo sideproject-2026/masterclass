@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Lms.Api/Lms.Api.csproj" />
+    <Project Path="src/Lms.AppHost/Lms.AppHost.csproj" />
     <Project Path="src/Lms.SharedKernel.Persistence/Lms.SharedKernel.Persistence.csproj" />
     <Project Path="src/Lms.SharedKernel/Lms.SharedKernel.csproj" />
   </Folder>
