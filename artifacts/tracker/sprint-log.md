@@ -13,6 +13,7 @@ This exists for one reason: [08 §2.3](../design/08-delivery-plan.md) re-baselin
 | Sprint | Dates | Planned | Completed | Velocity | Notes |
 |---|---|---:|---:|---:|---|
 | 1 | Aug 10–16 | 5 | 5 | 5.0 | ✅ Both cards done. Started early (Aug 8) in one sitting, so this is **not** a valid velocity sample — see caveat. |
+| 2 | Aug 17–23 | 5 | 5 | 5.0 | ✅ `F-3` + `F-4`. Also completed early, same sitting. Estimates held on both. |
 
 > **Caveat on Sprint 1.** These five points were completed in a single continuous session rather
 > than across a week of evenings. The estimate held, but it says nothing yet about sustained
@@ -172,6 +173,58 @@ the AppHost leaves the containers running, so a normal restart skips container s
 **Not yet verified**
 - `GlobalExceptionHandler` is covered by design but not exercised end to end — there is no endpoint that throws yet. It will be hit by integration tests from `S-2` onward.
 
+### `F-4` MigrationService and EF conventions
+
+| | |
+|---|---|
+| **Estimate** | 2 pts |
+| **Actual** | 2 pts |
+| **Area** | `api` |
+| **Branch** | `feat/f-4-migration-service` (stacked on `feat/f-3-service-defaults`) |
+| **PR** | pending — `gh` not yet installed |
+| **Started / Finished** | 2026-08-08 / 2026-08-08 |
+| **Status** | ✅ Done |
+
+**Acceptance criteria**
+- [x] Migration job runs to completion **before** the API starts (`WaitForCompletion`)
+- [x] Job exits non-zero on failure, so a deploy pipeline stops rather than rolling out against an unmigrated schema
+- [x] UUIDv7 keys generated in application code, no database default
+- [x] `xmin` available as an optimistic-concurrency token
+- [x] Typed-ID value converters applied by convention, not per entity
+- [x] Build clean, **93 tests** passing (was 78)
+
+**Verified against real PostgreSQL**
+```
+notifications.__ef_migrations_history_notifications
+  20260808050355_InitialNotifications | 10.0.10      ← proves the job ran
+
+notifications.outbox_messages
+  id              uuid                     not null   (no default — UUIDv7 from app code)
+  payload         jsonb                    not null
+  recipient_email character varying(256)   not null
+  …
+  "ix_outbox_messages_pending" btree (sent_at) WHERE sent_at IS NULL
+```
+Migration process had already exited when the API came up; `/health/ready` → `200`.
+
+**Shipped**
+- `Lms.SharedKernel.Persistence` — `StronglyTypedIdConverter<TId>` + `ApplyStronglyTypedIdConventions()`, `IsXminConcurrencyToken()`, `UseLmsConventions()`, `UseLmsMigrationHistory()`
+- `Lms.MigrationService` — worker resolving `DbContext` (agnostic of module count), source-generated logging, execution strategy for transient connection faults, non-zero exit on failure
+- `NotificationsDbContext` + `OutboxMessage` + configuration + the `InitialNotifications` migration
+- `.config/dotnet-tools.json` pinning `dotnet-ef`
+- 15 new tests
+
+**Decisions**
+1. **`EFCore.NamingConventions` for snake_case.** EF Core 10 has no built-in convention. pgweb is in the AppHost specifically so the database can be read by hand, and quoted `"PascalCase"` identifiers make that miserable.
+2. **`IsRowVersion()` alone is enough for `xmin`.** The Npgsql model-finalising convention points the column at `xmin` and suppresses its DDL. An explicit `HasColumnName("xmin")` was redundant and did not compile — removed.
+3. **`.editorconfig` exempts `**/Migrations/*.cs`.** `dotnet ef migrations add` writes code that violates the house style (file-scoped namespaces, formatting), and would reintroduce it on every future card. Generated code is not hand-edited.
+4. **`dotnet-ef` pinned to 10.0.10 via a tool manifest.** `dotnet tool install --prerelease` pulled an EF **11 preview** tool against EF Core 10 packages. Corrected, then pinned so every machine and CI agent matches.
+5. **The runner resolves `DbContext`, not concrete types**, so adding a module means one registration line in `Lms.MigrationService/Program.cs` and nothing else.
+
+**Deviations from the design docs**
+- **`OutboxMessage` was built here, not in `P-7` (Sprint 26).** A migration pipeline you cannot verify is a bad card, and an empty initial migration proves nothing. The table is fully specified in [02 §5](../design/02-domain-model.md), depends on no other entity, and is infrastructure rather than domain. **`P-7` now needs only the sender and the event handler** — noted against that card in [08 §4](../design/08-delivery-plan.md) so the estimate is not double-counted.
+- **Docs reconciled in this PR:** `06-tech-stack.md` package list + `dotnet-ef` pinning note, `CLAUDE.md` commands (was a TODO stub), `src/CLAUDE.md` EF conventions, `02-domain-model.md` §5.
+
 ---
 
 ## Card template
@@ -218,3 +271,8 @@ Implementation decisions worth finding later. Full context lives in the card ent
 | 2026-08-08 | `F-3` | `Lms.SharedKernel.Http` added so `SharedKernel` stays framework-free for Contracts |
 | 2026-08-08 | `F-3` | **Scalar** replaces the non-existent `MapSwaggerUi`; both design docs corrected |
 | 2026-08-08 | `F-3` | Pinned `Microsoft.OpenApi` 2.11.0 — transitive 2.0.0 has advisory GHSA-v5pm-xwqc-g5wc |
+| 2026-08-08 | `F-4` | snake_case via `EFCore.NamingConventions` — pgweb exists so the DB can be read by hand |
+| 2026-08-08 | `F-4` | `IsRowVersion()` alone maps `xmin`; naming the column explicitly is redundant |
+| 2026-08-08 | `F-4` | Generated migrations exempt from house style in `.editorconfig`; never hand-edited |
+| 2026-08-08 | `F-4` | `dotnet-ef` pinned in `.config/dotnet-tools.json` — must match the EF Core major |
+| 2026-08-08 | `F-4` | Outbox **table** pulled forward from `P-7` so the migration pipeline is verifiable |

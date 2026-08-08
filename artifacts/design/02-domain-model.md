@@ -337,6 +337,8 @@ Exclude anything the student is already enrolled in. Take 3. If fewer than 3, pa
 
 The point of the outbox: writing the row is part of the completion transaction, so an email provider outage can never roll back a student's course completion. A hosted background service drains it with retry.
 
+> **Built early.** This table shipped in `F-4` rather than `P-7`, because a migration pipeline you cannot verify is not worth much and an empty initial migration proves nothing. It is dependency-free infrastructure, so it fits a foundation card. `P-7` now needs only the sender and the event handler. Identifiers are snake_case (`notifications.outbox_messages`), and `Payload` is `jsonb`.
+
 ---
 
 ## 6. Billing — modeled, not built

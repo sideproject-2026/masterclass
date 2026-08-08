@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <!--
+    Applies every module's migrations, then exits. Runs as a pre-deploy Container Apps Job
+    and as a WaitForCompletion dependency locally — NEVER at API startup, which races
+    across replicas. See artifacts/design/01-architecture.md §7.
+  -->
+  <PropertyGroup>
+    <UserSecretsId>lms-migration-service</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lms.ServiceDefaults\Lms.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Modules\Lms.Modules.Notifications\Lms.Modules.Notifications.csproj" />
+  </ItemGroup>
+
+</Project>

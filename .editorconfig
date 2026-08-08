@@ -76,3 +76,12 @@ dotnet_diagnostic.IDE0290.severity = suggestion
 
 [tests/**/*.cs]
 dotnet_diagnostic.CA1707.severity = none      # underscores in test names are the convention here
+
+# EF Core writes these. Do not hand-edit them, and do not hold generated code to the
+# house style — `dotnet ef migrations add` would reintroduce every violation next time.
+[**/Migrations/*.cs]
+generated_code = true
+dotnet_diagnostic.IDE0161.severity = none     # file-scoped namespaces
+dotnet_diagnostic.IDE0055.severity = none     # formatting
+dotnet_diagnostic.CA1861.severity = none      # constant arrays as arguments
+dotnet_analyzer_diagnostic.severity = none

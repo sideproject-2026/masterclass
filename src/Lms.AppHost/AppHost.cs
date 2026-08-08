@@ -34,12 +34,19 @@ var storage = builder.AddAzureStorage("storage")
 var courseAssets = storage.AddBlobContainer("course-assets");
 var lessonAttachments = storage.AddBlobContainer("lesson-attachments");
 
+// --- Migrations ------------------------------------------------------------------
+// Runs to completion before the API starts. Never migrate at API startup — with more than
+// one replica that is a race (artifacts/design/01-architecture.md §7).
+var migrations = builder.AddProject<Projects.Lms_MigrationService>("migrations")
+    .WithReference(lmsDb)
+    .WaitFor(postgres);
+
 // --- Application ---------------------------------------------------------------
-// Lms.MigrationService (F-4) and the TanStack Start app (F-7) join here as they land.
+// The TanStack Start app (F-7) joins here when it lands.
 builder.AddProject<Projects.Lms_Api>("api")
     .WithReference(lmsDb)
     .WithReference(courseAssets)
     .WithReference(lessonAttachments)
-    .WaitFor(postgres);
+    .WaitForCompletion(migrations);
 
 builder.Build().Run();

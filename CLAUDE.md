@@ -26,12 +26,24 @@ Vocabulary: **Course → Chapter → Lesson** (Video or Reading). "Module" alway
 
 ## Commands
 
+```bash
+dotnet run --project src/Lms.AppHost
 ```
-# TODO: fill in once the solution exists (Sprint 1)
-# dotnet run --project src/Lms.AppHost     — starts everything incl. Postgres + Azurite
-# dotnet test
-# npm run dev --prefix web
+Starts API + PostgreSQL + Azurite + the migration job, with the Aspire dashboard. Requires Docker.
+
+```bash
+dotnet build && dotnet test
 ```
+
+```bash
+dotnet ef migrations add <Name> --project src/Modules/Lms.Modules.<Module> --startup-project src/Lms.MigrationService --context <Module>DbContext --output-dir Infrastructure/Migrations
+```
+`dotnet-ef` is pinned in `.config/dotnet-tools.json` — run `dotnet tool restore` first. Its version must match the EF Core package major; never `--prerelease`.
+
+```bash
+./scripts/reset-local-data.ps1
+```
+Wipes the Docker volumes. The reset is the volume, not the process — restarting the AppHost does **not** clear database state.
 
 Local dev is **Aspire only**. Postgres and Azurite run with `WithDataVolume()` + `ContainerLifetime.Persistent`, so data survives restarts. A broken local DB is fixed with `docker volume rm`, not by restarting.
 
