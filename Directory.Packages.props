@@ -43,6 +43,8 @@
   <ItemGroup Label="Aspire hosting">
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.4.6" />
     <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="13.4.6" />
+    <!-- Aspire 13's JS hosting. Aspire.Hosting.NodeJs stopped at 9.5.2 and has no 13.x. -->
+    <PackageVersion Include="Aspire.Hosting.JavaScript" Version="13.4.6" />
   </ItemGroup>
 
   <!-- Consumed by Lms.ServiceDefaults. Same instrumentation locally and in Azure;

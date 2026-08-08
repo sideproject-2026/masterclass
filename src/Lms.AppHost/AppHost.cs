@@ -42,11 +42,18 @@ var migrations = builder.AddProject<Projects.Lms_MigrationService>("migrations")
     .WaitFor(postgres);
 
 // --- Application ---------------------------------------------------------------
-// The TanStack Start app (F-7) joins here when it lands.
-builder.AddProject<Projects.Lms_Api>("api")
+var api = builder.AddProject<Projects.Lms_Api>("api")
     .WithReference(lmsDb)
     .WithReference(courseAssets)
     .WithReference(lessonAttachments)
     .WaitForCompletion(migrations);
+
+// TanStack Start. WithReference(api) injects services__api__http__0, which the Start
+// server reads to call the API — see web/src/server/api.ts. The browser never gets it.
+builder.AddViteApp("web", "../../web")
+    .WithReference(api)
+    .WaitFor(api)
+    .WithHttpEndpoint(env: "PORT")
+    .WithExternalHttpEndpoints();
 
 builder.Build().Run();

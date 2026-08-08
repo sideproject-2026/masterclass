@@ -6,17 +6,35 @@ TanStack Start (React 19) · TanStack Router + Query · Tailwind v4 · shadcn/ui
 
 ---
 
+## Commands
+
+```bash
+npm run dev
+```
+Standalone on port 3000. Under the AppHost the port comes from `PORT` — prefer `dotnet run --project ../src/Lms.AppHost`, which also starts the API this app talks to.
+
+```bash
+npm run build && npm run lint
+```
+
 ## Where things go
 
 ```
+src/server/               server-ONLY code. api.ts is the single door to Lms.Api.
 src/features/<feature>/   api.ts · hooks.ts · schemas.ts · components/
 src/components/ui/        shadcn — generated, never hand-edited
 src/components/           shared only when 2+ features use it
-src/lib/                  result.ts · pagination.ts · http.ts · format.ts
+src/lib/                  result.ts · pagination.ts · format.ts
 src/routes/               file routes — thin
+src/router.tsx            router construction
+src/styles.css            Tailwind v4 entry
 ```
 
 Feature folders mirror backend Modules (`catalog`, `studio`, `learn`, `auth`). If they drift apart, one of them is wrong.
+
+**`src/server/` must never be imported from a component.** It resolves the API base URL from Aspire's injected `services__api__*` env vars and is where the session cookie will live once auth lands. Anything it touches stays on the server.
+
+Scaffolded with `@tanstack/cli` (React, Tailwind v4, ESLint, no examples). TanStack Query, shadcn/ui and Zod arrive with the cards that need them — not before.
 
 ---
 
