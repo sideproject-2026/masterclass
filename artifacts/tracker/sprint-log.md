@@ -2,26 +2,26 @@
 
 Progress board and recorded actuals. Updated as the **last action of every card**.
 
-*Last updated: 2026-08-08 · after Sprint 4*
+*Last updated: 2026-08-08 · after Sprint 5*
 
 ---
 
 ## Status at a glance
 
 ```
-Points   ████░░░░░░░░░░░░░░░░░░░░░░░░░░   20 / 145   (14%)
-Sprints  ████░░░░░░░░░░░░░░░░░░░░░░░░░░    4 / 31
-Cards    █████░░░░░░░░░░░░░░░░░░░░░░░░░    9 / 58
+Points   █████░░░░░░░░░░░░░░░░░░░░░░░░░   23 / 145   (16%)
+Sprints  █████░░░░░░░░░░░░░░░░░░░░░░░░░    5 / 31
+Cards    █████░░░░░░░░░░░░░░░░░░░░░░░░░    9 / 58  (+1 partial)
 ```
 
 | | |
 |---|---|
 | **Phase** | 2 of 8 — Auth & Design System, in progress |
-| **Last completed** | Sprint 4 — *Users exist and can get a token* |
-| **Up next** | **Sprint 5** — `A-3` BFF session cookie (4) · `A-4` (1) · **carried integration tests** |
+| **Last completed** | Sprint 5 — *No token reaches browser JavaScript* (partial) |
+| **Up next** | **Sprint 6** — `W-1` design system · `A-6` · **carried: sign-out fix + integration tests** |
 | **Next milestone** | **M1 Hello, deployed** — Sprint 9, **11 Oct 2026** |
 | **Schedule** | On plan. Not re-dated — see the re-baseline below. |
-| **Tests** | 147 green (112 unit · 35 architecture) · **no integration tests yet** |
+| **Tests** | 147 green (112 unit · 35 architecture) · **still no integration tests** |
 | **Build** | Clean, warnings-as-errors |
 
 ### Phases
@@ -70,11 +70,11 @@ Cards    █████░░░░░░░░░░░░░░░░░░�
 
 | Risk | State |
 |---|---|
-| **R1** BFF session/refresh pattern | 🟡 Further reduced — `F-7` proved the server-side call, `A-2` proved rotation and revocation. Only the cookie itself remains, in Sprint 5. |
+| **R1** BFF session/refresh pattern | 🟡 Mostly retired — sealing, reading, tamper resistance and transparent refresh all proven in a browser. **One open defect: sign-out does not clear the cookie** (see Sprint 5). |
 | **R2** YouTube IFrame progress tracking | 🟡 Spike `SP-1` scheduled Sprint 7, four months before the real card |
 | **R3** Velocity below 5 pts/week | 🔴 **Still unmeasured.** Four sprints, all in single sittings. Sprint 4 also carried a card, so 5/5 flatters it. |
 | **R4** Life happens | ⬜ 4 weeks of slack built in (2 holiday + 2 buffer) |
-| **R5** Scope creep | 🟢 Held — one pull-forward (`F-4` outbox table, offset against `P-7`) and one carry (`A-2` integration tests), both recorded |
+| **R5** Scope creep | 🟡 Two items now carried — integration tests (twice) and the `A-3` sign-out fix. Carrying twice is the point at which a carry becomes a habit; both are first in Sprint 6. |
 | **R8** Design rabbit hole | 🟢 Not yet applicable — no design work before `W-1` in Sprint 6 |
 
 ---
@@ -87,7 +87,8 @@ Cards    █████░░░░░░░░░░░░░░░░░░�
 | 2 | Aug 17–23 | 5 | 5 | 5.0 | ✅ `F-3` + `F-4`. Also completed early, same sitting. Estimates held on both. |
 | 3 | Aug 24–30 | 5 | 5 | 5.0 | ✅ `F-5` + `F-7` + `F-6`. Cards reordered within the sprint. |
 | 4 | Aug 31–Sep 6 | 5 | 5 | 5.0 | ✅ `A-1` + `A-2`. **Integration-test project carried to Sprint 5** — see the caveat. |
-| 5 | Sep 7–13 | 5 | — | — | ⬜ `A-3` BFF session cookie (4) · `A-4` `GET /api/me` (1) · **+ carried integration tests** |
+| 5 | Sep 7–13 | 5 | 3 | 3.0 | 🟡 `A-3` partial — sign-out defect. `A-4` was already delivered in `A-2`. Integration tests carried **again**. |
+| 6 | Sep 14–20 | 5 | — | — | ⬜ `W-1` design system (3) · `A-6` admin grant-instructor (2) · **carried: A-3 sign-out fix + integration tests** |
 
 > 1 point ≈ 2 focused hours. Record **actual** points as hours ÷ 2, honestly — an inflated
 > actual hides a velocity problem until it is expensive to discover.
@@ -516,6 +517,55 @@ rate limit    401×7 then 429×6
 
 ---
 
+## Sprint 5 — Sep 7–13, 2026
+
+**Goal:** *No token ever reaches browser JavaScript.*
+
+### `A-3` BFF session cookie and transparent refresh
+
+| | |
+|---|---|
+| **Estimate** | 4 pts · **Actual** 3 of 4 |
+| **Area** | `web` |
+| **Branch** | `feat/a-3-bff-session` |
+| **Status** | 🟡 **Partial — sign-out defect carried** |
+
+**Done and verified in a real browser**
+- [x] `__Host-session` cookie, AES-256-GCM sealed, `HttpOnly; Secure; SameSite=Lax; Path=/`
+- [x] **`document.cookie` empty while signed in**; no JWT in the DOM, no localStorage, no sessionStorage
+- [x] Login response body is `{ok:true}` — the token pair never crosses to the browser
+- [x] Session survives reload **and a full server restart**
+- [x] Tamper resistance — invalid ciphertext, forged plaintext JSON, empty value: all render signed out with `200`, never a 500
+- [x] Transparent refresh at 5 minutes before expiry; a failed refresh clears rather than 500s
+- [ ] **Sign-out does not clear the cookie**
+
+**The defect, precisely**
+
+`Set-Cookie` emitted from the `logout` server function never reaches the browser, while `login`'s demonstrably does — the session persists across a restart, which only a real cookie explains.
+
+Ruled out, in order:
+1. `deleteCookie` not reproducing the full attribute set
+2. The `__Host-` rules rejecting a removal that omits `Secure`/`Path=/`
+3. Empty-value serialisation being dropped (switched to an expired placeholder)
+4. Stale Vite HMR — **reproduced after a full AppHost restart**
+
+Isolated by having `clearSession` also set a plain JS-readable probe cookie. **The probe did not appear either**, so the fault is the `Set-Cookie` path for that particular function, not anything about the session cookie.
+
+**Impact is bounded but real.** Logout still revokes the refresh token server-side, so a session cannot outlive the 15-minute access token. But sign-out is not immediate in the browser, which is not acceptable on a shared machine. Likely next step: perform sign-out as a document request (form POST + redirect) rather than a client-invoked RPC.
+
+**Decisions**
+1. **AES-256-GCM, not CBC** — authenticated encryption, so a tampered cookie fails to open instead of decrypting into attacker-chosen content. Demonstrated with a forged plaintext payload.
+2. **Refresh *before* forwarding**, not after a 401 — one round trip instead of two, and no transient failure surfaces.
+3. **`SESSION_SECRET` follows the `A-1` JWT-key pattern** — committed dev value for zero-setup, refused outside Development.
+4. **A deliberately unstyled sign-in form** on the index route. Scaffolding so the layer is exercised rather than merely written; `A-5` replaces it. Shipping an unexercised session layer would have been worse — and in fact the browser is what found the defect.
+
+**Not started**
+- `tests/Lms.IntegrationTests` — carried from Sprint 4 and **carried again**. Two sprints running now; this needs to be the first thing in Sprint 6, not the last.
+
+**`A-4`** `GET /api/me` — delivered early in `A-2`. Its point is **not** claimed here.
+
+---
+
 ## Card template
 
 ```markdown
@@ -582,3 +632,6 @@ Implementation decisions worth finding later. Full context lives in the card ent
 | 2026-08-08 | `A-2` | `ClockSkew = Zero`; the 5-minute default would extend a 15-minute token to 20 |
 | 2026-08-08 | `A-2` | Refresh reuse revokes the entire chain, making a stolen token detectable |
 | 2026-08-08 | `A-2` | `Result<Unit>` overload returning 204; the generic one answered `200 {}` |
+| 2026-08-08 | `A-3` | AES-256-GCM for the session cookie — a tampered value fails to open, not decrypts |
+| 2026-08-08 | `A-3` | Refresh *before* forwarding, not after a 401 — one round trip, no transient failure |
+| 2026-08-08 | `A-3` | Unstyled scaffolding form so the session layer is exercised; it is what found the defect |
