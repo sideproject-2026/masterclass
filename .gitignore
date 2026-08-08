@@ -1,0 +1,59 @@
+## .NET
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+artifacts-build/
+*.user
+*.suo
+*.userprefs
+*.dll
+*.pdb
+*.cache
+project.lock.json
+project.fragment.lock.json
+msbuild.log
+msbuild.err
+msbuild.wrn
+TestResults/
+[Cc]overage*/
+*.coverage
+*.trx
+
+## Rider / Visual Studio / VS Code
+.vs/
+.idea/
+*.sln.iml
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json.sample
+
+## Node / TanStack Start
+node_modules/
+dist/
+.output/
+.nitro/
+.tanstack/
+.vite/
+*.tsbuildinfo
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+## Environment & secrets — never commit
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+appsettings.Local.json
+appsettings.*.Local.json
+
+## Aspire
+.aspire/
+aspire-manifest.json
+
+## OS
+.DS_Store
+Thumbs.db
+desktop.ini
