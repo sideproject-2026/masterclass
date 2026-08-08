@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    ASP.NET-facing helpers: Result -> IResult, ProblemDetails, paging parameter binding.
+    Kept out of Lms.SharedKernel so that project stays free of a framework reference —
+    *.Contracts projects reference SharedKernel and must remain plain DTOs.
+    Same reasoning as Lms.SharedKernel.Persistence. See 01-architecture.md §4.
+  -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lms.SharedKernel\Lms.SharedKernel.csproj" />
+  </ItemGroup>
+
+</Project>

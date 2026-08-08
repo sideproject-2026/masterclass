@@ -12,8 +12,41 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.10" />
   </ItemGroup>
 
+  <!-- .NET 10 generates the OpenAPI document in-box; no Swashbuckle. -->
+  <ItemGroup Label="API">
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.10" />
+    <!--
+      Transitive pin. Microsoft.AspNetCore.OpenApi 10.0.10 drags in Microsoft.OpenApi 2.0.0,
+      which carries a known high-severity advisory (GHSA-v5pm-xwqc-g5wc). Caught by
+      NU1903 under TreatWarningsAsErrors. Remove this pin once the parent package
+      references a patched version itself.
+    -->
+    <PackageVersion Include="Microsoft.OpenApi" Version="2.11.0" />
+    <!-- Document viewer for Development. Microsoft.AspNetCore.OpenApi ships MapOpenApi only —
+         there is no built-in UI. Scalar is free, OSS and reads the generated document. -->
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.16.18" />
+  </ItemGroup>
+
   <ItemGroup Label="Extensions">
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.10" />
+  </ItemGroup>
+
+  <!-- Local orchestration only. Nothing here is deployed — see 01-architecture.md §7.3. -->
+  <ItemGroup Label="Aspire hosting">
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.4.6" />
+    <PackageVersion Include="Aspire.Hosting.Azure.Storage" Version="13.4.6" />
+  </ItemGroup>
+
+  <!-- Consumed by Lms.ServiceDefaults. Same instrumentation locally and in Azure;
+       only the OTLP destination differs. See 06-tech-stack.md §3.1. -->
+  <ItemGroup Label="Observability and resilience">
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.6.0" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.6.0" />
+    <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.3" />
+    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.15.3" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.15.2" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.15.1" />
+    <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.15.1" />
   </ItemGroup>
 
   <ItemGroup Label="Testing">

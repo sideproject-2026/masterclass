@@ -1,0 +1,23 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.4.6">
+
+  <!--
+    Local development orchestration. This project is NOT deployed — the deployed system is
+    two containers provisioned by Bicep. See artifacts/design/01-architecture.md §7.3.
+    Nothing under src/Modules may reference Aspire; the dependency runs one way only.
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <UserSecretsId>a92f8f87-be82-41db-b09d-1ae60b033d08</UserSecretsId>
+    <IsAspireHost>true</IsAspireHost>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Include="Aspire.Hosting.Azure.Storage" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lms.Api\Lms.Api.csproj" />
+  </ItemGroup>
+
+</Project>

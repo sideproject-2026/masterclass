@@ -2,7 +2,14 @@
 
   <!-- Composition root only. No business logic lives here — see 01-architecture.md §3. -->
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Scalar.AspNetCore" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Lms.SharedKernel\Lms.SharedKernel.csproj" />
+    <ProjectReference Include="..\Lms.SharedKernel.Http\Lms.SharedKernel.Http.csproj" />
+    <ProjectReference Include="..\Lms.ServiceDefaults\Lms.ServiceDefaults.csproj" />
     <ProjectReference Include="..\Modules\Lms.Modules.Identity\Lms.Modules.Identity.csproj" />
     <ProjectReference Include="..\Modules\Lms.Modules.Catalog\Lms.Modules.Catalog.csproj" />
     <ProjectReference Include="..\Modules\Lms.Modules.Enrollment\Lms.Modules.Enrollment.csproj" />
