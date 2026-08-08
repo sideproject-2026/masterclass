@@ -17,7 +17,8 @@ public static class NotificationsModule
     /// <summary>Connection-string name injected by the Aspire AppHost.</summary>
     public const string ConnectionName = "lmsdb";
 
-    public static IServiceCollection AddNotificationsModule(
+    /// <summary>The DbContext alone — see IdentityModule.AddIdentityPersistence.</summary>
+    public static IServiceCollection AddNotificationsPersistence(
         this IServiceCollection services,
         IConfiguration configuration)
     {
@@ -37,6 +38,11 @@ public static class NotificationsModule
 
         return services;
     }
+
+    public static IServiceCollection AddNotificationsModule(
+        this IServiceCollection services,
+        IConfiguration configuration) =>
+        services.AddNotificationsPersistence(configuration);
 
     public static IEndpointRouteBuilder MapNotificationsEndpoints(this IEndpointRouteBuilder app)
     {

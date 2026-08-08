@@ -12,6 +12,15 @@ public enum ErrorType
     /// <summary>Authenticated but not permitted: wrong role, not the owner, not enrolled. → 403</summary>
     Forbidden = 1,
 
+    /// <summary>
+    /// No credentials, or credentials that are not valid. → 401
+    /// </summary>
+    /// <remarks>
+    /// Distinct from <see cref="Forbidden"/>: 401 means "we do not know who you are",
+    /// 403 means "we know, and you may not". A failed login is 401, not 403.
+    /// </remarks>
+    Unauthenticated = 5,
+
     /// <summary>Does not exist, or must not be revealed to exist. → 404</summary>
     NotFound = 2,
 

@@ -10,6 +10,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- IdentityModuleDbContext derives from IdentityDbContext<,,>, so this assembly must be
+         referenced for the DbContext registration below to compile. -->
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -18,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lms.ServiceDefaults\Lms.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Modules\Lms.Modules.Identity\Lms.Modules.Identity.csproj" />
     <ProjectReference Include="..\Modules\Lms.Modules.Notifications\Lms.Modules.Notifications.csproj" />
   </ItemGroup>
 
