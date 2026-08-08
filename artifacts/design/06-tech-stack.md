@@ -164,14 +164,19 @@ var api = builder.AddProject<Projects.Lms_Api>("api")
     .WithReference(lessonAttachments)
     .WaitForCompletion(migrations);
 
+// AddViteApp comes from Aspire.Hosting.JavaScript. (Aspire.Hosting.NodeJs stopped at
+// 9.5.2 and has no 13.x release.) WithReference injects services__api__http__0, which the
+// Start server reads to reach the API — the browser never receives it.
 builder.AddViteApp("web", "../../web")
     .WithReference(api)
     .WaitFor(api)
     .WithHttpEndpoint(env: "PORT")
-    .WithNpmPackageInstallation();
+    .WithExternalHttpEndpoints();
 
 builder.Build().Run();
 ```
+
+> There is no `WithNpmPackageInstallation()` in `Aspire.Hosting.JavaScript` — run `npm install` in `web/` yourself the first time, and let CI run `npm ci`.
 
 **Long-lived data.** This is the part that matters for day-to-day work, and it needs both settings — they do different jobs:
 
