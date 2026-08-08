@@ -14,6 +14,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Lms.SharedKernel\Lms.SharedKernel.csproj" />
     <ProjectReference Include="..\..\src\Lms.SharedKernel.Http\Lms.SharedKernel.Http.csproj" />
+    <ProjectReference Include="..\..\src\Lms.SharedKernel.Persistence\Lms.SharedKernel.Persistence.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Lms.Modules.Notifications\Lms.Modules.Notifications.csproj" />
   </ItemGroup>
 
   <ItemGroup>

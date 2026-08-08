@@ -32,8 +32,11 @@ Microsoft.AspNetCore.Identity.EntityFrameworkCore
 Microsoft.AspNetCore.Authentication.JwtBearer
 Npgsql.EntityFrameworkCore.PostgreSQL
 Microsoft.EntityFrameworkCore.Design
+EFCore.NamingConventions
 Aspire.Npgsql.EntityFrameworkCore.PostgreSQL
 Aspire.Azure.Storage.Blobs
+Microsoft.AspNetCore.OpenApi
+Scalar.AspNetCore
 FluentValidation.AspNetCore
 Azure.Storage.Blobs
 Azure.Identity
@@ -44,6 +47,10 @@ Azure.Monitor.OpenTelemetry.AspNetCore
 ```
 
 The two `Aspire.*` packages are the client integrations: they register `DbContext` and `BlobServiceClient` from the connection strings the AppHost injects, with health checks, retries, and telemetry already attached. `OpenTelemetry.Extensions.Hosting` moves into `Lms.ServiceDefaults` rather than being configured per project.
+
+`EFCore.NamingConventions` gives snake_case tables and columns. EF Core 10 has no built-in convention, and unquoted lowercase identifiers are what make the database pleasant to query by hand — which matters, because pgweb is in the AppHost precisely so you can.
+
+Version pinning is not only for packages: **`dotnet-ef` is pinned in `.config/dotnet-tools.json`** and must match the EF Core package major. `dotnet tool install --prerelease` will happily fetch an EF 11 preview against EF 10 packages.
 
 Twelve packages. If this list grows past twenty, something has been added that was not needed.
 

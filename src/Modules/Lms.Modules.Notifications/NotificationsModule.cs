@@ -1,4 +1,7 @@
+using Lms.Modules.Notifications.Infrastructure;
+using Lms.SharedKernel.Persistence;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,13 +14,27 @@ namespace Lms.Modules.Notifications;
 /// </summary>
 public static class NotificationsModule
 {
+    /// <summary>Connection-string name injected by the Aspire AppHost.</summary>
+    public const string ConnectionName = "lmsdb";
+
     public static IServiceCollection AddNotificationsModule(
         this IServiceCollection services,
         IConfiguration configuration)
     {
         ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(configuration);
 
-        // Registrations arrive with the module's first feature.
+        services.AddDbContext<NotificationsDbContext>((_, options) =>
+        {
+            options
+                .UseNpgsql(
+                    configuration.GetConnectionString(ConnectionName),
+                    npgsql => npgsql.UseLmsMigrationHistory(
+                        NotificationsDbContext.Schema,
+                        NotificationsDbContext.MigrationsHistoryTable))
+                .UseLmsConventions();
+        });
+
         return services;
     }
 
@@ -25,7 +42,7 @@ public static class NotificationsModule
     {
         ArgumentNullException.ThrowIfNull(app);
 
-        // Route groups arrive with the module's first endpoint.
+        // Notifications reacts to events; it exposes no HTTP surface.
         return app;
     }
 }

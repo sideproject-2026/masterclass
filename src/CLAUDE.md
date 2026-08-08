@@ -68,7 +68,10 @@ internal sealed class XHandler(XDbContext db, IClock clock) : ICommandHandler<XC
 - Concurrency is Postgres `xmin`: a `uint` property with `IsRowVersion()`. No extra column, no migration.
 - `ExecuteUpdateAsync` for set-based writes (reorder, outbox stamping). Don't load rows to change one column.
 - Configuration in `IEntityTypeConfiguration<T>`. No data annotations on domain entities.
-- **Never migrate at startup.** `Lms.MigrationService`.
+- **Never migrate at startup.** `Lms.MigrationService` runs as a job; the AppHost gates the API on it with `WaitForCompletion`.
+- Identifiers are **snake_case** (`EFCore.NamingConventions`). Write raw SQL — index filters, check constraints — in snake_case to match.
+- New module DbContext: call `.UseLmsConventions()` and `npgsql.UseLmsMigrationHistory(Schema, MigrationsHistoryTable)`, apply `ApplyStronglyTypedIdConventions()` in `ConfigureConventions`, and add one `AddScoped<DbContext>` line in `Lms.MigrationService/Program.cs`.
+- **Never hand-edit a file under `Migrations/`.** They are generated and exempt from the house style in `.editorconfig`.
 - `Tags` is `text[]` with a GIN index; search is a generated `tsvector` column.
 
 ## Pagination

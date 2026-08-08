@@ -270,7 +270,7 @@ The largest phase. Four sprints of API, then three of UI on top of it.
 | **23** | Jan 11–17 | *Content is gated at the API.* | `P-1` `GET /api/learn/{slug}` + gated lesson endpoint (403 logic) — 3 `api`<br>`P-2` LessonProgress + monotonic progress upsert — 2 `api` | 5 |
 | **24** | Jan 18–24 | *A student can navigate a course.* | `P-3` Player shell: curriculum sidebar, routing, prev/next, resume — 4 `web`<br>`P-6` Attachment download SAS — 1 `api` | 5 |
 | **25** | Jan 25–31 | *Both lesson types work, video reports progress.* | `P-4` Reading lesson view + mark complete — 2 `web`<br>`P-5` YouTube IFrame player + heartbeats + `sendBeacon` — 4 `web` (de-risked by `SP-1`) | 6 |
-| **26** | Feb 1–7 | *The loop closes.* | `P-7` Completion calc + `CourseCompleted` + outbox + email — 3 `api`<br>`P-8` Completion page + suggestions — 2 `both` | 5 |
+| **26** | Feb 1–7 | *The loop closes.* | `P-7` Completion calc + `CourseCompleted` + outbox **sender** + email — 3 `api` *(the outbox table itself shipped in `F-4`)*<br>`P-8` Completion page + suggestions — 2 `both` | 5 |
 
 **🏁 M4 — Demo:** Enroll, watch a video to 90% and see it auto-tick, mark a reading complete, close the tab mid-lesson and resume at the right second, finish the last lesson, get the congratulations screen with three suggestions and an email.
 

@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lms.Api\Lms.Api.csproj" />
+    <ProjectReference Include="..\Lms.MigrationService\Lms.MigrationService.csproj" />
   </ItemGroup>
 
 </Project>
