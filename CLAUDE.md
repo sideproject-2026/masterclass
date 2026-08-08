@@ -89,6 +89,16 @@ Local dev is **Aspire only**. Postgres and Azurite run with `WithDataVolume()` +
 
 ---
 
+## Always update the tracker
+
+[artifacts/tracker/sprint-log.md](artifacts/tracker/sprint-log.md) is updated **as the last action of every card, without being asked** — and again whenever merge state changes. A tracker that lags is worse than none, because it is trusted and wrong.
+
+Every card entry records: estimate **and actual**, branch, PR, acceptance criteria ticked, what shipped, decisions taken, deviations from the design docs. Then refresh the top dashboard — points, cards, phase, open branches, carried work, risk states — and add a row to the decision index.
+
+- **Record the actual, not the estimate.** An inflated actual hides a velocity problem until it is expensive.
+- **A partial card is scored partial** and says exactly what is unfinished and what was ruled out. Never round up to green.
+- **Carried work is named and counted**, never quietly dropped into a later sprint.
+
 ## Working preferences
 
 - Design principles matter here. Prefer the clean solution and say why; don't silently take a shortcut.

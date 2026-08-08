@@ -23,6 +23,8 @@ Cards    █████░░░░░░░░░░░░░░░░░░�
 | **Schedule** | On plan. Not re-dated — see the re-baseline below. |
 | **Tests** | 147 green (112 unit · 35 architecture) · **still no integration tests** |
 | **Build** | Clean, warnings-as-errors |
+| **Open branches** | `feat/a-3-bff-session` only — PRs #1–#8 merged |
+| **Carried work** | `A-3` sign-out fix · integration tests (**2nd carry**) |
 
 ### Phases
 
@@ -57,14 +59,15 @@ Cards    █████░░░░░░░░░░░░░░░░░░�
 | `F-2` | Aspire AppHost, persistent data | 2 | `feat/f-2-aspire-apphost` | ✅ PR #2 |
 | `F-3` | ServiceDefaults, health, OpenAPI | 3 | `feat/f-3-service-defaults` | ✅ PR #2 |
 | `F-4` | Migration job + EF conventions | 2 | `feat/f-4-migration-service` | ✅ PR #3 |
-| `F-5` | Architecture tests | 2 | `feat/f-5-architecture-tests` | ⬜ open |
-| `F-7` | TanStack Start scaffold | 2 | `feat/f-7-web-scaffold` | ⬜ open |
-| `F-6` | CI workflow | 1 | `feat/f-6-ci` | ⬜ open |
-| `A-1` | Identity: users, roles, register/login | 3 | `feat/a-1-identity-module` | ⬜ open |
-| `A-2` | JWT validation, policies, me/refresh/logout | 2 | `feat/a-2-jwt-policies` | ⬜ open |
+| `F-5` | Architecture tests | 2 | `feat/f-5-architecture-tests` | ✅ PR #4 |
+| `F-7` | TanStack Start scaffold | 2 | `feat/f-7-web-scaffold` | ✅ PR #5 |
+| `F-6` | CI workflow | 1 | `feat/f-6-ci` | ✅ PR #6 |
+| `A-1` | Identity: users, roles, register/login | 3 | `feat/a-1-identity-module` | ✅ PR #7 |
+| `A-2` | JWT validation, policies, me/refresh/logout | 2 | `feat/a-2-jwt-policies` | ✅ PR #8 |
+| `A-3` | BFF session cookie | 3 of 4 | `feat/a-3-bff-session` | ⬜ **open — partial** |
 
-> Branches are **stacked** — merge in the order listed above, or the diffs will show unrelated commits.
-> `F-6` adds the CI workflow, so its own PR is the first run of that workflow.
+**`main` is at `95f8596`.** PRs #1–#8 merged and their branches deleted; `feat/a-3-bff-session`
+is the only open branch. Later cards branch fresh off `main`, no longer stacked.
 
 ### Open risks
 
@@ -93,7 +96,9 @@ Cards    █████░░░░░░░░░░░░░░░░░░�
 > 1 point ≈ 2 focused hours. Record **actual** points as hours ÷ 2, honestly — an inflated
 > actual hides a velocity problem until it is expensive to discover.
 
-**Rolling average:** 5.0 pts/sprint over 4 sprints — **read the re-baseline below before trusting it.**
+**Rolling average:** **4.6 pts/sprint** over 5 sprints (23 delivered of 25 planned) — and falling.
+Sprint 5's 3.0 is the first below-plan reading. Still every sprint has run in a single sitting, so
+this remains an estimate-accuracy number rather than a pace one — see the re-baseline below.
 
 > **Sprint 4 caveat.** Scored 5/5, but the integration-test project (`tests/Lms.IntegrationTests`,
 > WebApplicationFactory + Testcontainers) was in the plan and was **not built**. Everything was
