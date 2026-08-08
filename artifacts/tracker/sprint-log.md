@@ -118,6 +118,62 @@ the AppHost leaves the containers running, so a normal restart skips container s
 
 ---
 
+## Sprint 2 — Aug 17–23, 2026
+
+**Goal:** *A real database, behind a real health check.*
+
+### `F-3` ServiceDefaults, health, OpenAPI, ProblemDetails
+
+| | |
+|---|---|
+| **Estimate** | 3 pts |
+| **Actual** | 3 pts |
+| **Area** | `api` |
+| **Branch** | `feat/f-3-service-defaults` (stacked on `feat/f-2-aspire-apphost`) |
+| **PR** | pending — `gh` not yet installed |
+| **Started / Finished** | 2026-08-08 / 2026-08-08 |
+| **Status** | ✅ Done |
+
+**Acceptance criteria**
+- [x] `GET /health/live` → `200`, liveness check only, does not touch dependencies
+- [x] `GET /health/ready` → `200`, the place dependency checks will register
+- [x] `GET /openapi/v1.json` → `200`, valid OpenAPI 3.1.1 document
+- [x] Document viewer reachable in Development
+- [x] Unhandled exceptions become RFC 9457 ProblemDetails, never a stack trace
+- [x] `ErrorType` → HTTP status mapped in exactly one place
+- [x] Build clean, **78 tests** passing (was 60)
+
+**Verified live** against a running AppHost:
+```
+/health/live     200  {"status":"Healthy","checks":[{"name":"self",...}]}
+/health/ready    200  {"status":"Healthy",...}
+/openapi/v1.json 200  openapi 3.1.1, "paths": {}   ← health correctly excluded
+/scalar/v1       200  html
+```
+
+**Shipped**
+- `Lms.ServiceDefaults` — OpenTelemetry (traces/metrics/logs), health checks, service discovery, HTTP resilience
+- `Lms.SharedKernel.Http` — `ToHttpResult()`, `ToCreatedResult()`, `ToPagedHttpResult()`, `HttpResults.Problem()`, `PagingParams` with query-string binding
+- `GlobalExceptionHandler` — `IExceptionHandler` producing ProblemDetails with a correlated `traceId` and a deliberately generic message
+- `Program.cs` — ServiceDefaults, exception handler, string enum serialisation, OpenAPI, Scalar, `MapDefaultEndpoints()`
+- 18 new tests, mostly pinning the `ErrorType` → status mapping
+
+**Decisions**
+1. **Health endpoints are mapped in every environment, not just Development.** The Aspire template restricts them because a detailed payload leaks dependency names and failure reasons — but Container Apps must probe them in production. Resolved by hiding the *detail* rather than the endpoint: outside Development the body is a single status word.
+2. **`/health/live` deliberately does not check dependencies.** A failing database must not get the container killed and restarted in a loop. Readiness is where dependency checks go.
+3. **A third SharedKernel project (`.Http`).** Same reasoning as `.Persistence`: `SharedKernel` must stay free of a framework reference because `*.Contracts` projects reference it and have to remain plain DTOs.
+4. **Scalar instead of Swagger UI** — see deviation below.
+5. **Both health endpoints are `ExcludeFromDescription()`** — they are operational, not part of the API. Confirmed by `"paths": {}` in the generated document.
+
+**Deviations from the design docs**
+- **`MapSwaggerUi()` does not exist.** [03 §1](../design/03-api-design.md) and [06 §1](../design/06-tech-stack.md) both claimed it ships with `Microsoft.AspNetCore.OpenApi`. Inspecting the 10.0.10 assembly, the only mapping method is `MapOpenApi` — the package deliberately ships no UI. Switched to **Scalar** (`MapScalarApiReference()`, free and OSS). **Both docs corrected in this PR.**
+- **Security fix, unplanned.** `Microsoft.AspNetCore.OpenApi` 10.0.10 pulls in `Microsoft.OpenApi` 2.0.0, which carries a **known high-severity advisory (GHSA-v5pm-xwqc-g5wc)**. `TreatWarningsAsErrors` turned NU1903 into a build failure. Pinned transitively to 2.11.0 in `Directory.Packages.props`, with a note to remove the pin once the parent ships a patched reference.
+
+**Not yet verified**
+- `GlobalExceptionHandler` is covered by design but not exercised end to end — there is no endpoint that throws yet. It will be hit by integration tests from `S-2` onward.
+
+---
+
 ## Card template
 
 ```markdown
@@ -157,3 +213,8 @@ Implementation decisions worth finding later. Full context lives in the card ent
 | 2026-08-08 | `F-1` | `*.Contracts` may reference SharedKernel; design doc amended to match |
 | 2026-08-08 | `F-2` | `AddBlobContainer` on the storage resource — `AddBlobs` names an endpoint, it does not create a container |
 | 2026-08-08 | `F-2` | Named Docker volumes (`lms-postgres-data`, `lms-azurite-data`) so the reset script can target them |
+| 2026-08-08 | `F-3` | Health endpoints mapped in all environments; detail hidden outside Development rather than the endpoint |
+| 2026-08-08 | `F-3` | `/health/live` never touches dependencies — a bad DB must not restart-loop the container |
+| 2026-08-08 | `F-3` | `Lms.SharedKernel.Http` added so `SharedKernel` stays framework-free for Contracts |
+| 2026-08-08 | `F-3` | **Scalar** replaces the non-existent `MapSwaggerUi`; both design docs corrected |
+| 2026-08-08 | `F-3` | Pinned `Microsoft.OpenApi` 2.11.0 — transitive 2.0.0 has advisory GHSA-v5pm-xwqc-g5wc |

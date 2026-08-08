@@ -19,7 +19,7 @@
 | **Paging** | Offset paging: `?page=1&pageSize=20`. `pageSize` is **clamped** to 50, not rejected. Response is `PagedResult<T>`, built from the internal `QueryResult<T>` — see [`09 §8`](09-code-conventions.md#8-pagination). |
 | **Dates** | ISO 8601 with offset (`2026-08-08T09:10:00+00:00`). |
 | **Versioning** | None in MVP. The path prefix leaves room for `/api/v2` if it is ever needed; do not build the machinery now. |
-| **OpenAPI** | `builder.Services.AddOpenApi()` + `app.MapOpenApi()`. .NET 10 generates the document in-box — no Swashbuckle. `MapSwaggerUi()` in Development only. |
+| **OpenAPI** | `builder.Services.AddOpenApi()` + `app.MapOpenApi()` → `/openapi/v1.json`. .NET 10 generates the document in-box — no Swashbuckle. `Microsoft.AspNetCore.OpenApi` ships **no UI**, so **Scalar** (`MapScalarApiReference()` → `/scalar/v1`) renders it, Development only. |
 
 ### 1.1 Standard envelopes
 

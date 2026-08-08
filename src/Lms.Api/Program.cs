@@ -4,12 +4,31 @@ using Lms.Modules.Identity;
 using Lms.Modules.Media;
 using Lms.Modules.Notifications;
 using Lms.SharedKernel.Events;
+using Lms.SharedKernel.Http;
 using Lms.SharedKernel.Time;
+using Microsoft.AspNetCore.Http.Json;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// OpenTelemetry, health checks, service discovery and HTTP resilience.
+// Same code path locally and in Azure — only the OTLP destination differs.
+builder.AddServiceDefaults();
+
 builder.Services.AddSingleton<IClock, SystemClock>();
 builder.Services.AddSingleton<IEventBus, InProcessEventBus>();
+
+// Every unhandled exception becomes ProblemDetails; nothing leaks a stack trace.
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
+// Enums on the wire are strings, so reordering one is not a breaking change.
+builder.Services.Configure<JsonOptions>(options =>
+    options.SerializerOptions.Converters.Add(
+        new System.Text.Json.Serialization.JsonStringEnumConverter()));
+
+// .NET 10 generates the OpenAPI document in-box — no Swashbuckle.
+builder.Services.AddOpenApi();
 
 builder.Services
     .AddIdentityModule(builder.Configuration)
@@ -20,8 +39,16 @@ builder.Services
 
 var app = builder.Build();
 
-// Placeholder until F-3 adds ServiceDefaults, real health checks and OpenAPI.
-app.MapGet("/health/live", () => Results.Ok(new { status = "healthy" }));
+app.UseExceptionHandler();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();              // /openapi/v1.json
+    app.MapScalarApiReference();   // /scalar/v1 — Microsoft.AspNetCore.OpenApi ships no UI
+}
+
+// /health/live and /health/ready — excluded from the OpenAPI document.
+app.MapDefaultEndpoints();
 
 app.MapIdentityEndpoints()
    .MapCatalogEndpoints()
