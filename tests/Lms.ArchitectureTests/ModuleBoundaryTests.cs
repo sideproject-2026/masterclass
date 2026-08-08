@@ -120,16 +120,42 @@ public class ModuleBoundaryTests
     [InlineData("Enrollment")]
     [InlineData("Media")]
     [InlineData("Notifications")]
-    public void Domain_does_not_depend_on_AspNetCore(string module)
+    public void Domain_does_not_depend_on_Http(string module)
     {
         var result = Types.InAssembly(Architecture.Modules[module])
             .That().ResideInNamespace($"Lms.Modules.{module}.Domain")
             .ShouldNot()
-            .HaveDependencyOnAny(Architecture.AspNetCoreNamespace)
+            .HaveDependencyOnAny(Architecture.HttpNamespaces)
             .GetResult();
 
         result.IsSuccessful.ShouldBeTrue(result.Explain(
             $"{module}.Domain must not know about HTTP. Endpoints live in Endpoints/ and Features/."));
+    }
+
+    /// <summary>
+    /// ASP.NET Core Identity is an implementation detail of the Identity module.
+    /// </summary>
+    /// <remarks>
+    /// Encodes 04-adr-authentication.md §5 rule 2 — "<c>IdentityUser</c> never leaves the
+    /// Identity Module". Other modules see <c>Identity.Contracts.UserSummary</c> and a
+    /// <c>UserId</c>. This is what keeps a future swap to OpenIddict or a managed provider
+    /// a change in one module rather than a change everywhere.
+    /// </remarks>
+    [Theory]
+    [InlineData("Catalog")]
+    [InlineData("Enrollment")]
+    [InlineData("Media")]
+    [InlineData("Notifications")]
+    public void Only_the_Identity_module_knows_about_AspNetCore_Identity(string module)
+    {
+        var result = Types.InAssembly(Architecture.Modules[module])
+            .ShouldNot()
+            .HaveDependencyOnAny("Microsoft.AspNetCore.Identity")
+            .GetResult();
+
+        result.IsSuccessful.ShouldBeTrue(result.Explain(
+            $"Lms.Modules.{module} must not reference ASP.NET Core Identity. Users cross a "
+            + "module boundary as a UserId and a Contracts DTO, never as an IdentityUser."));
     }
 
     // Rule 5 — the rule the whole modular monolith rests on.

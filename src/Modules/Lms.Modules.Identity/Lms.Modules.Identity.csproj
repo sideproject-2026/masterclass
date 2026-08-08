@@ -5,10 +5,24 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Lms.SharedKernel\Lms.SharedKernel.csproj" />
     <ProjectReference Include="..\..\Lms.SharedKernel.Persistence\Lms.SharedKernel.Persistence.csproj" />
     <ProjectReference Include="..\..\Lms.SharedKernel.Http\Lms.SharedKernel.Http.csproj" />
     <ProjectReference Include="..\Lms.Modules.Identity.Contracts\Lms.Modules.Identity.Contracts.csproj" />
+  </ItemGroup>
+
+  <!-- Handlers and infrastructure are internal by convention (09-code-conventions.md §9).
+       Tests reach them through this rather than by widening their accessibility. -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="Lms.UnitTests" />
+    <InternalsVisibleTo Include="Lms.IntegrationTests" />
   </ItemGroup>
 
 </Project>

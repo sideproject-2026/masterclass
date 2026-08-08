@@ -15,6 +15,25 @@ internal static class Architecture
     public const string AspNetCoreNamespace = "Microsoft.AspNetCore";
     public const string AspireNamespace = "Aspire";
 
+    /// <summary>
+    /// The ASP.NET Core namespaces that actually represent HTTP.
+    /// </summary>
+    /// <remarks>
+    /// Matching the bare <c>Microsoft.AspNetCore</c> prefix is too coarse for domain code:
+    /// it sweeps in <c>Microsoft.AspNetCore.Identity</c>, which is a user-store abstraction
+    /// with no HTTP surface and is the store 04-adr-authentication.md deliberately chose.
+    /// The rule's intent is "the domain does not know about HTTP", so it names the HTTP
+    /// namespaces rather than everything shipped under the ASP.NET Core umbrella.
+    /// </remarks>
+    public static string[] HttpNamespaces { get; } =
+    [
+        "Microsoft.AspNetCore.Http",
+        "Microsoft.AspNetCore.Mvc",
+        "Microsoft.AspNetCore.Routing",
+        "Microsoft.AspNetCore.Builder",
+        "Microsoft.AspNetCore.Authorization"
+    ];
+
     public static Assembly SharedKernel => typeof(Result).Assembly;
 
     public static Assembly SharedKernelPersistence =>

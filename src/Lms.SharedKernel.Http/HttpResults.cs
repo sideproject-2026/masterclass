@@ -19,6 +19,7 @@ public static class HttpResults
     public static int ToStatusCode(this ErrorType type) => type switch
     {
         ErrorType.Validation => StatusCodes.Status400BadRequest,
+        ErrorType.Unauthenticated => StatusCodes.Status401Unauthorized,
         ErrorType.Forbidden => StatusCodes.Status403Forbidden,
         ErrorType.NotFound => StatusCodes.Status404NotFound,
         ErrorType.Conflict => StatusCodes.Status409Conflict,
@@ -82,6 +83,7 @@ public static class HttpResults
     private static string TitleFor(ErrorType type) => type switch
     {
         ErrorType.Validation => "The request was not valid.",
+        ErrorType.Unauthenticated => "Authentication is required.",
         ErrorType.Forbidden => "You are not permitted to perform this action.",
         ErrorType.NotFound => "The requested resource was not found.",
         ErrorType.Conflict => "The request conflicts with the current state.",
