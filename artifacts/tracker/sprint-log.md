@@ -2,26 +2,26 @@
 
 Progress board and recorded actuals. Updated as the **last action of every card**.
 
-*Last updated: 2026-08-08 · after Sprint 3*
+*Last updated: 2026-08-08 · after Sprint 4*
 
 ---
 
 ## Status at a glance
 
 ```
-Points   ███░░░░░░░░░░░░░░░░░░░░░░░░░░░   15 / 145   (10%)
-Sprints  ███░░░░░░░░░░░░░░░░░░░░░░░░░░░    3 / 31
-Cards    ███░░░░░░░░░░░░░░░░░░░░░░░░░░░    7 / 58
+Points   ████░░░░░░░░░░░░░░░░░░░░░░░░░░   20 / 145   (14%)
+Sprints  ████░░░░░░░░░░░░░░░░░░░░░░░░░░    4 / 31
+Cards    █████░░░░░░░░░░░░░░░░░░░░░░░░░    9 / 58
 ```
 
 | | |
 |---|---|
-| **Phase** | 1 of 8 — Foundation ✅ complete |
-| **Last completed** | Sprint 3 — *Guardrails up, frontend talking to the API* |
-| **Up next** | **Sprint 4** — `A-1` Identity module (3) · `A-2` JWT + policies (2) |
+| **Phase** | 2 of 8 — Auth & Design System, in progress |
+| **Last completed** | Sprint 4 — *Users exist and can get a token* |
+| **Up next** | **Sprint 5** — `A-3` BFF session cookie (4) · `A-4` (1) · **carried integration tests** |
 | **Next milestone** | **M1 Hello, deployed** — Sprint 9, **11 Oct 2026** |
 | **Schedule** | On plan. Not re-dated — see the re-baseline below. |
-| **Tests** | 124 green (93 unit · 31 architecture) |
+| **Tests** | 147 green (112 unit · 35 architecture) · **no integration tests yet** |
 | **Build** | Clean, warnings-as-errors |
 
 ### Phases
@@ -29,7 +29,7 @@ Cards    ███░░░░░░░░░░░░░░░░░░░░�
 | # | Phase | Sprints | Pts | Status |
 |---|---|---|---:|---|
 | 1 | Foundation | 1–3 | 15 | ✅ **Done** — `F-1`…`F-7` |
-| 2 | Auth & Design System | 4–7 | 20 | ⬜ Next — `A-1`…`A-6`, `W-1`, `SP-1` |
+| 2 | Auth & Design System | 4–7 | 20 | 🔵 **In progress** — `A-1` `A-2` done; `A-3`…`A-6`, `W-1`, `SP-1` to go |
 | 3 | Deploy | 8–9 | 9 | ⬜ `D-1`…`D-3` → **M1** |
 | 4 | Instructor Studio | 10–16 | 35 | ⬜ `S-1`…`S-12`, `W-2` → **M2** |
 | 5 | Catalog & Enrollment | 17–19, 22 | 20 | ⬜ `C-1`…`C-9`, `W-3` → **M3** |
@@ -60,6 +60,8 @@ Cards    ███░░░░░░░░░░░░░░░░░░░░�
 | `F-5` | Architecture tests | 2 | `feat/f-5-architecture-tests` | ⬜ open |
 | `F-7` | TanStack Start scaffold | 2 | `feat/f-7-web-scaffold` | ⬜ open |
 | `F-6` | CI workflow | 1 | `feat/f-6-ci` | ⬜ open |
+| `A-1` | Identity: users, roles, register/login | 3 | `feat/a-1-identity-module` | ⬜ open |
+| `A-2` | JWT validation, policies, me/refresh/logout | 2 | `feat/a-2-jwt-policies` | ⬜ open |
 
 > Branches are **stacked** — merge in the order listed above, or the diffs will show unrelated commits.
 > `F-6` adds the CI workflow, so its own PR is the first run of that workflow.
@@ -68,11 +70,11 @@ Cards    ███░░░░░░░░░░░░░░░░░░░░�
 
 | Risk | State |
 |---|---|
-| **R1** BFF session/refresh pattern | 🟡 Partly retired — `F-7` proved the server-side API call works. The cookie and refresh loop is still Sprint 5. |
+| **R1** BFF session/refresh pattern | 🟡 Further reduced — `F-7` proved the server-side call, `A-2` proved rotation and revocation. Only the cookie itself remains, in Sprint 5. |
 | **R2** YouTube IFrame progress tracking | 🟡 Spike `SP-1` scheduled Sprint 7, four months before the real card |
-| **R3** Velocity below 5 pts/week | 🔴 **Unmeasured.** Sprints 1–3 ran in single sittings, not at real cadence. See re-baseline. |
+| **R3** Velocity below 5 pts/week | 🔴 **Still unmeasured.** Four sprints, all in single sittings. Sprint 4 also carried a card, so 5/5 flatters it. |
 | **R4** Life happens | ⬜ 4 weeks of slack built in (2 holiday + 2 buffer) |
-| **R5** Scope creep | 🟢 Held — one deliberate pull-forward (`F-4` outbox table), recorded and offset against `P-7` |
+| **R5** Scope creep | 🟢 Held — one pull-forward (`F-4` outbox table, offset against `P-7`) and one carry (`A-2` integration tests), both recorded |
 | **R8** Design rabbit hole | 🟢 Not yet applicable — no design work before `W-1` in Sprint 6 |
 
 ---
@@ -84,12 +86,19 @@ Cards    ███░░░░░░░░░░░░░░░░░░░░�
 | 1 | Aug 10–16 | 5 | 5 | 5.0 | ✅ Both cards done. Started early (Aug 8) in one sitting, so this is **not** a valid velocity sample — see caveat. |
 | 2 | Aug 17–23 | 5 | 5 | 5.0 | ✅ `F-3` + `F-4`. Also completed early, same sitting. Estimates held on both. |
 | 3 | Aug 24–30 | 5 | 5 | 5.0 | ✅ `F-5` + `F-7` + `F-6`. Cards reordered within the sprint. |
-| 4 | Aug 31–Sep 6 | 5 | — | — | ⬜ `A-1` Identity module (3) · `A-2` JWT + policies (2) |
+| 4 | Aug 31–Sep 6 | 5 | 5 | 5.0 | ✅ `A-1` + `A-2`. **Integration-test project carried to Sprint 5** — see the caveat. |
+| 5 | Sep 7–13 | 5 | — | — | ⬜ `A-3` BFF session cookie (4) · `A-4` `GET /api/me` (1) · **+ carried integration tests** |
 
 > 1 point ≈ 2 focused hours. Record **actual** points as hours ÷ 2, honestly — an inflated
 > actual hides a velocity problem until it is expensive to discover.
 
-**Rolling average:** 5.0 pts/sprint over 3 sprints — **read the re-baseline below before trusting it.**
+**Rolling average:** 5.0 pts/sprint over 4 sprints — **read the re-baseline below before trusting it.**
+
+> **Sprint 4 caveat.** Scored 5/5, but the integration-test project (`tests/Lms.IntegrationTests`,
+> WebApplicationFactory + Testcontainers) was in the plan and was **not built**. Everything was
+> verified by hand against a live stack instead — real evidence, but not repeatable and not in CI.
+> A truer score is **4 of 5**. Carried into Sprint 5 rather than quietly dropped.
+
 **Re-baseline checkpoints:** ~~end of Sprint 3~~ ✅ done · end of Sprint 9
 
 ### Re-baseline — after Sprint 3
@@ -418,6 +427,95 @@ Then reverted. A guardrail nobody has watched fail is not a guardrail.
 
 ---
 
+## Sprint 4 — Aug 31 – Sep 6, 2026
+
+**Goal:** *Users exist and can get a token.*
+
+### `A-1` Identity module: users, roles, register/login
+
+| | |
+|---|---|
+| **Estimate** | 3 pts · **Actual** 3 pts |
+| **Area** | `api` |
+| **Branch** | `feat/a-1-identity-module` |
+| **Status** | ✅ Done |
+
+**Acceptance criteria**
+- [x] `AppUser`/`AppRole` on `Guid` keys, EF stores on the `identity` schema
+- [x] `InitialIdentity` migration; three roles seeded idempotently
+- [x] `POST /api/auth/register` → `201`, always `Student`, `409` duplicate, `400` weak password
+- [x] `POST /api/auth/login` → token pair; **one indistinguishable `401`** for every failure
+- [x] Refresh tokens stored as SHA-256 hashes, never raw
+
+**Verified against Postgres**
+```
+register        201 / 409 / 400
+login           200, expiresIn=900, token decodes to sub, email, name, role
+enumeration     wrong password and unknown email → byte-identical bodies
+                (traceId normalised); 72ms vs 60ms
+refresh_tokens  64-char hex hashes, no raw values
+```
+
+**Decisions**
+1. **Custom JWTs, not `MapIdentityApi`.** The ADR contradicted itself; three signals to one favoured JWT (see deviation).
+2. **15-minute access token**, not the hour the ADR stated. A JWT cannot be revoked early, so the lifetime *is* the revocation window.
+3. **A dummy password hash on the unknown-email path**, so response timing does not leak which addresses exist. Free to do, invisible if skipped, and impossible to retrofit convincingly.
+4. **Committed development signing key** so `dotnet run` needs no setup; `JwtOptionsValidator` refuses to start outside Development if it is still in use.
+5. **No `AddDefaultTokenProviders()`** — those serve email confirmation and password reset (`H-1`) and would require wiring `AddDataProtection()` for a flow nothing calls.
+6. **`AddIdentityPersistence` split from `AddIdentityModule`**, so the migration job does not validate a signing key it never uses. Applied to Notifications too; the pattern is now in `src/CLAUDE.md`.
+7. **Identity framework tables lose the `asp_net_` prefix** — already namespaced by the schema, and free to change before the migration was ever applied.
+
+**Deviations from the design docs**
+- **`04 §3.1` said `MapIdentityApi`** (opaque tokens) while also specifying JWT claims, while `§5` relies on repointing `JwtBearerOptions.Authority`, and `03 §3` shows `"accessToken": "eyJ..."`. **ADR corrected**, along with the token lifetime.
+- **`ErrorType` had no 401.** `03 §1.2` specifies one, but `F-1` shipped only 400/403/404/409/422. Added `Unauthenticated`; the "every error type has an explicit mapping" test would have caught a silent 500 fallthrough.
+
+**Gotcha** — `nameof(DbContext)` does not trip a dependency rule; the first violation probe used it and passed. Architecture rules read IL, not source text.
+
+---
+
+### `A-2` JWT validation, policies, session endpoints
+
+| | |
+|---|---|
+| **Estimate** | 2 pts · **Actual** 2 pts |
+| **Area** | `api` |
+| **Branch** | `feat/a-2-jwt-policies` |
+| **Status** | ✅ Done |
+
+**Acceptance criteria**
+- [x] Issuer, audience, lifetime and signature validated; **`ClockSkew = Zero`**
+- [x] Three policies wired from the existing `AuthPolicies` constants
+- [x] `GET`/`PUT /api/me`; user id taken from the token, never the body
+- [x] `POST /api/auth/refresh` rotates single-use
+- [x] `POST /api/auth/logout` revokes; succeeds for unknown tokens
+- [x] Rate limit 10 / 5 min on `/api/auth/*`
+- [x] Build clean, **147 tests**
+
+**Verified against a running stack**
+```
+GET /api/me   no token → 401 · valid token → 200 · garbage → 401
+refresh       rotates; new token differs
+replay        old token → 401 AND the replacement → 401  (chain revoked)
+logout        204; refresh afterwards → 401; unknown token → 204
+rate limit    401×7 then 429×6
+```
+
+**Decisions**
+1. **`ClockSkew = TimeSpan.Zero`.** The five-minute default would silently turn a deliberately short 15-minute token into a 20-minute one.
+2. **`MapInboundClaims = false`** so `sub` and `role` survive as written rather than being rewritten to SOAP-era URIs.
+3. **Refresh reuse revokes the whole chain.** A rotated-away token reappearing means replay; the chain is no longer trustworthy. Without it a stolen token is silently useful for fourteen days.
+4. **Logout succeeds for unknown tokens** — it must not be an oracle for whether one exists.
+5. **Rate limiting is per caller, on top of per-account lockout.** Lockout does nothing against credential stuffing spread across many accounts.
+
+**Two bugs found by using it**
+- **`Result<Unit>.ToHttpResult()` returned `200 {}`** — it bound to the generic `ToHttpResult<T>` and serialised `Unit`. Added a `Result<Unit>` overload returning `204`. This would have been wrong for *every* command that returns nothing.
+- **The rate-limit policy name first lived in `Lms.Api`**, which the Identity module cannot reference. The compiler caught the inverted dependency the architecture rules exist to prevent; the constant moved to `SharedKernel.Authorization.RateLimitPolicies`.
+
+**Not done — carried**
+- **`tests/Lms.IntegrationTests`** (WebApplicationFactory + Testcontainers) was in the plan and is not built. Every criterion above was verified by hand against a live stack, which is not the same as a repeatable test. **Carried into Sprint 5** — see the note below.
+
+---
+
 ## Card template
 
 ```markdown
@@ -475,3 +573,12 @@ Implementation decisions worth finding later. Full context lives in the card ent
 | 2026-08-08 | `F-7` | `web/src/server/` is the single door to the API and never imported by a component |
 | 2026-08-08 | `F-7` | Vite port from `PORT` so the AppHost assigns it, 3000 standalone |
 | 2026-08-08 | `F-6` | `npm ci` not `install`, so a stale lock file fails CI |
+| 2026-08-08 | `A-1` | Custom JWTs over `MapIdentityApi`; the ADR contradicted itself and was corrected |
+| 2026-08-08 | `A-1` | 15-minute access token — the lifetime *is* the revocation window |
+| 2026-08-08 | `A-1` | Dummy password hash on unknown-email login so timing does not leak account existence |
+| 2026-08-08 | `A-1` | Dev signing key committed for zero-setup `dotnet run`; validator blocks it outside Development |
+| 2026-08-08 | `A-1` | `AddXPersistence` split from `AddXModule` so the migration job skips auth wiring |
+| 2026-08-08 | `A-1` | `ErrorType.Unauthenticated` → 401; SharedKernel had no 401 despite the contract specifying one |
+| 2026-08-08 | `A-2` | `ClockSkew = Zero`; the 5-minute default would extend a 15-minute token to 20 |
+| 2026-08-08 | `A-2` | Refresh reuse revokes the entire chain, making a stolen token detectable |
+| 2026-08-08 | `A-2` | `Result<Unit>` overload returning 204; the generic one answered `200 {}` |

@@ -31,6 +31,14 @@ New use case → `/new-slice <Module> <UseCaseName> command|query`. Don't hand-r
 - Cross-Module reaction → `IEventBus`. Cross-Module read → a Contracts interface (`ICourseCurriculumQuery`, `IEnrollmentLookup`).
 - `Lms.ArchitectureTests` enforces this. If it goes red, fix the code, not the test.
 
+## Auth
+
+- `AuthPolicies`, `Roles` and `RateLimitPolicies` live in **`Lms.SharedKernel.Authorization`**. Never redeclare a role or policy name in a module — and never reference `Lms.Api` from a module to reach one.
+- The role claim is the short `"role"`, not `ClaimTypes.Role`. Issuer and validator must agree or every policy silently denies.
+- Access tokens last **15 minutes** and cannot be revoked early; that window *is* the revocation window. Logout revokes the refresh token.
+- Login returns one indistinguishable `401` for unknown email, wrong password and lockout. Never add a more helpful message.
+- `caller.GetUserId()` from `Lms.SharedKernel.Http` — take the user id from the token, never from the request body.
+
 ## Handlers
 
 ```csharp
@@ -70,7 +78,7 @@ internal sealed class XHandler(XDbContext db, IClock clock) : ICommandHandler<XC
 - Configuration in `IEntityTypeConfiguration<T>`. No data annotations on domain entities.
 - **Never migrate at startup.** `Lms.MigrationService` runs as a job; the AppHost gates the API on it with `WaitForCompletion`.
 - Identifiers are **snake_case** (`EFCore.NamingConventions`). Write raw SQL — index filters, check constraints — in snake_case to match.
-- New module DbContext: call `.UseLmsConventions()` and `npgsql.UseLmsMigrationHistory(Schema, MigrationsHistoryTable)`, apply `ApplyStronglyTypedIdConventions()` in `ConfigureConventions`, and add one `AddScoped<DbContext>` line in `Lms.MigrationService/Program.cs`.
+- New module DbContext: expose an `AddXPersistence(...)` that registers only the context (the migration job calls that, not the full module), then call `.UseLmsConventions()` and `npgsql.UseLmsMigrationHistory(Schema, MigrationsHistoryTable)`, apply `ApplyStronglyTypedIdConventions()` in `ConfigureConventions`, and add one `AddScoped<DbContext>` line in `Lms.MigrationService/Program.cs`.
 - **Never hand-edit a file under `Migrations/`.** They are generated and exempt from the house style in `.editorconfig`.
 - `Tags` is `text[]` with a GIN index; search is a generated `tsvector` column.
 

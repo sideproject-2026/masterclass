@@ -97,8 +97,10 @@ Three properties make this the right shape:
 
 **API side**
 - `AddIdentityCore<AppUser>()` with `Guid` keys and role support, EF stores on the `identity` schema.
-- Bearer tokens: `MapIdentityApi` covers register/login/refresh. Wrap it in the `/api/auth` shapes from [`03 §3`](03-api-design.md#3-authentication--apiauth) rather than exposing the default routes directly — you want control over the response shape and the error semantics (see the enumeration note below).
-- Access token ~1 hour; refresh token ~14 days, **rotated on every use**, prior token revoked.
+- **Custom-signed JWTs, not `MapIdentityApi`.** That helper issues *opaque* tokens, which cannot carry the claims below and would make the `Authority` swap in §5 impossible. `/api/auth` implements register/login/refresh/logout directly, per the shapes in [`03 §3`](03-api-design.md#3-authentication--apiauth).
+- **Access token 15 minutes**; refresh token ~14 days, **rotated on every use**, prior token revoked.
+  A JWT cannot be withdrawn before it expires, so its lifetime *is* the revocation window — how long a logged-out session or a just-revoked instructor keeps working. Fifteen minutes bounds that; the BFF refreshes server-side, so users never see it.
+- **Refresh reuse revokes the whole chain.** A rotated-away token turning up again means replay, so every active token for that user is revoked. Without it, a stolen token is silently useful for a fortnight.
 - Password policy: minimum 10 characters, no composition rules. Length beats character-class theatre. Lockout after 5 failures in 5 minutes.
 - Claims on the access token: `sub` (user id), `email`, `name`, `role` (repeated). Nothing else — no profile data that can go stale inside a token's lifetime.
 
@@ -189,7 +191,7 @@ Not MVP blockers, but do not let them slip silently:
 |---|---|
 | **Email confirmation** | MVP allows login before confirming. Turn on enforcement before opening public registration, or you will be hosting other people's spam. |
 | **Password reset** | `MapIdentityApi` provides the endpoints; they need the Notifications Module wired to a real email provider to function. |
-| **Refresh-token revocation on logout** | Must actually invalidate server-side, not just clear the cookie. |
+| ~~Refresh-token revocation on logout~~ | ✅ Done in `A-2`. Revokes server-side, and reuse of a revoked token ends every session for that user. |
 | **2FA** | Available in Identity, off in MVP. Enable for `Admin` accounts first — that role can mint instructors. |
 | **Admin bootstrap** | The first `Admin` is seeded from configuration at deploy. Never a self-service path, never a default password. |
 | **Audit log** | Role grants and revocations should be recorded. Small table, worth adding before the first external instructor. |

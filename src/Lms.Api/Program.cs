@@ -1,3 +1,4 @@
+using Lms.Api;
 using Lms.Modules.Catalog;
 using Lms.Modules.Enrollment;
 using Lms.Modules.Identity;
@@ -30,6 +31,10 @@ builder.Services.Configure<JsonOptions>(options =>
 // .NET 10 generates the OpenAPI document in-box — no Swashbuckle.
 builder.Services.AddOpenApi();
 
+// Validates bearer tokens; never issues them. See AuthenticationSetup.
+builder.Services.AddLmsAuthentication(builder.Configuration);
+builder.Services.AddLmsRateLimiting();
+
 builder.Services
     .AddIdentityModule(builder.Configuration)
     .AddCatalogModule(builder.Configuration)
@@ -40,6 +45,11 @@ builder.Services
 var app = builder.Build();
 
 app.UseExceptionHandler();
+app.UseRateLimiter();
+
+// Order matters: authentication resolves who the caller is, authorisation then decides.
+app.UseAuthentication();
+app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())
 {

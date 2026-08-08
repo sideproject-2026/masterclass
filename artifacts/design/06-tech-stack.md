@@ -30,12 +30,12 @@
 Microsoft.AspNetCore.OpenApi
 Microsoft.AspNetCore.Identity.EntityFrameworkCore
 Microsoft.AspNetCore.Authentication.JwtBearer
+Microsoft.IdentityModel.JsonWebTokens
 Npgsql.EntityFrameworkCore.PostgreSQL
 Microsoft.EntityFrameworkCore.Design
 EFCore.NamingConventions
 Aspire.Npgsql.EntityFrameworkCore.PostgreSQL
 Aspire.Azure.Storage.Blobs
-Microsoft.AspNetCore.OpenApi
 Scalar.AspNetCore
 FluentValidation.AspNetCore
 Azure.Storage.Blobs
@@ -52,7 +52,7 @@ The two `Aspire.*` packages are the client integrations: they register `DbContex
 
 Version pinning is not only for packages: **`dotnet-ef` is pinned in `.config/dotnet-tools.json`** and must match the EF Core package major. `dotnet tool install --prerelease` will happily fetch an EF 11 preview against EF 10 packages.
 
-Twelve packages. If this list grows past twenty, something has been added that was not needed.
+Seventeen packages. If this list passes twenty-five, something has been added that was not needed.
 
 ---
 

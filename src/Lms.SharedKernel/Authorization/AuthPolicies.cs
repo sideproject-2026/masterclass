@@ -15,6 +15,16 @@ public static class AuthPolicies
     public const string Admin = nameof(Admin);
 }
 
+/// <summary>
+/// Rate-limiting policy names. Here rather than in the host because modules attach them to
+/// their own route groups, and a module must never reference <c>Lms.Api</c>.
+/// </summary>
+public static class RateLimitPolicies
+{
+    /// <summary>Login, register and refresh. See artifacts/design/03-api-design.md §8.</summary>
+    public const string Auth = "auth";
+}
+
 /// <summary>Role names as persisted by ASP.NET Core Identity. Exactly three.</summary>
 public static class Roles
 {
