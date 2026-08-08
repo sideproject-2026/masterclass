@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Contracts hold DTOs, query interfaces and integration events, nothing else.
+       SharedKernel is the ONLY permitted reference: it is a leaf, so mutual
+       Contracts references between modules stay acyclic. See 01-architecture.md §2.2. -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\Lms.SharedKernel\Lms.SharedKernel.csproj" />
+  </ItemGroup>
+
+</Project>

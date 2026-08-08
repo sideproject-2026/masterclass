@@ -74,7 +74,9 @@ graph TD
 
 Solid = project reference. Dashed = reference to a `*.Contracts` project or an interface only.
 
-**Catalog and Enrollment reference each other's Contracts, and that is not a cycle.** A `*.Contracts` project contains only DTOs, query interfaces, and event definitions, and **has no project references of its own** — not even to its owning Module. So `Catalog → Enrollment.Contracts` and `Enrollment → Catalog.Contracts` are two edges into two leaf nodes, and the assembly graph stays acyclic. The rule to hold: *implementation* dependencies must be acyclic; mutual *contract* dependencies are how two Modules stay decoupled while still exchanging data.
+**Catalog and Enrollment reference each other's Contracts, and that is not a cycle.** A `*.Contracts` project contains only DTOs, query interfaces, and event definitions, and its **only permitted project reference is `Lms.SharedKernel`** — never its owning Module, never another Module. Since `SharedKernel` is itself a leaf (it references no project), `Catalog → Enrollment.Contracts → SharedKernel` and `Enrollment → Catalog.Contracts → SharedKernel` both terminate, and the assembly graph stays acyclic.
+
+> Contracts need the SharedKernel reference because DTOs are typed with `CourseId`, `UserId`, and `PagedResult<T>` rather than raw `Guid`s and lists. Allowing it is what keeps typed identifiers usable across a Module boundary. The rule to hold: *implementation* dependencies must be acyclic; mutual *contract* dependencies are how two Modules stay decoupled while still exchanging data.
 
 The two directions in practice:
 - Enrollment → `Catalog.Contracts.ICourseCurriculumQuery` — needs the lesson list to compute completion.
