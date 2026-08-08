@@ -49,6 +49,19 @@ public static class HttpResults
             ? TypedResults.NoContent()
             : Problem(result.Error);
 
+    /// <summary>
+    /// 204 on success — <see cref="Unit"/> means "nothing to return".
+    /// </summary>
+    /// <remarks>
+    /// Overload resolution picks this over the generic <c>ToHttpResult&lt;T&gt;</c>, which would
+    /// otherwise serialise <see cref="Unit"/> and answer <c>200 {}</c>. Every command that
+    /// returns nothing goes through here, so getting it wrong would be wrong everywhere.
+    /// </remarks>
+    public static IResult ToHttpResult(this Result<Unit> result) =>
+        result.IsSuccess
+            ? TypedResults.NoContent()
+            : Problem(result.Error);
+
     /// <summary>201 with a Location header, ProblemDetails otherwise.</summary>
     public static IResult ToCreatedResult<T>(this Result<T> result, Func<T, string> location)
     {

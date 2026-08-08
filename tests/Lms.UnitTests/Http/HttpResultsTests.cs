@@ -58,6 +58,26 @@ public class ToHttpResultTests
     }
 
     [Fact]
+    public void A_successful_Result_of_Unit_also_becomes_204_not_200()
+    {
+        // Handlers return Result<Unit> for commands with nothing to say. Without a dedicated
+        // overload this binds to ToHttpResult<T> and answers 200 {} — wrong everywhere at once.
+        Result<Unit> result = Unit.Value;
+
+        result.ToHttpResult().ShouldBeOfType<NoContent>();
+    }
+
+    [Fact]
+    public void A_failed_Result_of_Unit_still_reports_the_problem()
+    {
+        Result<Unit> result = NotFound;
+
+        result.ToHttpResult()
+            .ShouldBeOfType<ProblemHttpResult>()
+            .StatusCode.ShouldBe(StatusCodes.Status404NotFound);
+    }
+
+    [Fact]
     public void A_failure_becomes_a_problem_result_with_the_mapped_status()
     {
         Result<string> result = NotFound;

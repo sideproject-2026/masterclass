@@ -1,9 +1,13 @@
 using Lms.Modules.Identity.Domain;
 using Lms.Modules.Identity.Endpoints;
 using Lms.Modules.Identity.Features.Login;
+using Lms.Modules.Identity.Features.Logout;
+using Lms.Modules.Identity.Features.Me;
+using Lms.Modules.Identity.Features.Refresh;
 using Lms.Modules.Identity.Features.Register;
 using Lms.Modules.Identity.Infrastructure;
 using Lms.SharedKernel.Messaging;
+using Lms.SharedKernel.Results;
 using Lms.SharedKernel.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
@@ -80,6 +84,14 @@ public static class IdentityModule
             ICommandHandler<RegisterUserCommand, RegisteredUser>, RegisterUserHandler>();
         services.AddScoped<
             ICommandHandler<LoginUserCommand, AuthTokens>, LoginUserHandler>();
+        services.AddScoped<
+            ICommandHandler<RefreshSessionCommand, AuthTokens>, RefreshSessionHandler>();
+        services.AddScoped<
+            ICommandHandler<LogoutCommand, Unit>, LogoutHandler>();
+        services.AddScoped<
+            IQueryHandler<GetCurrentUserQuery, CurrentUserDto>, GetCurrentUserHandler>();
+        services.AddScoped<
+            ICommandHandler<UpdateCurrentUserCommand, CurrentUserDto>, UpdateCurrentUserHandler>();
 
         return services;
     }
@@ -88,7 +100,7 @@ public static class IdentityModule
     {
         ArgumentNullException.ThrowIfNull(app);
 
-        return app.MapAuthEndpoints();
+        return app.MapAuthEndpoints().MapMeEndpoints();
     }
 
     /// <summary>
