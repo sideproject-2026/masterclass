@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Shouldly" />
+    <PackageReference Include="NetArchTest.eNhancedEdition" />
+  </ItemGroup>
+
+  <!--
+    Every assembly the rules need to inspect. These references exist so the tests can SEE
+    the modules; the rules then assert that the modules cannot see each other.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Lms.SharedKernel\Lms.SharedKernel.csproj" />
+    <ProjectReference Include="..\..\src\Lms.SharedKernel.Http\Lms.SharedKernel.Http.csproj" />
+    <ProjectReference Include="..\..\src\Lms.SharedKernel.Persistence\Lms.SharedKernel.Persistence.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Lms.Modules.Identity\Lms.Modules.Identity.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Lms.Modules.Identity.Contracts\Lms.Modules.Identity.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Lms.Modules.Catalog\Lms.Modules.Catalog.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Lms.Modules.Catalog.Contracts\Lms.Modules.Catalog.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Lms.Modules.Enrollment\Lms.Modules.Enrollment.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Lms.Modules.Enrollment.Contracts\Lms.Modules.Enrollment.Contracts.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Lms.Modules.Media\Lms.Modules.Media.csproj" />
+    <ProjectReference Include="..\..\src\Modules\Lms.Modules.Notifications\Lms.Modules.Notifications.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="Shouldly" />
+  </ItemGroup>
+
+</Project>
