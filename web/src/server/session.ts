@@ -4,7 +4,7 @@ import {
   randomBytes,
   createHash,
 } from 'node:crypto'
-import { getCookie, setCookie } from '@tanstack/react-start/server'
+import { getRequestHeader, setResponseHeader } from '@tanstack/react-start/server'
 
 /**
  * The session cookie — the whole point of the BFF.
@@ -107,44 +107,51 @@ function open(sealed: string): Session | null {
 }
 
 export function readSession(): Session | null {
-  const raw = getCookie(COOKIE_NAME)
-  return raw ? open(raw) : null
+  const header = getRequestHeader('cookie')
+  if (!header) return null
+
+  for (const pair of header.split(/;\s*/)) {
+    // Split on the FIRST '=' only. The sealed value is base64url and can itself contain
+    // '=' padding; splitting on every '=' truncates it into something that will not open.
+    const separator = pair.indexOf('=')
+    if (separator === -1) continue
+
+    if (pair.slice(0, separator) === COOKIE_NAME) {
+      return open(pair.slice(separator + 1))
+    }
+  }
+
+  return null
 }
 
 /**
- * The attribute set. Shared by write and clear because a `__Host-` cookie can only be
- * replaced or removed by a `Set-Cookie` that itself satisfies the `__Host-` rules —
- * Secure, `Path=/`, no `Domain`. Miss one and the browser silently ignores the header.
+ * The attribute set, shared by write and clear so the two cannot drift.
+ *
+ * A `__Host-` cookie can only be replaced or removed by a `Set-Cookie` that itself
+ * satisfies the `__Host-` rules — Secure, `Path=/`, no `Domain`. Miss one and the browser
+ * silently ignores the header.
  */
-const COOKIE_OPTIONS = {
-  httpOnly: true,
-  secure: true,
-  sameSite: 'lax',
-  path: '/',
-} as const
+const COOKIE_ATTRIBUTES = 'HttpOnly; Secure; SameSite=Lax; Path=/'
 
+/**
+ * Written as a raw response header rather than through a cookie helper.
+ *
+ * This is the primitive TanStack Start's own authentication guide uses, and switching to it
+ * is what fixed the A-3 sign-out defect: the helper's `Set-Cookie` was not surviving on the
+ * response for every server-side entry point, so sign-out reported success while the browser
+ * kept the cookie. A header we build ourselves has no such ambiguity.
+ */
 export function writeSession(session: Session): void {
-  setCookie(COOKIE_NAME, seal(session), {
-    ...COOKIE_OPTIONS,
-    // Matches the refresh-token lifetime; the access token inside expires far sooner.
-    maxAge: 14 * 24 * 60 * 60,
-  })
+  setResponseHeader(
+    'Set-Cookie',
+    // Max-Age matches the refresh-token lifetime; the access token inside expires far sooner.
+    `${COOKIE_NAME}=${seal(session)}; ${COOKIE_ATTRIBUTES}; Max-Age=${14 * 24 * 60 * 60}`,
+  )
 }
 
-/**
- * Overwrites the cookie with an already-expired placeholder.
- *
- * Two details, both found the hard way by signing out in a real browser and reloading
- * while the server cheerfully reported success:
- *
- * 1. Not `deleteCookie` — it does not reproduce the full attribute set, and a `__Host-`
- *    cookie can only be replaced by a `Set-Cookie` that itself satisfies the `__Host-`
- *    rules (Secure, `Path=/`, no `Domain`).
- * 2. Not an empty value — an empty string is dropped during serialisation, so no header
- *    is emitted at all. The placeholder is never read; `open()` rejects it regardless.
- */
+/** Expires the cookie immediately. `Max-Age=0` is the removal instruction. */
 export function clearSession(): void {
-  setCookie(COOKIE_NAME, 'expired', { ...COOKIE_OPTIONS, expires: new Date(0) })
+  setResponseHeader('Set-Cookie', `${COOKIE_NAME}=; ${COOKIE_ATTRIBUTES}; Max-Age=0`)
 }
 
 export function needsRefresh(session: Session, now = Date.now()): boolean {

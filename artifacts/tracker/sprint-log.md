@@ -9,22 +9,22 @@ Progress board and recorded actuals. Updated as the **last action of every card*
 ## Status at a glance
 
 ```
-Points   █████░░░░░░░░░░░░░░░░░░░░░░░░░   23 / 145   (16%)
-Sprints  █████░░░░░░░░░░░░░░░░░░░░░░░░░    5 / 31
-Cards    █████░░░░░░░░░░░░░░░░░░░░░░░░░    9 / 58  (+1 partial)
+Points   █████░░░░░░░░░░░░░░░░░░░░░░░░░   24 / 145   (17%)
+Sprints  █████░░░░░░░░░░░░░░░░░░░░░░░░░    5 / 31   (6 in progress)
+Cards    █████░░░░░░░░░░░░░░░░░░░░░░░░░   10 / 58
 ```
 
 | | |
 |---|---|
 | **Phase** | 2 of 8 — Auth & Design System, in progress |
-| **Last completed** | Sprint 5 — *No token reaches browser JavaScript* (partial) |
-| **Up next** | **Sprint 6** — `W-1` design system · `A-6` · **carried: sign-out fix + integration tests** |
+| **Last completed** | `A-3` — BFF session cookie, **now complete**; sign-out defect closed |
+| **Up next** | **Sprint 6, in progress** — integration tests · `W-1` design system · `A-6` |
 | **Next milestone** | **M1 Hello, deployed** — Sprint 9, **11 Oct 2026** |
 | **Schedule** | On plan. Not re-dated — see the re-baseline below. |
 | **Tests** | 147 green (112 unit · 35 architecture) · **still no integration tests** |
 | **Build** | Clean, warnings-as-errors |
 | **Open branches** | `feat/a-3-bff-session` only — PRs #1–#8 merged |
-| **Carried work** | `A-3` sign-out fix · integration tests (**2nd carry**) |
+| **Carried work** | integration tests (**2nd carry, in progress**) — `A-3` sign-out fix ✅ closed |
 
 ### Phases
 
@@ -64,7 +64,7 @@ Cards    █████░░░░░░░░░░░░░░░░░░�
 | `F-6` | CI workflow | 1 | `feat/f-6-ci` | ✅ PR #6 |
 | `A-1` | Identity: users, roles, register/login | 3 | `feat/a-1-identity-module` | ✅ PR #7 |
 | `A-2` | JWT validation, policies, me/refresh/logout | 2 | `feat/a-2-jwt-policies` | ✅ PR #8 |
-| `A-3` | BFF session cookie | 3 of 4 | `feat/a-3-bff-session` | ⬜ **open — partial** |
+| `A-3` | BFF session cookie | 4 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
 
 **`main` is at `95f8596`.** PRs #1–#8 merged and their branches deleted; `feat/a-3-bff-session`
 is the only open branch. Later cards branch fresh off `main`, no longer stacked.
@@ -73,11 +73,11 @@ is the only open branch. Later cards branch fresh off `main`, no longer stacked.
 
 | Risk | State |
 |---|---|
-| **R1** BFF session/refresh pattern | 🟡 Mostly retired — sealing, reading, tamper resistance and transparent refresh all proven in a browser. **One open defect: sign-out does not clear the cookie** (see Sprint 5). |
+| **R1** BFF session/refresh pattern | 🟢 **Retired.** Sealing, reading, tamper resistance, transparent refresh and now sign-out are all proven in a browser. The pattern did not fight us; a 204-handling bug in our own HTTP wrapper did. |
 | **R2** YouTube IFrame progress tracking | 🟡 Spike `SP-1` scheduled Sprint 7, four months before the real card |
 | **R3** Velocity below 5 pts/week | 🔴 **Still unmeasured.** Four sprints, all in single sittings. Sprint 4 also carried a card, so 5/5 flatters it. |
 | **R4** Life happens | ⬜ 4 weeks of slack built in (2 holiday + 2 buffer) |
-| **R5** Scope creep | 🟡 Two items now carried — integration tests (twice) and the `A-3` sign-out fix. Carrying twice is the point at which a carry becomes a habit; both are first in Sprint 6. |
+| **R5** Scope creep | 🟡 One item still carried — integration tests (twice). The `A-3` sign-out fix is closed. Goes green when the test project exists. |
 | **R8** Design rabbit hole | 🟢 Not yet applicable — no design work before `W-1` in Sprint 6 |
 
 ---
@@ -91,7 +91,7 @@ is the only open branch. Later cards branch fresh off `main`, no longer stacked.
 | 3 | Aug 24–30 | 5 | 5 | 5.0 | ✅ `F-5` + `F-7` + `F-6`. Cards reordered within the sprint. |
 | 4 | Aug 31–Sep 6 | 5 | 5 | 5.0 | ✅ `A-1` + `A-2`. **Integration-test project carried to Sprint 5** — see the caveat. |
 | 5 | Sep 7–13 | 5 | 3 | 3.0 | 🟡 `A-3` partial — sign-out defect. `A-4` was already delivered in `A-2`. Integration tests carried **again**. |
-| 6 | Sep 14–20 | 5 | — | — | ⬜ `W-1` design system (3) · `A-6` admin grant-instructor (2) · **carried: A-3 sign-out fix + integration tests**. `W-1`'s shadcn/token scaffolding already landed on the `A-3` branch; the card is unchanged and still estimated at 3. |
+| 6 | Sep 14–20 | 5 | 1 so far | — | 🔵 In progress. `A-3` sign-out fix closed (**+1**, completing `A-3` at 4 of 4). Remaining: integration tests (carried) · `W-1` (3) · `A-6` (2). `W-1`'s shadcn/token scaffolding already landed on the `A-3` branch; the card is unchanged at 3. |
 
 > 1 point ≈ 2 focused hours. Record **actual** points as hours ÷ 2, honestly — an inflated
 > actual hides a velocity problem until it is expensive to discover.
@@ -530,10 +530,10 @@ rate limit    401×7 then 429×6
 
 | | |
 |---|---|
-| **Estimate** | 4 pts · **Actual** 3 of 4 |
+| **Estimate** | 4 pts · **Actual** 4 pts (3 in Sprint 5 + 1 in Sprint 6) |
 | **Area** | `web` |
 | **Branch** | `feat/a-3-bff-session` |
-| **Status** | 🟡 **Partial — sign-out defect carried** |
+| **Status** | ✅ **Done** — sign-out fixed in Sprint 6, see below |
 
 **Done and verified in a real browser**
 - [x] `__Host-session` cookie, AES-256-GCM sealed, `HttpOnly; Secure; SameSite=Lax; Path=/`
@@ -542,27 +542,50 @@ rate limit    401×7 then 429×6
 - [x] Session survives reload **and a full server restart**
 - [x] Tamper resistance — invalid ciphertext, forged plaintext JSON, empty value: all render signed out with `200`, never a 500
 - [x] Transparent refresh at 5 minutes before expiry; a failed refresh clears rather than 500s
-- [ ] **Sign-out does not clear the cookie**
+- [x] **Sign-out clears the cookie** — fixed 2026-08-09, root cause below
 
-**The defect, precisely**
+**The defect, and what it actually was**
 
-`Set-Cookie` emitted from the `logout` server function never reaches the browser, while `login`'s demonstrably does — the session persists across a restart, which only a real cookie explains.
+Every hypothesis in Sprint 5 was about `Set-Cookie` — `deleteCookie`'s attribute set, the `__Host-`
+rules, empty-value serialisation, stale HMR. All four were wrong, and so was the conclusion drawn
+from the probe cookie.
 
-Ruled out, in order:
-1. `deleteCookie` not reproducing the full attribute set
-2. The `__Host-` rules rejecting a removal that omits `Secure`/`Path=/`
-3. Empty-value serialisation being dropped (switched to an expired placeholder)
-4. Stale Vite HMR — **reproduced after a full AppHost restart**
+**`clearSession()` was never reached.** `POST /api/auth/logout` answers **204 No Content** — the
+`Result<Unit>` overload added in `A-2`. `apiPost` called `response.json()` unconditionally, and
+`json()` on an empty body throws `SyntaxError: Unexpected end of JSON input` rather than returning
+null. The throw happened on the line above `clearSession()`, so the cookie was never cleared and
+the rejected promise surfaced to the browser as a resolved sign-out.
 
-Isolated by having `clearSession` also set a plain JS-readable probe cookie. **The probe did not appear either**, so the fault is the `Set-Cookie` path for that particular function, not anything about the session cookie.
+`apiFetch` had carried the correct `status === 204 ? undefined : await response.json()` guard since
+`A-3` was written. `apiPost` never got it, because until logout every caller returned a body.
 
-**Impact is bounded but real.** Logout still revokes the refresh token server-side, so a session cannot outlive the 15-minute access token. But sign-out is not immediate in the browser, which is not acceptable on a shared machine. Likely next step: perform sign-out as a document request (form POST + redirect) rather than a client-invoked RPC.
+Found by reproducing against a standalone `vite dev` where the server stack trace is visible.
+Under the AppHost the same stack goes to the dashboard and had not been read — four hypotheses
+were tested against browser-side symptoms when one server-side stack trace named the line.
+
+**Why the probe cookie misled.** It was set inside `clearSession()`, below the throw, so it never
+executed. "The probe did not appear either" was read as evidence about the `Set-Cookie` path when
+it was evidence that the function did not run at all.
+
+**Also changed, deliberately.** Sign-out is now a document POST to `/sign-out` returning 303 rather
+than a client-invoked RPC. It was already the planned next step and it is the better shape
+regardless: the browser applies cookie changes on a real navigation, all client router state is
+discarded rather than invalidated, and it works with JavaScript disabled — a fair requirement for
+the control that ends a session on a shared machine.
+
+**Verified in a real browser:** sign in → sign out → 303 to `/` → a fresh navigation renders signed
+out, so the server no longer receives the cookie. `document.cookie` empty throughout. In Postgres,
+`identity.refresh_tokens` shows **zero live tokens** — every row has `revoked_at` set.
 
 **Decisions**
 1. **AES-256-GCM, not CBC** — authenticated encryption, so a tampered cookie fails to open instead of decrypting into attacker-chosen content. Demonstrated with a forged plaintext payload.
 2. **Refresh *before* forwarding**, not after a 401 — one round trip instead of two, and no transient failure surfaces.
 3. **`SESSION_SECRET` follows the `A-1` JWT-key pattern** — committed dev value for zero-setup, refused outside Development.
-4. **A deliberately unstyled sign-in form** on the index route. Scaffolding so the layer is exercised rather than merely written; `A-5` replaces it. Shipping an unexercised session layer would have been worse — and in fact the browser is what found the defect.
+4. **Cookies are written with `setResponseHeader('Set-Cookie', …)`**, not a cookie helper — the
+   primitive TanStack Start's own authentication guide uses. This was applied while hunting the
+   defect and turned out not to be the fix, but it is kept: one shared attribute string means
+   write and clear cannot drift, which is what the `__Host-` prefix requires.
+5. **A deliberately unstyled sign-in form** on the index route. Scaffolding so the layer is exercised rather than merely written; `A-5` replaces it. Shipping an unexercised session layer would have been worse — and in fact the browser is what found the defect.
 
 **Not started**
 - `tests/Lms.IntegrationTests` — carried from Sprint 4 and **carried again**. Two sprints running now; this needs to be the first thing in Sprint 6, not the last.
@@ -660,3 +683,7 @@ Implementation decisions worth finding later. Full context lives in the card ent
 | 2026-08-08 | `A-3` | Unstyled scaffolding form so the session layer is exercised; it is what found the defect |
 | 2026-08-09 | `W-1` | shadcn/token scaffolding committed on the `A-3` branch rather than a fresh one — minor, and `A-3` is still open |
 | 2026-08-09 | `W-1` | `components.json` corrected: `rsc: false`, `css: src/styles.css`, empty `config` — Tailwind v4 has no JS config and Start is not RSC |
+| 2026-08-09 | `A-3` | Sign-out defect was `apiPost` calling `response.json()` on a 204 — not a `Set-Cookie` problem at all |
+| 2026-08-09 | `A-3` | Sign-out is a document POST returning 303, not an RPC — cookie applied on a navigation, and it works without JS |
+| 2026-08-09 | `A-3` | Session cookie written via `setResponseHeader`, with one shared attribute string so write and clear cannot drift |
+| 2026-08-09 | `A-3` | **Read the server stack trace first.** Four browser-side hypotheses cost a sprint; one `vite dev` stack trace named the line. |

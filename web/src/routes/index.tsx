@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
 
-import { getCurrentUser, login, logout } from '../server/auth'
+import { getCurrentUser, login } from '../server/auth'
 import { getApiHealth } from '#/features/health/query'
 
 export const Route = createFileRoute('/')({
@@ -39,13 +39,6 @@ function Home() {
     }
   }
 
-  async function onSignOut() {
-    setBusy(true)
-    await logout()
-    setBusy(false)
-    await router.invalidate()
-  }
-
   return (
     <main className="mx-auto max-w-2xl p-8">
       <h1 className="text-3xl font-bold tracking-tight">Masterclass</h1>
@@ -73,14 +66,12 @@ function Home() {
             <p className="mt-1 text-xs opacity-70">
               Roles: {auth.user.roles.join(', ') || 'none'}
             </p>
-            <button
-              type="button"
-              onClick={onSignOut}
-              disabled={busy}
-              className="mt-3 rounded border px-3 py-1 text-sm"
-            >
-              Sign out
-            </button>
+            {/* A real form POST, not an RPC — see routes/sign-out.tsx for why. */}
+            <form method="post" action="/sign-out">
+              <button type="submit" className="mt-3 rounded border px-3 py-1 text-sm">
+                Sign out
+              </button>
+            </form>
           </div>
         ) : (
           <form onSubmit={onSignIn} className="mt-4 grid max-w-sm gap-2 text-sm">
