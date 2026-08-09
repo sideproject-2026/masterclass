@@ -82,5 +82,10 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # Currently the markdown sanitiser: a security control, so it is not allowed to regress
+      # quietly. Vitest runs without the TanStack Start plugin — see web/vitest.config.ts.
+      - name: Test
+        run: npm test
+
       - name: Build
         run: npm run build

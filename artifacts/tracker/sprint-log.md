@@ -9,19 +9,19 @@ Progress board and recorded actuals. Updated as the **last action of every card*
 ## Status at a glance
 
 ```
-Points   ██████░░░░░░░░░░░░░░░░░░░░░░░░   26 / 145   (18%)
+Points   ██████░░░░░░░░░░░░░░░░░░░░░░░░   29 / 145   (20%)
 Sprints  █████░░░░░░░░░░░░░░░░░░░░░░░░░    5 / 31   (6 in progress)
-Cards    ██████░░░░░░░░░░░░░░░░░░░░░░░░   11 / 58
+Cards    ██████░░░░░░░░░░░░░░░░░░░░░░░░   12 / 58
 ```
 
 | | |
 |---|---|
 | **Phase** | 2 of 8 — Auth & Design System, in progress |
-| **Last completed** | `IT-1` — integration test harness. **Both carries are now closed.** |
-| **Up next** | **Sprint 6, in progress** — `W-1` design system · `A-6` admin grant-instructor |
+| **Last completed** | `W-1` — design system and app shell |
+| **Up next** | **Sprint 6, in progress** — `A-6` admin grant-instructor, the last card |
 | **Next milestone** | **M1 Hello, deployed** — Sprint 9, **11 Oct 2026** |
 | **Schedule** | On plan. Not re-dated — see the re-baseline below. |
-| **Tests** | **167 green** (112 unit · 35 architecture · **20 integration**) |
+| **Tests** | **175 green** (112 unit · 35 architecture · 20 integration · **8 web**) |
 | **Build** | Clean, warnings-as-errors |
 | **Open branches** | `feat/a-3-bff-session` only — PRs #1–#8 merged |
 | **Carried work** | **None.** Both carries closed in Sprint 6. |
@@ -66,6 +66,7 @@ Cards    ██████░░░░░░░░░░░░░░░░░�
 | `A-2` | JWT validation, policies, me/refresh/logout | 2 | `feat/a-2-jwt-policies` | ✅ PR #8 |
 | `A-3` | BFF session cookie | 4 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
 | `IT-1` | Integration test harness | 2 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
+| `W-1` | Design system + app shell | 3 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
 
 **`main` is at `95f8596`.** PRs #1–#8 merged and their branches deleted; `feat/a-3-bff-session`
 is the only open branch. Later cards branch fresh off `main`, no longer stacked.
@@ -79,7 +80,7 @@ is the only open branch. Later cards branch fresh off `main`, no longer stacked.
 | **R3** Velocity below 5 pts/week | 🔴 **Still unmeasured.** Four sprints, all in single sittings. Sprint 4 also carried a card, so 5/5 flatters it. |
 | **R4** Life happens | ⬜ 4 weeks of slack built in (2 holiday + 2 buffer) |
 | **R5** Scope creep | 🟢 **Nothing carried.** Both items closed in Sprint 6 — the sign-out fix and the integration suite that had slipped twice. |
-| **R8** Design rabbit hole | 🟢 Not yet applicable — no design work before `W-1` in Sprint 6 |
+| **R8** Design rabbit hole | 🟢 `W-1` came in at estimate. One accent colour, shadcn defaults everywhere else, and no time spent on Studio CSS. Next design work is `W-4`, Sprint 27. |
 
 ---
 
@@ -92,7 +93,7 @@ is the only open branch. Later cards branch fresh off `main`, no longer stacked.
 | 3 | Aug 24–30 | 5 | 5 | 5.0 | ✅ `F-5` + `F-7` + `F-6`. Cards reordered within the sprint. |
 | 4 | Aug 31–Sep 6 | 5 | 5 | 5.0 | ✅ `A-1` + `A-2`. **Integration-test project carried to Sprint 5** — see the caveat. |
 | 5 | Sep 7–13 | 5 | 3 | 3.0 | 🟡 `A-3` partial — sign-out defect. `A-4` was already delivered in `A-2`. Integration tests carried **again**. |
-| 6 | Sep 14–20 | 5 | 3 so far | — | 🔵 In progress. `A-3` sign-out fix (**+1**, completing `A-3` at 4 of 4) and `IT-1` integration harness (**+2**, the twice-carried item). Remaining: `W-1` (3) · `A-6` (2) — which puts the sprint on course for **8 against a 5-point plan**, because it is paying off two sprints of debt. |
+| 6 | Sep 14–20 | 5 | 6 so far | — | 🔵 In progress. `A-3` sign-out fix (**+1**), `IT-1` integration harness (**+2**, the twice-carried item), `W-1` design system (**+3**). `A-6` (2) remains, putting the sprint at **8 against a 5-point plan** — it is paying off two sprints of debt, not overdelivering. |
 
 > 1 point ≈ 2 focused hours. Record **actual** points as hours ÷ 2, honestly — an inflated
 > actual hides a velocity problem until it is expensive to discover.
@@ -666,12 +667,71 @@ Testcontainers and that is what was built.
 
 | | |
 |---|---|
-| **Estimate** | 3 pts · **Actual** — |
+| **Estimate** | 3 pts · **Actual** 3 pts |
 | **Area** | `web` |
-| **Branch** | `feat/a-3-bff-session` (scaffolding only, so far) |
-| **Status** | 🔵 In progress — scaffolding landed, the card is not started |
+| **Branch** | `feat/a-3-bff-session` |
+| **Status** | ✅ Done |
 
-**Scaffolding landed early, on the `A-3` branch.** shadcn/ui was installed and the token
+**Acceptance criteria**
+- [x] Tailwind v4 tokens — colour, type scale, spacing, radius — as CSS variables
+- [x] Light **and** dark, with **no flash** on load
+- [x] shadcn/ui installed and generating into `components/ui`
+- [x] App shell: header, nav slot, content container, footer
+- [x] Markdown renderer with sanitisation
+- [x] Works at 375px, keyboard reachable, no console warnings
+
+**Verified in a browser, measured rather than eyeballed**
+```
+375px light   horizontal overflow 0px · display name hidden · sign-out reachable
+375px dark    horizontal overflow 0px · nothing unreachable by keyboard
+toggle        class + localStorage + computed bg/fg invert, both directions
+reload        stored 'dark' applied before paint; no hydration warning
+```
+
+**Shipped**
+- One accent hue (`oklch(… 264)`) for `--primary` and `--ring` in both themes; everything else
+  stays neutral
+- `lib/theme.ts` — the inline no-flash script and the toggle action
+- `components/theme-toggle.tsx`, `components/layout/app-shell.tsx`, `components/layout/site-header.tsx`
+- `components/markdown.tsx` — `react-markdown` + `remark-gfm` + `rehype-sanitize`
+- `web/vitest.config.ts` and **8 sanitiser tests**; `npm test` added to CI
+- Root route now puts auth in route context; `__root.tsx` title fixed
+
+**Decisions**
+1. **The theme lives in the `dark` class on `<html>`, never in React state.** The server cannot
+   know the visitor's choice, so any server-rendered guess is either a flash or a hydration
+   mismatch. The toggle's icon is chosen by CSS (`dark:block` / `dark:hidden`), which is why the
+   component needs no state, no effect and no client-only guard.
+2. **The no-flash script is inlined in `<head>`.** Applying the class at hydration means every
+   dark-mode visitor sees a white flash on every load. `<html>` carries
+   `suppressHydrationWarning` because the script edits it before React arrives — that is the
+   design, not a papered-over warning.
+3. **One accent colour, and only two lines reference the hue.** `W-5` (Sprint 28) can replace it
+   without touching a component. Rule 2 of [08 §5](../design/08-delivery-plan.md).
+4. **Auth moved into root route context** rather than being fetched per route. The header needs
+   it everywhere, and `A-5`'s `_authed` / `_instructor` guards read the same context.
+5. **Links in rendered markdown name `href` explicitly instead of spreading props.**
+   react-markdown also passes a `node` prop, which reaches the DOM as `node="[object Object]"`
+   if forwarded — caught in the browser. Naming the one allowed attribute mirrors the schema's
+   allow-list at the render layer.
+6. **The sanitiser schema narrows rehype-sanitize's default** rather than listing tags from
+   scratch. The default already blocks `script`, `iframe`, event handlers and `javascript:`
+   URLs and is maintained by people tracking the bypasses; hand-rolled allow-lists acquire holes.
+
+**Deviations from the design docs**
+- **A frontend test runner was added (`vitest`), which no card called for.** The markdown
+  sanitiser is a security control and there was no way to stop it regressing silently. Kept
+  deliberately thin: no jsdom and no testing-library, just `renderToStaticMarkup` and assertions
+  on the output. It also unblocks `A-5`'s guard tests.
+- One test initially asserted the string `alert(1)` was absent from the output. It is not — raw
+  HTML is never parsed, so `<script>alert(1)</script>` becomes the literal text `alert(1)` inside
+  a `<p>`, which is inert. The assertion now checks the *element* is absent, because the original
+  would also have failed on any page that legitimately discusses XSS.
+
+**Not done here, by design** — skeletons, empty states and error boundaries are `W-4` (Sprint 27).
+The shell has no data of its own to be empty about.
+
+**Scaffolding had landed early, on the `A-3` branch.** shadcn/ui was installed and the token
 layer set up while the sign-out defect was still open, so it rides along on
 `feat/a-3-bff-session` rather than a fresh branch. What exists: `components.json`, the
 `radix-vega` style with `radix-ui` / `cva` / `tailwind-merge` / `lucide-react`, Inter Variable,
@@ -679,9 +739,7 @@ layer set up while the sign-out defect was still open, so it rides along on
 `Button`, `lib/utils.ts` (`cn`), and the health server function moved out of the route into
 `features/health/query.ts` behind the `#/` alias.
 
-**No points are claimed for it.** `W-1` still owns the app shell, the theme toggle with its
-no-flash script, the sanitised markdown renderer, and the 375px / light-and-dark pass — none of
-which is done. This is scaffolding, not the card.
+It is counted inside the 3 points above, not separately.
 
 **Fixed on the way in:** `components.json` was generated with `rsc: true` (TanStack Start is not
 RSC — it would prepend `"use client"` to every future component), `css: src/style.css` (the file
@@ -772,3 +830,10 @@ Implementation decisions worth finding later. Full context lives in the card ent
 | 2026-08-09 | `IT-1` | Wire shapes restated in the test project — reusing the server's records would hide a rename |
 | 2026-08-09 | `IT-1` | `RoleSeeder` now catches `DbUpdateException`: check-then-act would have crashed a two-replica first deploy |
 | 2026-08-09 | `IT-1` | Auth rate limits bind from configuration; `TestServer` has no `RemoteIpAddress`, so the suite shares one partition |
+| 2026-08-09 | `W-1` | Theme lives in the `dark` class, never React state; CSS picks the toggle icon, so there is no hydration mismatch |
+| 2026-08-09 | `W-1` | No-flash theme script inlined in `<head>`; `<html>` carries `suppressHydrationWarning` by design |
+| 2026-08-09 | `W-1` | One accent hue, referenced by exactly two lines, so `W-5` can replace it without touching a component |
+| 2026-08-09 | `W-1` | Auth lives in root route context — the header needs it everywhere and `A-5`'s guards will read the same thing |
+| 2026-08-09 | `W-1` | Markdown links name `href` explicitly; spreading react-markdown's props leaks `node="[object Object]"` |
+| 2026-08-09 | `W-1` | Sanitiser narrows rehype-sanitize's default schema rather than listing tags from scratch |
+| 2026-08-09 | `W-1` | **Vitest added, unplanned** — a security control with no regression test is a control with a shelf life |
