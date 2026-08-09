@@ -529,7 +529,7 @@ The entirety of curated instructor onboarding ([`00 §5`](00-overview.md#5-confi
 | Endpoint | Purpose | Success |
 |---|---|---|
 | `POST /api/admin/users/{userId}/grant-instructor` | Add the `Instructor` role and create an `InstructorProfile`. | `200` |
-| `POST /api/admin/users/{userId}/revoke-instructor` | Remove the role. Published courses stay published. | `200` |
+| `POST /api/admin/users/{userId}/revoke-instructor` | Remove the role. Published courses stay published. | `204` |
 | `GET /api/admin/users?search=` | Find a user id by email. | `200 PagedResult<AdminUser>` |
 
 ```jsonc
@@ -539,7 +539,15 @@ The entirety of curated instructor onboarding ([`00 §5`](00-overview.md#5-confi
 { "userId": "...", "roles": ["Student","Instructor"], "instructorSlug": "jane-doe" }
 ```
 
-**409** if the slug is taken. Revoking does **not** unpublish or delete existing courses — that would break enrolled students' access, and content removal should be a deliberate, separate act.
+**409** if the slug already belongs to someone else. **400** if the slug is malformed — it becomes a public URL segment, so it must be lowercase letters, digits and single hyphens. **404** for an unknown user.
+
+Both writes are **idempotent**: granting a user who already holds the role returns `200` with their existing slug rather than `409`, and revoking someone who is not an instructor returns `204`.
+
+Revoking does **not** unpublish or delete existing courses — that would break enrolled students' access, and content removal should be a deliberate, separate act. It also **keeps the `InstructorProfile` and its slug**: course pages still name the author, and releasing the slug would let a later instructor inherit someone else's URL.
+
+Revocation is not instantaneous. The role travels in an access token that cannot be recalled, so it takes effect within the 15-minute token lifetime — that window *is* the revocation window ([`04 §3.1`](04-adr-authentication.md)).
+
+> **The first `Admin` is seeded from configuration** (`Admin:Email`, `Admin:Password`) and there is no self-service path — see [`04 §7`](04-adr-authentication.md#7-open-items-and-hardening-backlog). The seeder grants **both `Student` and `Admin`**, because "every registered user holds `Student`" ([`02 §2`](02-domain-model.md)) is the invariant behind the `Student` policy meaning "authenticated"; an admin without it is refused `GET /api/me`, contradicting the matrix below.
 
 ---
 

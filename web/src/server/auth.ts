@@ -1,8 +1,8 @@
 import { createServerFn } from '@tanstack/react-start'
 
-import { apiFetch, apiPost  } from './api'
-import type {TokenResponse} from './api';
-import { clearSession, readSession, sessionFromTokens, writeSession } from './session'
+import { apiFetch, apiPost } from './api'
+import type { TokenResponse } from './api'
+import { readSession, sessionFromTokens, writeSession } from './session'
 
 /**
  * The authentication surface the browser is allowed to touch.
@@ -32,7 +32,7 @@ export type AuthResult = { ok: true } | { ok: false; error: string }
  * sealed cookie and the browser is told only whether it worked.
  */
 export const login = createServerFn({ method: 'POST' })
-  .inputValidator((data: { email: string; password: string }) => data)
+  .validator((data: { email: string; password: string }) => data)
   .handler(async ({ data }): Promise<AuthResult> => {
     const result = await apiPost<TokenResponse>('/api/auth/login', {
       email: data.email,
@@ -49,20 +49,8 @@ export const login = createServerFn({ method: 'POST' })
     return { ok: true }
   })
 
-export const logout = createServerFn({ method: 'POST' }).handler(
-  async (): Promise<AuthResult> => {
-    const session = readSession()
-
-    if (session) {
-      // Revoke server-side first. Clearing only the cookie would leave a usable refresh
-      // token in the database for fourteen days.
-      await apiPost('/api/auth/logout', { refreshToken: session.refreshToken })
-    }
-
-    clearSession()
-    return { ok: true }
-  },
-)
+// Sign-out is not here. It is a document POST to the /sign-out route, so the browser
+// applies the cookie removal on a real navigation — see web/src/routes/sign-out.tsx.
 
 /**
  * The signed-in user, or a signed-out state.

@@ -31,4 +31,18 @@ public static class IdentityErrors
 
     public static Error UserNotFound { get; } =
         Error.NotFound("auth.user_not_found", "No such user.");
+
+    /// <summary>
+    /// A slug is a public URL segment, so it is validated rather than escaped at render time.
+    /// </summary>
+    public static Error InvalidSlug { get; } =
+        Error.Validation(
+            "admin.invalid_slug",
+            "A slug must be lowercase letters, digits and single hyphens — for example 'jane-doe'.");
+
+    public static Error InvalidHeadline { get; } =
+        Error.Validation("admin.invalid_headline", "A headline is required and must be short.");
+
+    public static Error SlugAlreadyTaken { get; } =
+        Error.Conflict("admin.slug_taken", "That slug is already in use by another instructor.");
 }

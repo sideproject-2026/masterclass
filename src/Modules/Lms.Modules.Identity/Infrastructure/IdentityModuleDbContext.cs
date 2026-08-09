@@ -21,6 +21,8 @@ public sealed class IdentityModuleDbContext(DbContextOptions<IdentityModuleDbCon
 
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
+    public DbSet<InstructorProfile> InstructorProfiles => Set<InstructorProfile>();
+
     // Parameter is named 'builder' to match the base signature (CA1725).
     protected override void OnModelCreating(ModelBuilder builder)
     {

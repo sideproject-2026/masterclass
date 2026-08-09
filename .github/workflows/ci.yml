@@ -51,7 +51,9 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
-      # Includes Lms.ArchitectureTests — module boundaries are enforced here, not by review.
+      # Includes Lms.ArchitectureTests (module boundaries, enforced here rather than by review)
+      # and Lms.IntegrationTests, which starts a real PostgreSQL through Testcontainers.
+      # ubuntu-latest ships a running Docker daemon, so no service container is needed.
       - name: Test
         run: dotnet test --no-build --configuration Release --verbosity normal
 
@@ -79,6 +81,11 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
+      # Currently the markdown sanitiser: a security control, so it is not allowed to regress
+      # quietly. Vitest runs without the TanStack Start plugin — see web/vitest.config.ts.
+      - name: Test
+        run: npm test
 
       - name: Build
         run: npm run build

@@ -9,29 +9,29 @@ Progress board and recorded actuals. Updated as the **last action of every card*
 ## Status at a glance
 
 ```
-Points   █████░░░░░░░░░░░░░░░░░░░░░░░░░   23 / 145   (16%)
-Sprints  █████░░░░░░░░░░░░░░░░░░░░░░░░░    5 / 31
-Cards    █████░░░░░░░░░░░░░░░░░░░░░░░░░    9 / 58  (+1 partial)
+Points   ███████░░░░░░░░░░░░░░░░░░░░░░░   31 / 145   (21%)
+Sprints  ██████░░░░░░░░░░░░░░░░░░░░░░░░    6 / 31
+Cards    ███████░░░░░░░░░░░░░░░░░░░░░░░   13 / 58
 ```
 
 | | |
 |---|---|
-| **Phase** | 2 of 8 — Auth & Design System, in progress |
-| **Last completed** | Sprint 5 — *No token reaches browser JavaScript* (partial) |
-| **Up next** | **Sprint 6** — `W-1` design system · `A-6` · **carried: sign-out fix + integration tests** |
+| **Phase** | 2 of 8 — Auth & Design System · only `A-5` and `SP-1` remain |
+| **Last completed** | Sprint 6 — *Every future screen inherits a look* — **8 of 5 points**, clearing two sprints of debt |
+| **Up next** | **Sprint 7** — `A-5` route guards + login/register pages (3) · `SP-1` YouTube IFrame spike (2) |
 | **Next milestone** | **M1 Hello, deployed** — Sprint 9, **11 Oct 2026** |
 | **Schedule** | On plan. Not re-dated — see the re-baseline below. |
-| **Tests** | 147 green (112 unit · 35 architecture) · **still no integration tests** |
+| **Tests** | **214 green** (133 unit · 35 architecture · 39 integration · 8 web) |
 | **Build** | Clean, warnings-as-errors |
-| **Open branches** | `feat/a-3-bff-session` only — PRs #1–#8 merged |
-| **Carried work** | `A-3` sign-out fix · integration tests (**2nd carry**) |
+| **Open branches** | `feat/a-3-bff-session` — **carries all of Sprint 6 and needs a PR** |
+| **Carried work** | **None.** |
 
 ### Phases
 
 | # | Phase | Sprints | Pts | Status |
 |---|---|---|---:|---|
 | 1 | Foundation | 1–3 | 15 | ✅ **Done** — `F-1`…`F-7` |
-| 2 | Auth & Design System | 4–7 | 20 | 🔵 **In progress** — `A-1` `A-2` done; `A-3`…`A-6`, `W-1`, `SP-1` to go |
+| 2 | Auth & Design System | 4–7 | 20 | 🔵 **In progress** — `A-1`…`A-4`, `A-6`, `W-1` done; `A-5` and `SP-1` remain |
 | 3 | Deploy | 8–9 | 9 | ⬜ `D-1`…`D-3` → **M1** |
 | 4 | Instructor Studio | 10–16 | 35 | ⬜ `S-1`…`S-12`, `W-2` → **M2** |
 | 5 | Catalog & Enrollment | 17–19, 22 | 20 | ⬜ `C-1`…`C-9`, `W-3` → **M3** |
@@ -64,7 +64,10 @@ Cards    █████░░░░░░░░░░░░░░░░░░�
 | `F-6` | CI workflow | 1 | `feat/f-6-ci` | ✅ PR #6 |
 | `A-1` | Identity: users, roles, register/login | 3 | `feat/a-1-identity-module` | ✅ PR #7 |
 | `A-2` | JWT validation, policies, me/refresh/logout | 2 | `feat/a-2-jwt-policies` | ✅ PR #8 |
-| `A-3` | BFF session cookie | 3 of 4 | `feat/a-3-bff-session` | ⬜ **open — partial** |
+| `A-3` | BFF session cookie | 4 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
+| `IT-1` | Integration test harness | 2 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
+| `W-1` | Design system + app shell | 3 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
+| `A-6` | Admin grant-instructor | 2 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
 
 **`main` is at `95f8596`.** PRs #1–#8 merged and their branches deleted; `feat/a-3-bff-session`
 is the only open branch. Later cards branch fresh off `main`, no longer stacked.
@@ -73,12 +76,12 @@ is the only open branch. Later cards branch fresh off `main`, no longer stacked.
 
 | Risk | State |
 |---|---|
-| **R1** BFF session/refresh pattern | 🟡 Mostly retired — sealing, reading, tamper resistance and transparent refresh all proven in a browser. **One open defect: sign-out does not clear the cookie** (see Sprint 5). |
+| **R1** BFF session/refresh pattern | 🟢 **Retired.** Sealing, reading, tamper resistance, transparent refresh and now sign-out are all proven in a browser. The pattern did not fight us; a 204-handling bug in our own HTTP wrapper did. |
 | **R2** YouTube IFrame progress tracking | 🟡 Spike `SP-1` scheduled Sprint 7, four months before the real card |
-| **R3** Velocity below 5 pts/week | 🔴 **Still unmeasured.** Four sprints, all in single sittings. Sprint 4 also carried a card, so 5/5 flatters it. |
+| **R3** Velocity below 5 pts/week | 🔴 **Still unmeasured after six sprints.** All six ran as single sittings. Sprint 6's 8.0 is debt repayment, not throughput, and must not be read as headroom. Re-baseline checkpoint is end of Sprint 9. |
 | **R4** Life happens | ⬜ 4 weeks of slack built in (2 holiday + 2 buffer) |
-| **R5** Scope creep | 🟡 Two items now carried — integration tests (twice) and the `A-3` sign-out fix. Carrying twice is the point at which a carry becomes a habit; both are first in Sprint 6. |
-| **R8** Design rabbit hole | 🟢 Not yet applicable — no design work before `W-1` in Sprint 6 |
+| **R5** Scope creep | 🟢 **Nothing carried.** Both items closed in Sprint 6 — the sign-out fix and the integration suite that had slipped twice. |
+| **R8** Design rabbit hole | 🟢 `W-1` came in at estimate. One accent colour, shadcn defaults everywhere else, and no time spent on Studio CSS. Next design work is `W-4`, Sprint 27. |
 
 ---
 
@@ -91,14 +94,23 @@ is the only open branch. Later cards branch fresh off `main`, no longer stacked.
 | 3 | Aug 24–30 | 5 | 5 | 5.0 | ✅ `F-5` + `F-7` + `F-6`. Cards reordered within the sprint. |
 | 4 | Aug 31–Sep 6 | 5 | 5 | 5.0 | ✅ `A-1` + `A-2`. **Integration-test project carried to Sprint 5** — see the caveat. |
 | 5 | Sep 7–13 | 5 | 3 | 3.0 | 🟡 `A-3` partial — sign-out defect. `A-4` was already delivered in `A-2`. Integration tests carried **again**. |
-| 6 | Sep 14–20 | 5 | — | — | ⬜ `W-1` design system (3) · `A-6` admin grant-instructor (2) · **carried: A-3 sign-out fix + integration tests**. `W-1`'s shadcn/token scaffolding already landed on the `A-3` branch; the card is unchanged and still estimated at 3. |
+| 6 | Sep 14–20 | 5 | 8 | 8.0 | ✅ `A-3` sign-out fix (1) · `IT-1` harness (2) · `W-1` (3) · `A-6` (2). **8 against a 5-point plan** — two of those points are Sprint 4/5 debt being repaid, so the sprint did ~6 points of new work and cleared the backlog. Still a single sitting. |
+| 7 | Sep 21–27 | 5 | — | — | ⬜ `A-5` route guards + login/register pages (3) · `SP-1` YouTube IFrame spike (2) |
 
 > 1 point ≈ 2 focused hours. Record **actual** points as hours ÷ 2, honestly — an inflated
 > actual hides a velocity problem until it is expensive to discover.
 
-**Rolling average:** **4.6 pts/sprint** over 5 sprints (23 delivered of 25 planned) — and falling.
-Sprint 5's 3.0 is the first below-plan reading. Still every sprint has run in a single sitting, so
-this remains an estimate-accuracy number rather than a pace one — see the re-baseline below.
+**Rolling average:** **5.2 pts/sprint** over 6 sprints (31 delivered of 30 planned).
+
+Read that carefully rather than cheerfully. Sprint 6's 8.0 is **debt repayment**, not throughput:
+3 of its points were work planned for Sprints 4 and 5 and not done then. Spread honestly across
+the sprints that owed them, the picture is closer to a flat 5 with one bad sprint in the middle.
+And every sprint so far has still run in a single sitting, so this remains an estimate-accuracy
+number rather than a sustained-pace one.
+
+**What Sprint 6 actually showed:** four cards, four estimates, four exact hits. The estimates are
+good. What is still unmeasured after six sprints is whether the *cadence* holds across evenings
+with context lost in between — the thing risk **R3** is actually about.
 
 > **Sprint 4 caveat.** Scored 5/5, but the integration-test project (`tests/Lms.IntegrationTests`,
 > WebApplicationFactory + Testcontainers) was in the plan and was **not built**. Everything was
@@ -530,10 +542,10 @@ rate limit    401×7 then 429×6
 
 | | |
 |---|---|
-| **Estimate** | 4 pts · **Actual** 3 of 4 |
+| **Estimate** | 4 pts · **Actual** 4 pts (3 in Sprint 5 + 1 in Sprint 6) |
 | **Area** | `web` |
 | **Branch** | `feat/a-3-bff-session` |
-| **Status** | 🟡 **Partial — sign-out defect carried** |
+| **Status** | ✅ **Done** — sign-out fixed in Sprint 6, see below |
 
 **Done and verified in a real browser**
 - [x] `__Host-session` cookie, AES-256-GCM sealed, `HttpOnly; Secure; SameSite=Lax; Path=/`
@@ -542,34 +554,194 @@ rate limit    401×7 then 429×6
 - [x] Session survives reload **and a full server restart**
 - [x] Tamper resistance — invalid ciphertext, forged plaintext JSON, empty value: all render signed out with `200`, never a 500
 - [x] Transparent refresh at 5 minutes before expiry; a failed refresh clears rather than 500s
-- [ ] **Sign-out does not clear the cookie**
+- [x] **Sign-out clears the cookie** — fixed 2026-08-09, root cause below
 
-**The defect, precisely**
+**The defect, and what it actually was**
 
-`Set-Cookie` emitted from the `logout` server function never reaches the browser, while `login`'s demonstrably does — the session persists across a restart, which only a real cookie explains.
+Every hypothesis in Sprint 5 was about `Set-Cookie` — `deleteCookie`'s attribute set, the `__Host-`
+rules, empty-value serialisation, stale HMR. All four were wrong, and so was the conclusion drawn
+from the probe cookie.
 
-Ruled out, in order:
-1. `deleteCookie` not reproducing the full attribute set
-2. The `__Host-` rules rejecting a removal that omits `Secure`/`Path=/`
-3. Empty-value serialisation being dropped (switched to an expired placeholder)
-4. Stale Vite HMR — **reproduced after a full AppHost restart**
+**`clearSession()` was never reached.** `POST /api/auth/logout` answers **204 No Content** — the
+`Result<Unit>` overload added in `A-2`. `apiPost` called `response.json()` unconditionally, and
+`json()` on an empty body throws `SyntaxError: Unexpected end of JSON input` rather than returning
+null. The throw happened on the line above `clearSession()`, so the cookie was never cleared and
+the rejected promise surfaced to the browser as a resolved sign-out.
 
-Isolated by having `clearSession` also set a plain JS-readable probe cookie. **The probe did not appear either**, so the fault is the `Set-Cookie` path for that particular function, not anything about the session cookie.
+`apiFetch` had carried the correct `status === 204 ? undefined : await response.json()` guard since
+`A-3` was written. `apiPost` never got it, because until logout every caller returned a body.
 
-**Impact is bounded but real.** Logout still revokes the refresh token server-side, so a session cannot outlive the 15-minute access token. But sign-out is not immediate in the browser, which is not acceptable on a shared machine. Likely next step: perform sign-out as a document request (form POST + redirect) rather than a client-invoked RPC.
+Found by reproducing against a standalone `vite dev` where the server stack trace is visible.
+Under the AppHost the same stack goes to the dashboard and had not been read — four hypotheses
+were tested against browser-side symptoms when one server-side stack trace named the line.
+
+**Why the probe cookie misled.** It was set inside `clearSession()`, below the throw, so it never
+executed. "The probe did not appear either" was read as evidence about the `Set-Cookie` path when
+it was evidence that the function did not run at all.
+
+**Also changed, deliberately.** Sign-out is now a document POST to `/sign-out` returning 303 rather
+than a client-invoked RPC. It was already the planned next step and it is the better shape
+regardless: the browser applies cookie changes on a real navigation, all client router state is
+discarded rather than invalidated, and it works with JavaScript disabled — a fair requirement for
+the control that ends a session on a shared machine.
+
+**Verified in a real browser:** sign in → sign out → 303 to `/` → a fresh navigation renders signed
+out, so the server no longer receives the cookie. `document.cookie` empty throughout. In Postgres,
+`identity.refresh_tokens` shows **zero live tokens** — every row has `revoked_at` set.
 
 **Decisions**
 1. **AES-256-GCM, not CBC** — authenticated encryption, so a tampered cookie fails to open instead of decrypting into attacker-chosen content. Demonstrated with a forged plaintext payload.
 2. **Refresh *before* forwarding**, not after a 401 — one round trip instead of two, and no transient failure surfaces.
 3. **`SESSION_SECRET` follows the `A-1` JWT-key pattern** — committed dev value for zero-setup, refused outside Development.
-4. **A deliberately unstyled sign-in form** on the index route. Scaffolding so the layer is exercised rather than merely written; `A-5` replaces it. Shipping an unexercised session layer would have been worse — and in fact the browser is what found the defect.
+4. **Cookies are written with `setResponseHeader('Set-Cookie', …)`**, not a cookie helper — the
+   primitive TanStack Start's own authentication guide uses. This was applied while hunting the
+   defect and turned out not to be the fix, but it is kept: one shared attribute string means
+   write and clear cannot drift, which is what the `__Host-` prefix requires.
+5. **A deliberately unstyled sign-in form** on the index route. Scaffolding so the layer is exercised rather than merely written; `A-5` replaces it. Shipping an unexercised session layer would have been worse — and in fact the browser is what found the defect.
 
 **Not started**
 - `tests/Lms.IntegrationTests` — carried from Sprint 4 and **carried again**. Two sprints running now; this needs to be the first thing in Sprint 6, not the last.
 
 **`A-4`** `GET /api/me` — delivered early in `A-2`. Its point is **not** claimed here.
 
-**`W-1` groundwork landed on this branch, unplanned.** shadcn/ui was installed and the token
+---
+
+## Sprint 6 — Sep 14–20, 2026
+
+**Goal:** *Every future screen inherits a look — and the auth layer is finally covered by tests.*
+
+Carried work first. See the `A-3` card above for the sign-out fix, which completes that card.
+
+### `IT-1` Integration test harness (carried from Sprints 4 and 5)
+
+| | |
+|---|---|
+| **Estimate** | 2 pts · **Actual** 2 pts |
+| **Area** | `api` |
+| **Branch** | `feat/a-3-bff-session` |
+| **Status** | ✅ Done — **the carry is closed** |
+
+**Acceptance criteria**
+- [x] `tests/Lms.IntegrationTests` — xunit v3, `WebApplicationFactory<Program>` + Testcontainers
+- [x] One PostgreSQL container per assembly; migrations applied before the API starts
+- [x] **20 tests green**, suite total now **167** (112 unit · 35 architecture · 20 integration)
+- [x] Every `A-1`/`A-2` security property that previously existed only as a tracker note
+- [x] Runs in CI unchanged — `ubuntu-latest` already has a Docker daemon
+
+**What is covered**
+
+Registration (201 / 409 / 400, and that it grants `Student` and nothing else), login and the
+**enumeration defence** (wrong password and unknown email compared byte for byte with only
+`traceId` normalised), refresh rotation, single use, **replay revoking the whole chain**, logout
+revoking, logout succeeding for an unknown token, logout answering 204 with an empty body,
+`/api/me` for anonymous / garbage / valid callers, `instructorSlug` null for a student, rename
+taking the id from the token, and the rate limiter firing on `/api/auth/*` but not on `/health`.
+
+**Two real bugs found on the first run**
+
+1. **`RoleSeeder` crashes when two instances start together.** `RoleExistsAsync` then
+   `CreateAsync` is check-then-act, and the loser gets a `DbUpdateException` on `RoleNameIndex`
+   — not a failed `IdentityResult`. The existing comment claimed "a concurrent replica winning
+   the race is fine and expected"; the code did not deliver that, so **the first Container Apps
+   deploy with two replicas would have crashed both**. Now caught and logged at Debug.
+   The comment was true about intent and false about behaviour, which is the worst kind.
+2. **Rate limits were unreachable constants.** Every request under `WebApplicationFactory` has
+   no `RemoteIpAddress`, so the whole suite shares one partition and the production limit of ten
+   was spent within two tests. `PermitLimit` and `WindowMinutes` now bind from configuration
+   with the production values as defaults — the suite raises the ceiling and the rate-limit test
+   lowers it on its own host.
+
+**Decisions**
+1. **One container for the assembly, unique emails instead of truncation between tests.** A
+   container per class multiplies a five-second startup for no isolation gain, and truncation
+   would force the suite serial. `Guid`-suffixed addresses keep it parallel and order-independent.
+2. **`UseSetting`, not `ConfigureAppConfiguration`.** The latter is appended after `Program.cs`
+   has run, so eager reads — the signing key, the rate limits — silently keep the app's own
+   `appsettings.json`. Only the connection string survived it, and only because `AddDbContext`'s
+   options lambda runs lazily. That near-miss is worth remembering: the tests appeared to work
+   while running against the **committed development signing key**.
+3. **A distinct test signing key, and the host runs as Production.** `JwtOptionsValidator`
+   short-circuits in Development, so a Development test host would never execute the validator
+   the deployment depends on.
+4. **The wire shapes are restated in the test project** rather than reusing the server's records.
+   A rename on the server should break a test, not pass because both sides moved together.
+5. **A second `WebApplicationFactory` over the same container** for the rate-limit test. Factories
+   are cheap; containers are not.
+
+**Deviations from the design docs** — none. `01 §3` specified `WebApplicationFactory` +
+Testcontainers and that is what was built.
+
+---
+
+### `W-1` Design system + app shell
+
+| | |
+|---|---|
+| **Estimate** | 3 pts · **Actual** 3 pts |
+| **Area** | `web` |
+| **Branch** | `feat/a-3-bff-session` |
+| **Status** | ✅ Done |
+
+**Acceptance criteria**
+- [x] Tailwind v4 tokens — colour, type scale, spacing, radius — as CSS variables
+- [x] Light **and** dark, with **no flash** on load
+- [x] shadcn/ui installed and generating into `components/ui`
+- [x] App shell: header, nav slot, content container, footer
+- [x] Markdown renderer with sanitisation
+- [x] Works at 375px, keyboard reachable, no console warnings
+
+**Verified in a browser, measured rather than eyeballed**
+```
+375px light   horizontal overflow 0px · display name hidden · sign-out reachable
+375px dark    horizontal overflow 0px · nothing unreachable by keyboard
+toggle        class + localStorage + computed bg/fg invert, both directions
+reload        stored 'dark' applied before paint; no hydration warning
+```
+
+**Shipped**
+- One accent hue (`oklch(… 264)`) for `--primary` and `--ring` in both themes; everything else
+  stays neutral
+- `lib/theme.ts` — the inline no-flash script and the toggle action
+- `components/theme-toggle.tsx`, `components/layout/app-shell.tsx`, `components/layout/site-header.tsx`
+- `components/markdown.tsx` — `react-markdown` + `remark-gfm` + `rehype-sanitize`
+- `web/vitest.config.ts` and **8 sanitiser tests**; `npm test` added to CI
+- Root route now puts auth in route context; `__root.tsx` title fixed
+
+**Decisions**
+1. **The theme lives in the `dark` class on `<html>`, never in React state.** The server cannot
+   know the visitor's choice, so any server-rendered guess is either a flash or a hydration
+   mismatch. The toggle's icon is chosen by CSS (`dark:block` / `dark:hidden`), which is why the
+   component needs no state, no effect and no client-only guard.
+2. **The no-flash script is inlined in `<head>`.** Applying the class at hydration means every
+   dark-mode visitor sees a white flash on every load. `<html>` carries
+   `suppressHydrationWarning` because the script edits it before React arrives — that is the
+   design, not a papered-over warning.
+3. **One accent colour, and only two lines reference the hue.** `W-5` (Sprint 28) can replace it
+   without touching a component. Rule 2 of [08 §5](../design/08-delivery-plan.md).
+4. **Auth moved into root route context** rather than being fetched per route. The header needs
+   it everywhere, and `A-5`'s `_authed` / `_instructor` guards read the same context.
+5. **Links in rendered markdown name `href` explicitly instead of spreading props.**
+   react-markdown also passes a `node` prop, which reaches the DOM as `node="[object Object]"`
+   if forwarded — caught in the browser. Naming the one allowed attribute mirrors the schema's
+   allow-list at the render layer.
+6. **The sanitiser schema narrows rehype-sanitize's default** rather than listing tags from
+   scratch. The default already blocks `script`, `iframe`, event handlers and `javascript:`
+   URLs and is maintained by people tracking the bypasses; hand-rolled allow-lists acquire holes.
+
+**Deviations from the design docs**
+- **A frontend test runner was added (`vitest`), which no card called for.** The markdown
+  sanitiser is a security control and there was no way to stop it regressing silently. Kept
+  deliberately thin: no jsdom and no testing-library, just `renderToStaticMarkup` and assertions
+  on the output. It also unblocks `A-5`'s guard tests.
+- One test initially asserted the string `alert(1)` was absent from the output. It is not — raw
+  HTML is never parsed, so `<script>alert(1)</script>` becomes the literal text `alert(1)` inside
+  a `<p>`, which is inert. The assertion now checks the *element* is absent, because the original
+  would also have failed on any page that legitimately discusses XSS.
+
+**Not done here, by design** — skeletons, empty states and error boundaries are `W-4` (Sprint 27).
+The shell has no data of its own to be empty about.
+
+**Scaffolding had landed early, on the `A-3` branch.** shadcn/ui was installed and the token
 layer set up while the sign-out defect was still open, so it rides along on
 `feat/a-3-bff-session` rather than a fresh branch. What exists: `components.json`, the
 `radix-vega` style with `radix-ui` / `cva` / `tailwind-merge` / `lucide-react`, Inter Variable,
@@ -577,15 +749,94 @@ layer set up while the sign-out defect was still open, so it rides along on
 `Button`, `lib/utils.ts` (`cn`), and the health server function moved out of the route into
 `features/health/query.ts` behind the `#/` alias.
 
-**No points are claimed for it.** `W-1` in Sprint 6 still owns the layout shell, the theme
-toggle, the 375px pass and the light/dark verification — none of which is done. This is
-scaffolding, not the card.
+It is counted inside the 3 points above, not separately.
 
 **Fixed on the way in:** `components.json` was generated with `rsc: true` (TanStack Start is not
 RSC — it would prepend `"use client"` to every future component), `css: src/style.css` (the file
 is `styles.css`) and a `tailwind.config.js` path that does not exist under Tailwind v4. All three
 would have misdirected the next `shadcn add`. The two generated files also tripped
 `import/consistent-type-specifier-style` and were `--fix`ed, so CI stays green.
+
+---
+
+### `A-6` Admin grant-instructor
+
+| | |
+|---|---|
+| **Estimate** | 2 pts · **Actual** 2 pts |
+| **Area** | `api` |
+| **Branch** | `feat/a-3-bff-session` |
+| **Status** | ✅ Done |
+
+**Acceptance criteria**
+- [x] `InstructorProfile` entity, configuration and the `AddInstructorProfile` migration
+- [x] `POST /api/admin/users/{id}/grant-instructor` → `200`, `409` on a taken slug
+- [x] `POST /api/admin/users/{id}/revoke-instructor` → `204`, role only
+- [x] `GET /api/admin/users?search=` → `PagedResult<AdminUser>`
+- [x] Seeded admin from configuration, with no default password
+- [x] `instructorSlug` on `/api/me` is real — the `A-1` placeholder is gone
+- [x] **206 backend tests green** (133 unit · 35 architecture · 39 integration)
+
+**Verified against a live stack**
+```
+admin login          200, token carries role Admin
+admin /api/me        200, roles ["Student","Admin"]
+grant                200 {"roles":["Student","Instructor"],"instructorSlug":"jane-doe-live"}
+jane /api/me         200, instructorSlug present
+jane grants          403  ← Instructor is not Admin
+admin search         200, one row, no credential fields
+```
+
+**Shipped**
+- `Domain/InstructorProfile.cs` — factory returning `Result<T>`, slug validated at the boundary
+- Three slices: `GrantInstructor`, `RevokeInstructor`, `FindUsers`
+- `Endpoints/AdminEndpoints.cs` — one group, `Admin` policy applied at the group
+- `Infrastructure/AdminSeeder.cs` + a committed Development-only credential
+- Three new `IdentityErrors` entries; 8 unit tests and 12 integration tests
+
+**Decisions**
+1. **A real FK from `instructor_profiles.user_id` to `users.id`.** The no-FK rule is about
+   *cross-module* references; both tables are in the `identity` schema, so a foreign key is
+   correct and the primary key doubles as it — one profile per user, enforced by the key.
+2. **The unique index on slug is the arbiter, not a pre-check.** Querying first and inserting
+   after still loses to a second admin granting the same slug concurrently, so the handler
+   catches the `DbUpdateException` and returns `409`.
+3. **Both writes are idempotent.** Granting twice is a retry, not a conflict; revoking a
+   non-instructor is a no-op. Admin tooling gets retried by hand.
+4. **Revoke keeps the profile and the slug.** Course pages still name the author, and freeing
+   the slug would let a later instructor inherit someone else's public URL.
+5. **A committed Development-only admin credential**, matching the `A-1` signing key and `A-3`
+   session secret. The seeder does nothing at all when either setting is absent — there is no
+   default password in the code, and it never resets an existing account, so someone who can
+   edit configuration cannot use a redeploy to take over an admin.
+6. **`ILIKE` rather than `ToUpper().Contains()`** in the user search. Same work in PostgreSQL,
+   states the case-insensitivity in SQL, and does not trip CA1862 on an expression tree.
+7. **`github_url` / `linkedin_url` named explicitly.** The snake_case convention splits internal
+   capitals into `git_hub_url`; pgweb exists so the schema reads well by hand.
+
+**A bug the live check found that the tests did not**
+
+The seeded admin was granted only `Admin`, so `GET /api/me` returned **403** — contradicting the
+authorization matrix in [03 §7](../design/03-api-design.md). "Every registered user holds
+`Student`" is an invariant `AuthPolicies.Student` depends on (it means "we know who you are" and
+is implemented as `RequireRole(Student)`), and the seeder creates a user directly instead of
+going through registration, so it has to uphold the invariant itself. Now grants both roles,
+with a regression test.
+
+Worth noting **why the test suite missed it**: every other test obtains its identity through
+registration, which grants `Student` automatically. The seeded admin is the only account in the
+system created by another path, and nothing exercised it end to end until the live check.
+
+**Also fixed:** `AdminSeeder` shipped with the same check-then-act race as `RoleSeeder` —
+`FindByEmailAsync` then `CreateAsync`, where the loser gets a `DbUpdateException` rather than a
+failed `IdentityResult`. Caught within minutes by the integration suite, which starts three
+hosts concurrently. Writing the same bug twice in one sprint is the argument for the harness.
+
+**Deviations from the design docs**
+- **`revoke-instructor` returns `204`, not the `200` in `03 §6`.** A command returning nothing is
+  204 here — the `Result<Unit>` convention established in `A-2`. **Doc updated**, along with the
+  400/404 cases, the idempotency of both writes, the profile surviving revocation, and a note on
+  the seeded admin needing `Student`.
 
 ---
 
@@ -660,3 +911,28 @@ Implementation decisions worth finding later. Full context lives in the card ent
 | 2026-08-08 | `A-3` | Unstyled scaffolding form so the session layer is exercised; it is what found the defect |
 | 2026-08-09 | `W-1` | shadcn/token scaffolding committed on the `A-3` branch rather than a fresh one — minor, and `A-3` is still open |
 | 2026-08-09 | `W-1` | `components.json` corrected: `rsc: false`, `css: src/styles.css`, empty `config` — Tailwind v4 has no JS config and Start is not RSC |
+| 2026-08-09 | `A-3` | Sign-out defect was `apiPost` calling `response.json()` on a 204 — not a `Set-Cookie` problem at all |
+| 2026-08-09 | `A-3` | Sign-out is a document POST returning 303, not an RPC — cookie applied on a navigation, and it works without JS |
+| 2026-08-09 | `A-3` | Session cookie written via `setResponseHeader`, with one shared attribute string so write and clear cannot drift |
+| 2026-08-09 | `A-3` | **Read the server stack trace first.** Four browser-side hypotheses cost a sprint; one `vite dev` stack trace named the line. |
+| 2026-08-09 | `IT-1` | One Postgres container per assembly; unique emails per test instead of truncation, so the suite stays parallel |
+| 2026-08-09 | `IT-1` | `UseSetting`, not `ConfigureAppConfiguration` — the latter lands after `Program.cs`'s eager config reads |
+| 2026-08-09 | `IT-1` | Test host runs as Production with its own signing key, so `JwtOptionsValidator` actually executes |
+| 2026-08-09 | `IT-1` | Wire shapes restated in the test project — reusing the server's records would hide a rename |
+| 2026-08-09 | `IT-1` | `RoleSeeder` now catches `DbUpdateException`: check-then-act would have crashed a two-replica first deploy |
+| 2026-08-09 | `IT-1` | Auth rate limits bind from configuration; `TestServer` has no `RemoteIpAddress`, so the suite shares one partition |
+| 2026-08-09 | `W-1` | Theme lives in the `dark` class, never React state; CSS picks the toggle icon, so there is no hydration mismatch |
+| 2026-08-09 | `W-1` | No-flash theme script inlined in `<head>`; `<html>` carries `suppressHydrationWarning` by design |
+| 2026-08-09 | `W-1` | One accent hue, referenced by exactly two lines, so `W-5` can replace it without touching a component |
+| 2026-08-09 | `W-1` | Auth lives in root route context — the header needs it everywhere and `A-5`'s guards will read the same thing |
+| 2026-08-09 | `W-1` | Markdown links name `href` explicitly; spreading react-markdown's props leaks `node="[object Object]"` |
+| 2026-08-09 | `W-1` | Sanitiser narrows rehype-sanitize's default schema rather than listing tags from scratch |
+| 2026-08-09 | `W-1` | **Vitest added, unplanned** — a security control with no regression test is a control with a shelf life |
+| 2026-08-09 | `A-6` | Real FK from `instructor_profiles.user_id`; the no-FK rule is about cross-module refs, and both tables are in `identity` |
+| 2026-08-09 | `A-6` | The unique slug index is the arbiter — a pre-check still loses to a concurrent grant, so `DbUpdateException` becomes the 409 |
+| 2026-08-09 | `A-6` | Grant and revoke are both idempotent; admin tooling gets retried by hand |
+| 2026-08-09 | `A-6` | Revoke keeps the profile and slug — course pages still name the author, and the URL must not be inheritable |
+| 2026-08-09 | `A-6` | Dev-only admin credential committed; the seeder is a no-op unless both settings are present and never resets an existing account |
+| 2026-08-09 | `A-6` | **The seeder must grant `Student` too** — "every registered user holds Student" is what makes `AuthPolicies.Student` mean "authenticated" |
+| 2026-08-09 | `A-6` | `ILIKE` over `ToUpper().Contains()` — same SQL, states the intent, and CA1862 cannot read expression trees |
+| 2026-08-09 | `A-6` | `revoke-instructor` is 204 not 200; design doc corrected to the `Result<Unit>` convention from `A-2` |

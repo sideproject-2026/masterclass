@@ -44,7 +44,7 @@ export type TokenResponse = {
   tokenType: string
 }
 
-/** Unauthenticated call to the API. Used by login and register. */
+/** Unauthenticated call to the API. Used by login, register and logout. */
 export async function apiPost<T>(
   path: string,
   body: unknown,
@@ -64,7 +64,14 @@ export async function apiPost<T>(
     }
   }
 
-  return { ok: true, data: (await response.json()) as T }
+  return {
+    // 204 has no body, and `response.json()` on an empty one throws rather than returning
+    // null. This is what broke sign-out: /api/auth/logout answers 204, apiPost threw, and
+    // clearSession() below the await never ran — so the cookie survived while the server
+    // reported success. apiFetch already had this guard; apiPost did not.
+    ok: true,
+    data: (response.status === 204 ? undefined : await response.json()) as T,
+  }
 }
 
 /**

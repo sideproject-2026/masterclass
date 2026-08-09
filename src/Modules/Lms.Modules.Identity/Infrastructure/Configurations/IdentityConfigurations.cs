@@ -31,6 +31,51 @@ internal sealed class AppRoleConfiguration : IEntityTypeConfiguration<AppRole>
     }
 }
 
+internal sealed class InstructorProfileConfiguration : IEntityTypeConfiguration<InstructorProfile>
+{
+    public void Configure(EntityTypeBuilder<InstructorProfile> builder)
+    {
+        ArgumentNullException.ThrowIfNull(builder);
+
+        builder.ToTable("instructor_profiles");
+
+        // UserId is both PK and FK — one profile per user, enforced by the key itself rather
+        // than by a unique index that someone could later drop.
+        builder.HasKey(p => p.UserId);
+        builder.Property(p => p.UserId).ValueGeneratedNever();
+
+        builder.Property(p => p.Slug).HasMaxLength(InstructorProfile.SlugMaxLength).IsRequired();
+        builder.Property(p => p.Headline)
+            .HasMaxLength(InstructorProfile.HeadlineMaxLength)
+            .IsRequired();
+        builder.Property(p => p.Bio).HasMaxLength(InstructorProfile.BioMaxLength);
+        builder.Property(p => p.AvatarBlobPath).HasMaxLength(InstructorProfile.UrlMaxLength + 100);
+        builder.Property(p => p.WebsiteUrl).HasMaxLength(InstructorProfile.UrlMaxLength);
+
+        // Named explicitly: the snake_case convention splits the internal capitals and produces
+        // git_hub_url and linked_in_url. pgweb exists so the database can be read by hand, which
+        // is the whole reason for snake_case — these two are worth the two extra lines.
+        builder.Property(p => p.GitHubUrl)
+            .HasColumnName("github_url")
+            .HasMaxLength(InstructorProfile.UrlMaxLength);
+        builder.Property(p => p.LinkedInUrl)
+            .HasColumnName("linkedin_url")
+            .HasMaxLength(InstructorProfile.UrlMaxLength);
+        builder.Property(p => p.CreatedAt).IsRequired();
+
+        // The public catalog filters by instructor slug, and grant checks it for collisions.
+        // Unique in the database, not just in the handler — two admins can grant at once.
+        builder.HasIndex(p => p.Slug)
+            .IsUnique()
+            .HasDatabaseName("ux_instructor_profiles_slug");
+
+        builder.HasOne<AppUser>()
+            .WithOne()
+            .HasForeignKey<InstructorProfile>(p => p.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
+}
+
 internal sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
 {
     public void Configure(EntityTypeBuilder<RefreshToken> builder)
