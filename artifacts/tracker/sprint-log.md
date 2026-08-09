@@ -2,7 +2,7 @@
 
 Progress board and recorded actuals. Updated as the **last action of every card**.
 
-*Last updated: 2026-08-08 · after Sprint 5*
+*Last updated: 2026-08-09 · after Sprint 5*
 
 ---
 
@@ -91,7 +91,7 @@ is the only open branch. Later cards branch fresh off `main`, no longer stacked.
 | 3 | Aug 24–30 | 5 | 5 | 5.0 | ✅ `F-5` + `F-7` + `F-6`. Cards reordered within the sprint. |
 | 4 | Aug 31–Sep 6 | 5 | 5 | 5.0 | ✅ `A-1` + `A-2`. **Integration-test project carried to Sprint 5** — see the caveat. |
 | 5 | Sep 7–13 | 5 | 3 | 3.0 | 🟡 `A-3` partial — sign-out defect. `A-4` was already delivered in `A-2`. Integration tests carried **again**. |
-| 6 | Sep 14–20 | 5 | — | — | ⬜ `W-1` design system (3) · `A-6` admin grant-instructor (2) · **carried: A-3 sign-out fix + integration tests** |
+| 6 | Sep 14–20 | 5 | — | — | ⬜ `W-1` design system (3) · `A-6` admin grant-instructor (2) · **carried: A-3 sign-out fix + integration tests**. `W-1`'s shadcn/token scaffolding already landed on the `A-3` branch; the card is unchanged and still estimated at 3. |
 
 > 1 point ≈ 2 focused hours. Record **actual** points as hours ÷ 2, honestly — an inflated
 > actual hides a velocity problem until it is expensive to discover.
@@ -569,6 +569,24 @@ Isolated by having `clearSession` also set a plain JS-readable probe cookie. **T
 
 **`A-4`** `GET /api/me` — delivered early in `A-2`. Its point is **not** claimed here.
 
+**`W-1` groundwork landed on this branch, unplanned.** shadcn/ui was installed and the token
+layer set up while the sign-out defect was still open, so it rides along on
+`feat/a-3-bff-session` rather than a fresh branch. What exists: `components.json`, the
+`radix-vega` style with `radix-ui` / `cva` / `tailwind-merge` / `lucide-react`, Inter Variable,
+~125 lines of `@theme inline` tokens and light/dark variables in `styles.css`, one generated
+`Button`, `lib/utils.ts` (`cn`), and the health server function moved out of the route into
+`features/health/query.ts` behind the `#/` alias.
+
+**No points are claimed for it.** `W-1` in Sprint 6 still owns the layout shell, the theme
+toggle, the 375px pass and the light/dark verification — none of which is done. This is
+scaffolding, not the card.
+
+**Fixed on the way in:** `components.json` was generated with `rsc: true` (TanStack Start is not
+RSC — it would prepend `"use client"` to every future component), `css: src/style.css` (the file
+is `styles.css`) and a `tailwind.config.js` path that does not exist under Tailwind v4. All three
+would have misdirected the next `shadcn add`. The two generated files also tripped
+`import/consistent-type-specifier-style` and were `--fix`ed, so CI stays green.
+
 ---
 
 ## Card template
@@ -640,3 +658,5 @@ Implementation decisions worth finding later. Full context lives in the card ent
 | 2026-08-08 | `A-3` | AES-256-GCM for the session cookie — a tampered value fails to open, not decrypts |
 | 2026-08-08 | `A-3` | Refresh *before* forwarding, not after a 401 — one round trip, no transient failure |
 | 2026-08-08 | `A-3` | Unstyled scaffolding form so the session layer is exercised; it is what found the defect |
+| 2026-08-09 | `W-1` | shadcn/token scaffolding committed on the `A-3` branch rather than a fresh one — minor, and `A-3` is still open |
+| 2026-08-09 | `W-1` | `components.json` corrected: `rsc: false`, `css: src/styles.css`, empty `config` — Tailwind v4 has no JS config and Start is not RSC |
