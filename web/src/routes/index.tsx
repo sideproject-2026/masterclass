@@ -1,14 +1,8 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
-import { createServerFn } from '@tanstack/react-start'
 import { useState } from 'react'
 
 import { getCurrentUser, login, logout } from '../server/auth'
-import { apiBaseUrl, fetchApiHealth } from '../server/api'
-
-const getApiHealth = createServerFn({ method: 'GET' }).handler(async () => {
-  const health = await fetchApiHealth()
-  return { ...health, baseUrl: apiBaseUrl() }
-})
+import { getApiHealth } from '#/features/health/query'
 
 export const Route = createFileRoute('/')({
   loader: async () => ({
