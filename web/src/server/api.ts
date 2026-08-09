@@ -49,6 +49,7 @@ export async function apiPost<T>(
   path: string,
   body: unknown,
 ): Promise<{ ok: true; data: T } | { ok: false; status: number; detail: string }> {
+  
   const response = await fetch(`${apiBaseUrl()}${path}`, {
     method: 'POST',
     headers: { 'content-type': 'application/json', accept: 'application/json' },

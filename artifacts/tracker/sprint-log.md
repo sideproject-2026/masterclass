@@ -9,29 +9,29 @@ Progress board and recorded actuals. Updated as the **last action of every card*
 ## Status at a glance
 
 ```
-Points   ██████░░░░░░░░░░░░░░░░░░░░░░░░   29 / 145   (20%)
-Sprints  █████░░░░░░░░░░░░░░░░░░░░░░░░░    5 / 31   (6 in progress)
-Cards    ██████░░░░░░░░░░░░░░░░░░░░░░░░   12 / 58
+Points   ███████░░░░░░░░░░░░░░░░░░░░░░░   31 / 145   (21%)
+Sprints  ██████░░░░░░░░░░░░░░░░░░░░░░░░    6 / 31
+Cards    ███████░░░░░░░░░░░░░░░░░░░░░░░   13 / 58
 ```
 
 | | |
 |---|---|
-| **Phase** | 2 of 8 — Auth & Design System, in progress |
-| **Last completed** | `W-1` — design system and app shell |
-| **Up next** | **Sprint 6, in progress** — `A-6` admin grant-instructor, the last card |
+| **Phase** | 2 of 8 — Auth & Design System · only `A-5` and `SP-1` remain |
+| **Last completed** | Sprint 6 — *Every future screen inherits a look* — **8 of 5 points**, clearing two sprints of debt |
+| **Up next** | **Sprint 7** — `A-5` route guards + login/register pages (3) · `SP-1` YouTube IFrame spike (2) |
 | **Next milestone** | **M1 Hello, deployed** — Sprint 9, **11 Oct 2026** |
 | **Schedule** | On plan. Not re-dated — see the re-baseline below. |
-| **Tests** | **175 green** (112 unit · 35 architecture · 20 integration · **8 web**) |
+| **Tests** | **214 green** (133 unit · 35 architecture · 39 integration · 8 web) |
 | **Build** | Clean, warnings-as-errors |
-| **Open branches** | `feat/a-3-bff-session` only — PRs #1–#8 merged |
-| **Carried work** | **None.** Both carries closed in Sprint 6. |
+| **Open branches** | `feat/a-3-bff-session` — **carries all of Sprint 6 and needs a PR** |
+| **Carried work** | **None.** |
 
 ### Phases
 
 | # | Phase | Sprints | Pts | Status |
 |---|---|---|---:|---|
 | 1 | Foundation | 1–3 | 15 | ✅ **Done** — `F-1`…`F-7` |
-| 2 | Auth & Design System | 4–7 | 20 | 🔵 **In progress** — `A-1` `A-2` done; `A-3`…`A-6`, `W-1`, `SP-1` to go |
+| 2 | Auth & Design System | 4–7 | 20 | 🔵 **In progress** — `A-1`…`A-4`, `A-6`, `W-1` done; `A-5` and `SP-1` remain |
 | 3 | Deploy | 8–9 | 9 | ⬜ `D-1`…`D-3` → **M1** |
 | 4 | Instructor Studio | 10–16 | 35 | ⬜ `S-1`…`S-12`, `W-2` → **M2** |
 | 5 | Catalog & Enrollment | 17–19, 22 | 20 | ⬜ `C-1`…`C-9`, `W-3` → **M3** |
@@ -67,6 +67,7 @@ Cards    ██████░░░░░░░░░░░░░░░░░�
 | `A-3` | BFF session cookie | 4 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
 | `IT-1` | Integration test harness | 2 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
 | `W-1` | Design system + app shell | 3 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
+| `A-6` | Admin grant-instructor | 2 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
 
 **`main` is at `95f8596`.** PRs #1–#8 merged and their branches deleted; `feat/a-3-bff-session`
 is the only open branch. Later cards branch fresh off `main`, no longer stacked.
@@ -77,7 +78,7 @@ is the only open branch. Later cards branch fresh off `main`, no longer stacked.
 |---|---|
 | **R1** BFF session/refresh pattern | 🟢 **Retired.** Sealing, reading, tamper resistance, transparent refresh and now sign-out are all proven in a browser. The pattern did not fight us; a 204-handling bug in our own HTTP wrapper did. |
 | **R2** YouTube IFrame progress tracking | 🟡 Spike `SP-1` scheduled Sprint 7, four months before the real card |
-| **R3** Velocity below 5 pts/week | 🔴 **Still unmeasured.** Four sprints, all in single sittings. Sprint 4 also carried a card, so 5/5 flatters it. |
+| **R3** Velocity below 5 pts/week | 🔴 **Still unmeasured after six sprints.** All six ran as single sittings. Sprint 6's 8.0 is debt repayment, not throughput, and must not be read as headroom. Re-baseline checkpoint is end of Sprint 9. |
 | **R4** Life happens | ⬜ 4 weeks of slack built in (2 holiday + 2 buffer) |
 | **R5** Scope creep | 🟢 **Nothing carried.** Both items closed in Sprint 6 — the sign-out fix and the integration suite that had slipped twice. |
 | **R8** Design rabbit hole | 🟢 `W-1` came in at estimate. One accent colour, shadcn defaults everywhere else, and no time spent on Studio CSS. Next design work is `W-4`, Sprint 27. |
@@ -93,14 +94,23 @@ is the only open branch. Later cards branch fresh off `main`, no longer stacked.
 | 3 | Aug 24–30 | 5 | 5 | 5.0 | ✅ `F-5` + `F-7` + `F-6`. Cards reordered within the sprint. |
 | 4 | Aug 31–Sep 6 | 5 | 5 | 5.0 | ✅ `A-1` + `A-2`. **Integration-test project carried to Sprint 5** — see the caveat. |
 | 5 | Sep 7–13 | 5 | 3 | 3.0 | 🟡 `A-3` partial — sign-out defect. `A-4` was already delivered in `A-2`. Integration tests carried **again**. |
-| 6 | Sep 14–20 | 5 | 6 so far | — | 🔵 In progress. `A-3` sign-out fix (**+1**), `IT-1` integration harness (**+2**, the twice-carried item), `W-1` design system (**+3**). `A-6` (2) remains, putting the sprint at **8 against a 5-point plan** — it is paying off two sprints of debt, not overdelivering. |
+| 6 | Sep 14–20 | 5 | 8 | 8.0 | ✅ `A-3` sign-out fix (1) · `IT-1` harness (2) · `W-1` (3) · `A-6` (2). **8 against a 5-point plan** — two of those points are Sprint 4/5 debt being repaid, so the sprint did ~6 points of new work and cleared the backlog. Still a single sitting. |
+| 7 | Sep 21–27 | 5 | — | — | ⬜ `A-5` route guards + login/register pages (3) · `SP-1` YouTube IFrame spike (2) |
 
 > 1 point ≈ 2 focused hours. Record **actual** points as hours ÷ 2, honestly — an inflated
 > actual hides a velocity problem until it is expensive to discover.
 
-**Rolling average:** **4.6 pts/sprint** over 5 sprints (23 delivered of 25 planned) — and falling.
-Sprint 5's 3.0 is the first below-plan reading. Still every sprint has run in a single sitting, so
-this remains an estimate-accuracy number rather than a pace one — see the re-baseline below.
+**Rolling average:** **5.2 pts/sprint** over 6 sprints (31 delivered of 30 planned).
+
+Read that carefully rather than cheerfully. Sprint 6's 8.0 is **debt repayment**, not throughput:
+3 of its points were work planned for Sprints 4 and 5 and not done then. Spread honestly across
+the sprints that owed them, the picture is closer to a flat 5 with one bad sprint in the middle.
+And every sprint so far has still run in a single sitting, so this remains an estimate-accuracy
+number rather than a sustained-pace one.
+
+**What Sprint 6 actually showed:** four cards, four estimates, four exact hits. The estimates are
+good. What is still unmeasured after six sprints is whether the *cadence* holds across evenings
+with context lost in between — the thing risk **R3** is actually about.
 
 > **Sprint 4 caveat.** Scored 5/5, but the integration-test project (`tests/Lms.IntegrationTests`,
 > WebApplicationFactory + Testcontainers) was in the plan and was **not built**. Everything was
@@ -749,6 +759,87 @@ would have misdirected the next `shadcn add`. The two generated files also tripp
 
 ---
 
+### `A-6` Admin grant-instructor
+
+| | |
+|---|---|
+| **Estimate** | 2 pts · **Actual** 2 pts |
+| **Area** | `api` |
+| **Branch** | `feat/a-3-bff-session` |
+| **Status** | ✅ Done |
+
+**Acceptance criteria**
+- [x] `InstructorProfile` entity, configuration and the `AddInstructorProfile` migration
+- [x] `POST /api/admin/users/{id}/grant-instructor` → `200`, `409` on a taken slug
+- [x] `POST /api/admin/users/{id}/revoke-instructor` → `204`, role only
+- [x] `GET /api/admin/users?search=` → `PagedResult<AdminUser>`
+- [x] Seeded admin from configuration, with no default password
+- [x] `instructorSlug` on `/api/me` is real — the `A-1` placeholder is gone
+- [x] **206 backend tests green** (133 unit · 35 architecture · 39 integration)
+
+**Verified against a live stack**
+```
+admin login          200, token carries role Admin
+admin /api/me        200, roles ["Student","Admin"]
+grant                200 {"roles":["Student","Instructor"],"instructorSlug":"jane-doe-live"}
+jane /api/me         200, instructorSlug present
+jane grants          403  ← Instructor is not Admin
+admin search         200, one row, no credential fields
+```
+
+**Shipped**
+- `Domain/InstructorProfile.cs` — factory returning `Result<T>`, slug validated at the boundary
+- Three slices: `GrantInstructor`, `RevokeInstructor`, `FindUsers`
+- `Endpoints/AdminEndpoints.cs` — one group, `Admin` policy applied at the group
+- `Infrastructure/AdminSeeder.cs` + a committed Development-only credential
+- Three new `IdentityErrors` entries; 8 unit tests and 12 integration tests
+
+**Decisions**
+1. **A real FK from `instructor_profiles.user_id` to `users.id`.** The no-FK rule is about
+   *cross-module* references; both tables are in the `identity` schema, so a foreign key is
+   correct and the primary key doubles as it — one profile per user, enforced by the key.
+2. **The unique index on slug is the arbiter, not a pre-check.** Querying first and inserting
+   after still loses to a second admin granting the same slug concurrently, so the handler
+   catches the `DbUpdateException` and returns `409`.
+3. **Both writes are idempotent.** Granting twice is a retry, not a conflict; revoking a
+   non-instructor is a no-op. Admin tooling gets retried by hand.
+4. **Revoke keeps the profile and the slug.** Course pages still name the author, and freeing
+   the slug would let a later instructor inherit someone else's public URL.
+5. **A committed Development-only admin credential**, matching the `A-1` signing key and `A-3`
+   session secret. The seeder does nothing at all when either setting is absent — there is no
+   default password in the code, and it never resets an existing account, so someone who can
+   edit configuration cannot use a redeploy to take over an admin.
+6. **`ILIKE` rather than `ToUpper().Contains()`** in the user search. Same work in PostgreSQL,
+   states the case-insensitivity in SQL, and does not trip CA1862 on an expression tree.
+7. **`github_url` / `linkedin_url` named explicitly.** The snake_case convention splits internal
+   capitals into `git_hub_url`; pgweb exists so the schema reads well by hand.
+
+**A bug the live check found that the tests did not**
+
+The seeded admin was granted only `Admin`, so `GET /api/me` returned **403** — contradicting the
+authorization matrix in [03 §7](../design/03-api-design.md). "Every registered user holds
+`Student`" is an invariant `AuthPolicies.Student` depends on (it means "we know who you are" and
+is implemented as `RequireRole(Student)`), and the seeder creates a user directly instead of
+going through registration, so it has to uphold the invariant itself. Now grants both roles,
+with a regression test.
+
+Worth noting **why the test suite missed it**: every other test obtains its identity through
+registration, which grants `Student` automatically. The seeded admin is the only account in the
+system created by another path, and nothing exercised it end to end until the live check.
+
+**Also fixed:** `AdminSeeder` shipped with the same check-then-act race as `RoleSeeder` —
+`FindByEmailAsync` then `CreateAsync`, where the loser gets a `DbUpdateException` rather than a
+failed `IdentityResult`. Caught within minutes by the integration suite, which starts three
+hosts concurrently. Writing the same bug twice in one sprint is the argument for the harness.
+
+**Deviations from the design docs**
+- **`revoke-instructor` returns `204`, not the `200` in `03 §6`.** A command returning nothing is
+  204 here — the `Result<Unit>` convention established in `A-2`. **Doc updated**, along with the
+  400/404 cases, the idempotency of both writes, the profile surviving revocation, and a note on
+  the seeded admin needing `Student`.
+
+---
+
 ## Card template
 
 ```markdown
@@ -837,3 +928,11 @@ Implementation decisions worth finding later. Full context lives in the card ent
 | 2026-08-09 | `W-1` | Markdown links name `href` explicitly; spreading react-markdown's props leaks `node="[object Object]"` |
 | 2026-08-09 | `W-1` | Sanitiser narrows rehype-sanitize's default schema rather than listing tags from scratch |
 | 2026-08-09 | `W-1` | **Vitest added, unplanned** — a security control with no regression test is a control with a shelf life |
+| 2026-08-09 | `A-6` | Real FK from `instructor_profiles.user_id`; the no-FK rule is about cross-module refs, and both tables are in `identity` |
+| 2026-08-09 | `A-6` | The unique slug index is the arbiter — a pre-check still loses to a concurrent grant, so `DbUpdateException` becomes the 409 |
+| 2026-08-09 | `A-6` | Grant and revoke are both idempotent; admin tooling gets retried by hand |
+| 2026-08-09 | `A-6` | Revoke keeps the profile and slug — course pages still name the author, and the URL must not be inheritable |
+| 2026-08-09 | `A-6` | Dev-only admin credential committed; the seeder is a no-op unless both settings are present and never resets an existing account |
+| 2026-08-09 | `A-6` | **The seeder must grant `Student` too** — "every registered user holds Student" is what makes `AuthPolicies.Student` mean "authenticated" |
+| 2026-08-09 | `A-6` | `ILIKE` over `ToUpper().Contains()` — same SQL, states the intent, and CA1862 cannot read expression trees |
+| 2026-08-09 | `A-6` | `revoke-instructor` is 204 not 200; design doc corrected to the `Result<Unit>` convention from `A-2` |

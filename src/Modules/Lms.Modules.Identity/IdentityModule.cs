@@ -1,12 +1,16 @@
 using Lms.Modules.Identity.Domain;
 using Lms.Modules.Identity.Endpoints;
+using Lms.Modules.Identity.Features.FindUsers;
+using Lms.Modules.Identity.Features.GrantInstructor;
 using Lms.Modules.Identity.Features.Login;
 using Lms.Modules.Identity.Features.Logout;
 using Lms.Modules.Identity.Features.Me;
 using Lms.Modules.Identity.Features.Refresh;
 using Lms.Modules.Identity.Features.Register;
+using Lms.Modules.Identity.Features.RevokeInstructor;
 using Lms.Modules.Identity.Infrastructure;
 using Lms.SharedKernel.Messaging;
+using Lms.SharedKernel.Pagination;
 using Lms.SharedKernel.Results;
 using Lms.SharedKernel.Persistence;
 using Microsoft.AspNetCore.Identity;
@@ -79,6 +83,8 @@ public static class IdentityModule
 
         services.AddScoped<JwtTokenService>();
         services.AddHostedService<RoleSeeder>();
+        // Seeds nothing unless Admin:Email and Admin:Password are both configured.
+        services.AddHostedService<AdminSeeder>();
 
         services.AddScoped<
             ICommandHandler<RegisterUserCommand, RegisteredUser>, RegisterUserHandler>();
@@ -92,6 +98,12 @@ public static class IdentityModule
             IQueryHandler<GetCurrentUserQuery, CurrentUserDto>, GetCurrentUserHandler>();
         services.AddScoped<
             ICommandHandler<UpdateCurrentUserCommand, CurrentUserDto>, UpdateCurrentUserHandler>();
+        services.AddScoped<
+            ICommandHandler<GrantInstructorCommand, InstructorGrant>, GrantInstructorHandler>();
+        services.AddScoped<
+            ICommandHandler<RevokeInstructorCommand, Unit>, RevokeInstructorHandler>();
+        services.AddScoped<
+            IQueryHandler<FindUsersQuery, QueryResult<AdminUser>>, FindUsersHandler>();
 
         return services;
     }
@@ -100,7 +112,7 @@ public static class IdentityModule
     {
         ArgumentNullException.ThrowIfNull(app);
 
-        return app.MapAuthEndpoints().MapMeEndpoints();
+        return app.MapAuthEndpoints().MapMeEndpoints().MapAdminEndpoints();
     }
 
     /// <summary>

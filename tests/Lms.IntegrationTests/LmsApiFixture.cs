@@ -39,6 +39,17 @@ public sealed class LmsApiFixture : IAsyncLifetime
     /// </summary>
     private const string TestSigningKey = "INTEGRATION-TEST-SIGNING-KEY-not-the-development-one-91b4d7";
 
+    /// <summary>
+    /// The seeded admin, supplied the way a deployment supplies it — through configuration.
+    /// </summary>
+    /// <remarks>
+    /// There is no other way to obtain an <c>Admin</c>, which is the point: if a test could
+    /// promote itself to admin, so could a caller.
+    /// </remarks>
+    public const string AdminEmail = "admin@integration.test";
+
+    public const string AdminPassword = "integration-test-admin-password";
+
     private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder(PostgresImage)
         .WithDatabase("lmsdb")
         .Build();
@@ -102,6 +113,8 @@ public sealed class LmsApiFixture : IAsyncLifetime
 
         settings["ConnectionStrings:lmsdb"] = _postgres.GetConnectionString();
         settings["Jwt:SigningKey"] = TestSigningKey;
+        settings["Admin:Email"] = AdminEmail;
+        settings["Admin:Password"] = AdminPassword;
 
         return new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
