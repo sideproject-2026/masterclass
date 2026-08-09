@@ -53,6 +53,10 @@ var api = builder.AddProject<Projects.Lms_Api>("api")
 builder.AddViteApp("web", "../../web")
     .WithReference(api)
     .WaitFor(api)
+    // Seals the __Host-session cookie. Development-only value, matching the JWT signing key
+    // in appsettings.Development.json; web/src/server/session.ts refuses to use it in
+    // production. Real deployments read it from Key Vault.
+    .WithEnvironment("SESSION_SECRET", "DEVELOPMENT-ONLY-session-secret-do-not-ship-4c1f8a")
     .WithHttpEndpoint(env: "PORT")
     .WithExternalHttpEndpoints();
 
