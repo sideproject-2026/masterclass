@@ -1,6 +1,7 @@
 using Lms.Modules.Identity.Domain;
 using Lms.SharedKernel.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -31,6 +32,25 @@ internal sealed partial class RoleSeeder(
                 continue;
             }
 
+            await CreateRoleAsync(roles, name);
+        }
+    }
+
+    /// <summary>
+    /// Creates one role, tolerating another replica having created it in between.
+    /// </summary>
+    /// <remarks>
+    /// <c>RoleExistsAsync</c> followed by <c>CreateAsync</c> is check-then-act, so with more
+    /// than one replica starting at once both can pass the check and one loses on the unique
+    /// index. That loss arrives as a <see cref="DbUpdateException"/> from
+    /// <c>SaveChangesAsync</c> — it is <b>not</b> a failed <c>IdentityResult</c>, so returning
+    /// the result unexamined would let it escape and take the process down on first deploy.
+    /// Found by the integration suite, where several test hosts start simultaneously.
+    /// </remarks>
+    private async Task CreateRoleAsync(RoleManager<AppRole> roles, string name)
+    {
+        try
+        {
             var result = await roles.CreateAsync(AppRole.Create(name));
 
             if (result.Succeeded)
@@ -39,10 +59,16 @@ internal sealed partial class RoleSeeder(
             }
             else
             {
-                // A concurrent replica winning the race is fine and expected.
                 var reason = string.Join(" ", result.Errors.Select(e => e.Description));
                 LogRoleNotCreated(name, reason);
             }
+        }
+        catch (DbUpdateException)
+        {
+            // Someone else created it between the check and the insert. That is the desired
+            // end state, so it is not an error — but say so, because a seeder that is silently
+            // never the winner is worth noticing.
+            LogRoleRaceLost(name);
         }
     }
 
@@ -53,4 +79,9 @@ internal sealed partial class RoleSeeder(
 
     [LoggerMessage(Level = LogLevel.Debug, Message = "Role {Role} not created: {Reason}")]
     private partial void LogRoleNotCreated(string role, string reason);
+
+    [LoggerMessage(
+        Level = LogLevel.Debug,
+        Message = "Role {Role} was created concurrently by another instance.")]
+    private partial void LogRoleRaceLost(string role);
 }

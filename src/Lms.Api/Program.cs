@@ -33,7 +33,7 @@ builder.Services.AddOpenApi();
 
 // Validates bearer tokens; never issues them. See AuthenticationSetup.
 builder.Services.AddLmsAuthentication(builder.Configuration);
-builder.Services.AddLmsRateLimiting();
+builder.Services.AddLmsRateLimiting(builder.Configuration);
 
 builder.Services
     .AddIdentityModule(builder.Configuration)

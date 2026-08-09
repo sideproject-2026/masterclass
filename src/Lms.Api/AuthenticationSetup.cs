@@ -80,8 +80,18 @@ internal static class AuthenticationSetup
     /// Account lockout already caps attempts per <i>account</i>; this caps them per caller,
     /// which is what blunts credential stuffing across many accounts.
     /// </remarks>
-    public static IServiceCollection AddLmsRateLimiting(this IServiceCollection services)
+    public static IServiceCollection AddLmsRateLimiting(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
+        // The defaults are the production values. They are bindable because every request in
+        // an integration test arrives with no RemoteIpAddress and therefore shares a single
+        // partition — ten permits would exhaust after ten calls and fail tests that have
+        // nothing to do with rate limiting. Tests raise the ceiling for the general suite and
+        // lower it in the one test that proves the limiter fires.
+        var permitLimit = configuration.GetValue<int?>("RateLimiting:Auth:PermitLimit") ?? 10;
+        var windowMinutes = configuration.GetValue<int?>("RateLimiting:Auth:WindowMinutes") ?? 5;
+
         services.AddRateLimiter(options =>
         {
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -91,8 +101,8 @@ internal static class AuthenticationSetup
                     context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
                     _ => new FixedWindowRateLimiterOptions
                     {
-                        PermitLimit = 10,
-                        Window = TimeSpan.FromMinutes(5),
+                        PermitLimit = permitLimit,
+                        Window = TimeSpan.FromMinutes(windowMinutes),
                         QueueLimit = 0
                     }));
         });

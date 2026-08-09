@@ -9,22 +9,22 @@ Progress board and recorded actuals. Updated as the **last action of every card*
 ## Status at a glance
 
 ```
-Points   █████░░░░░░░░░░░░░░░░░░░░░░░░░   24 / 145   (17%)
+Points   ██████░░░░░░░░░░░░░░░░░░░░░░░░   26 / 145   (18%)
 Sprints  █████░░░░░░░░░░░░░░░░░░░░░░░░░    5 / 31   (6 in progress)
-Cards    █████░░░░░░░░░░░░░░░░░░░░░░░░░   10 / 58
+Cards    ██████░░░░░░░░░░░░░░░░░░░░░░░░   11 / 58
 ```
 
 | | |
 |---|---|
 | **Phase** | 2 of 8 — Auth & Design System, in progress |
-| **Last completed** | `A-3` — BFF session cookie, **now complete**; sign-out defect closed |
-| **Up next** | **Sprint 6, in progress** — integration tests · `W-1` design system · `A-6` |
+| **Last completed** | `IT-1` — integration test harness. **Both carries are now closed.** |
+| **Up next** | **Sprint 6, in progress** — `W-1` design system · `A-6` admin grant-instructor |
 | **Next milestone** | **M1 Hello, deployed** — Sprint 9, **11 Oct 2026** |
 | **Schedule** | On plan. Not re-dated — see the re-baseline below. |
-| **Tests** | 147 green (112 unit · 35 architecture) · **still no integration tests** |
+| **Tests** | **167 green** (112 unit · 35 architecture · **20 integration**) |
 | **Build** | Clean, warnings-as-errors |
 | **Open branches** | `feat/a-3-bff-session` only — PRs #1–#8 merged |
-| **Carried work** | integration tests (**2nd carry, in progress**) — `A-3` sign-out fix ✅ closed |
+| **Carried work** | **None.** Both carries closed in Sprint 6. |
 
 ### Phases
 
@@ -65,6 +65,7 @@ Cards    █████░░░░░░░░░░░░░░░░░░�
 | `A-1` | Identity: users, roles, register/login | 3 | `feat/a-1-identity-module` | ✅ PR #7 |
 | `A-2` | JWT validation, policies, me/refresh/logout | 2 | `feat/a-2-jwt-policies` | ✅ PR #8 |
 | `A-3` | BFF session cookie | 4 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
+| `IT-1` | Integration test harness | 2 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
 
 **`main` is at `95f8596`.** PRs #1–#8 merged and their branches deleted; `feat/a-3-bff-session`
 is the only open branch. Later cards branch fresh off `main`, no longer stacked.
@@ -77,7 +78,7 @@ is the only open branch. Later cards branch fresh off `main`, no longer stacked.
 | **R2** YouTube IFrame progress tracking | 🟡 Spike `SP-1` scheduled Sprint 7, four months before the real card |
 | **R3** Velocity below 5 pts/week | 🔴 **Still unmeasured.** Four sprints, all in single sittings. Sprint 4 also carried a card, so 5/5 flatters it. |
 | **R4** Life happens | ⬜ 4 weeks of slack built in (2 holiday + 2 buffer) |
-| **R5** Scope creep | 🟡 One item still carried — integration tests (twice). The `A-3` sign-out fix is closed. Goes green when the test project exists. |
+| **R5** Scope creep | 🟢 **Nothing carried.** Both items closed in Sprint 6 — the sign-out fix and the integration suite that had slipped twice. |
 | **R8** Design rabbit hole | 🟢 Not yet applicable — no design work before `W-1` in Sprint 6 |
 
 ---
@@ -91,7 +92,7 @@ is the only open branch. Later cards branch fresh off `main`, no longer stacked.
 | 3 | Aug 24–30 | 5 | 5 | 5.0 | ✅ `F-5` + `F-7` + `F-6`. Cards reordered within the sprint. |
 | 4 | Aug 31–Sep 6 | 5 | 5 | 5.0 | ✅ `A-1` + `A-2`. **Integration-test project carried to Sprint 5** — see the caveat. |
 | 5 | Sep 7–13 | 5 | 3 | 3.0 | 🟡 `A-3` partial — sign-out defect. `A-4` was already delivered in `A-2`. Integration tests carried **again**. |
-| 6 | Sep 14–20 | 5 | 1 so far | — | 🔵 In progress. `A-3` sign-out fix closed (**+1**, completing `A-3` at 4 of 4). Remaining: integration tests (carried) · `W-1` (3) · `A-6` (2). `W-1`'s shadcn/token scaffolding already landed on the `A-3` branch; the card is unchanged at 3. |
+| 6 | Sep 14–20 | 5 | 3 so far | — | 🔵 In progress. `A-3` sign-out fix (**+1**, completing `A-3` at 4 of 4) and `IT-1` integration harness (**+2**, the twice-carried item). Remaining: `W-1` (3) · `A-6` (2) — which puts the sprint on course for **8 against a 5-point plan**, because it is paying off two sprints of debt. |
 
 > 1 point ≈ 2 focused hours. Record **actual** points as hours ÷ 2, honestly — an inflated
 > actual hides a velocity problem until it is expensive to discover.
@@ -592,7 +593,85 @@ out, so the server no longer receives the cookie. `document.cookie` empty throug
 
 **`A-4`** `GET /api/me` — delivered early in `A-2`. Its point is **not** claimed here.
 
-**`W-1` groundwork landed on this branch, unplanned.** shadcn/ui was installed and the token
+---
+
+## Sprint 6 — Sep 14–20, 2026
+
+**Goal:** *Every future screen inherits a look — and the auth layer is finally covered by tests.*
+
+Carried work first. See the `A-3` card above for the sign-out fix, which completes that card.
+
+### `IT-1` Integration test harness (carried from Sprints 4 and 5)
+
+| | |
+|---|---|
+| **Estimate** | 2 pts · **Actual** 2 pts |
+| **Area** | `api` |
+| **Branch** | `feat/a-3-bff-session` |
+| **Status** | ✅ Done — **the carry is closed** |
+
+**Acceptance criteria**
+- [x] `tests/Lms.IntegrationTests` — xunit v3, `WebApplicationFactory<Program>` + Testcontainers
+- [x] One PostgreSQL container per assembly; migrations applied before the API starts
+- [x] **20 tests green**, suite total now **167** (112 unit · 35 architecture · 20 integration)
+- [x] Every `A-1`/`A-2` security property that previously existed only as a tracker note
+- [x] Runs in CI unchanged — `ubuntu-latest` already has a Docker daemon
+
+**What is covered**
+
+Registration (201 / 409 / 400, and that it grants `Student` and nothing else), login and the
+**enumeration defence** (wrong password and unknown email compared byte for byte with only
+`traceId` normalised), refresh rotation, single use, **replay revoking the whole chain**, logout
+revoking, logout succeeding for an unknown token, logout answering 204 with an empty body,
+`/api/me` for anonymous / garbage / valid callers, `instructorSlug` null for a student, rename
+taking the id from the token, and the rate limiter firing on `/api/auth/*` but not on `/health`.
+
+**Two real bugs found on the first run**
+
+1. **`RoleSeeder` crashes when two instances start together.** `RoleExistsAsync` then
+   `CreateAsync` is check-then-act, and the loser gets a `DbUpdateException` on `RoleNameIndex`
+   — not a failed `IdentityResult`. The existing comment claimed "a concurrent replica winning
+   the race is fine and expected"; the code did not deliver that, so **the first Container Apps
+   deploy with two replicas would have crashed both**. Now caught and logged at Debug.
+   The comment was true about intent and false about behaviour, which is the worst kind.
+2. **Rate limits were unreachable constants.** Every request under `WebApplicationFactory` has
+   no `RemoteIpAddress`, so the whole suite shares one partition and the production limit of ten
+   was spent within two tests. `PermitLimit` and `WindowMinutes` now bind from configuration
+   with the production values as defaults — the suite raises the ceiling and the rate-limit test
+   lowers it on its own host.
+
+**Decisions**
+1. **One container for the assembly, unique emails instead of truncation between tests.** A
+   container per class multiplies a five-second startup for no isolation gain, and truncation
+   would force the suite serial. `Guid`-suffixed addresses keep it parallel and order-independent.
+2. **`UseSetting`, not `ConfigureAppConfiguration`.** The latter is appended after `Program.cs`
+   has run, so eager reads — the signing key, the rate limits — silently keep the app's own
+   `appsettings.json`. Only the connection string survived it, and only because `AddDbContext`'s
+   options lambda runs lazily. That near-miss is worth remembering: the tests appeared to work
+   while running against the **committed development signing key**.
+3. **A distinct test signing key, and the host runs as Production.** `JwtOptionsValidator`
+   short-circuits in Development, so a Development test host would never execute the validator
+   the deployment depends on.
+4. **The wire shapes are restated in the test project** rather than reusing the server's records.
+   A rename on the server should break a test, not pass because both sides moved together.
+5. **A second `WebApplicationFactory` over the same container** for the rate-limit test. Factories
+   are cheap; containers are not.
+
+**Deviations from the design docs** — none. `01 §3` specified `WebApplicationFactory` +
+Testcontainers and that is what was built.
+
+---
+
+### `W-1` Design system + app shell
+
+| | |
+|---|---|
+| **Estimate** | 3 pts · **Actual** — |
+| **Area** | `web` |
+| **Branch** | `feat/a-3-bff-session` (scaffolding only, so far) |
+| **Status** | 🔵 In progress — scaffolding landed, the card is not started |
+
+**Scaffolding landed early, on the `A-3` branch.** shadcn/ui was installed and the token
 layer set up while the sign-out defect was still open, so it rides along on
 `feat/a-3-bff-session` rather than a fresh branch. What exists: `components.json`, the
 `radix-vega` style with `radix-ui` / `cva` / `tailwind-merge` / `lucide-react`, Inter Variable,
@@ -600,9 +679,9 @@ layer set up while the sign-out defect was still open, so it rides along on
 `Button`, `lib/utils.ts` (`cn`), and the health server function moved out of the route into
 `features/health/query.ts` behind the `#/` alias.
 
-**No points are claimed for it.** `W-1` in Sprint 6 still owns the layout shell, the theme
-toggle, the 375px pass and the light/dark verification — none of which is done. This is
-scaffolding, not the card.
+**No points are claimed for it.** `W-1` still owns the app shell, the theme toggle with its
+no-flash script, the sanitised markdown renderer, and the 375px / light-and-dark pass — none of
+which is done. This is scaffolding, not the card.
 
 **Fixed on the way in:** `components.json` was generated with `rsc: true` (TanStack Start is not
 RSC — it would prepend `"use client"` to every future component), `css: src/style.css` (the file
@@ -687,3 +766,9 @@ Implementation decisions worth finding later. Full context lives in the card ent
 | 2026-08-09 | `A-3` | Sign-out is a document POST returning 303, not an RPC — cookie applied on a navigation, and it works without JS |
 | 2026-08-09 | `A-3` | Session cookie written via `setResponseHeader`, with one shared attribute string so write and clear cannot drift |
 | 2026-08-09 | `A-3` | **Read the server stack trace first.** Four browser-side hypotheses cost a sprint; one `vite dev` stack trace named the line. |
+| 2026-08-09 | `IT-1` | One Postgres container per assembly; unique emails per test instead of truncation, so the suite stays parallel |
+| 2026-08-09 | `IT-1` | `UseSetting`, not `ConfigureAppConfiguration` — the latter lands after `Program.cs`'s eager config reads |
+| 2026-08-09 | `IT-1` | Test host runs as Production with its own signing key, so `JwtOptionsValidator` actually executes |
+| 2026-08-09 | `IT-1` | Wire shapes restated in the test project — reusing the server's records would hide a rename |
+| 2026-08-09 | `IT-1` | `RoleSeeder` now catches `DbUpdateException`: check-then-act would have crashed a two-replica first deploy |
+| 2026-08-09 | `IT-1` | Auth rate limits bind from configuration; `TestServer` has no `RemoteIpAddress`, so the suite shares one partition |
