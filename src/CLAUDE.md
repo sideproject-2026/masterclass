@@ -60,6 +60,10 @@ internal sealed class XHandler(XDbContext db, IClock clock) : ICommandHandler<XC
 - `ErrorType` → HTTP status maps in `ToHttpResult()` and nowhere else.
 - Combinators are `Map`, `Bind`, `Tap`, `Ensure`. Don't grow the set.
 
+## Globalization — one silent trap
+
+`Directory.Build.props` sets `InvariantGlobalization=true`. **`string.Normalize()` is then a no-op: it does not throw, it returns the input unchanged.** The textbook accent-stripper (`Normalize(FormD)` then drop `NonSpacingMark`) therefore compiles, passes every ASCII test, and mangles the first accented input it meets — `Réactivité` → `r-activit-`. `Course.Slugify` folds with an explicit table for this reason. Culture-sensitive comparison and `ToUpper(culture)` are similarly degraded. If you need real Unicode normalization, that is a conscious decision to turn the flag off, not a library call.
+
 ## Domain
 
 - Invariants live in the entity. `course.Publish()` returns `Result` — it does not throw and it is not a validator's job.

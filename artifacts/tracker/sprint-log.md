@@ -9,22 +9,22 @@ Progress board and recorded actuals. Updated as the **last action of every card*
 ## Status at a glance
 
 ```
-Points   ████████░░░░░░░░░░░░░░░░░░░░░░   36 / 145   (25%)
-Sprints  ███████░░░░░░░░░░░░░░░░░░░░░░░    7 / 31
-Cards    ████████░░░░░░░░░░░░░░░░░░░░░░   15 / 58
+Points   ████████░░░░░░░░░░░░░░░░░░░░░░   40 / 145   (28%)
+Sprints  ████████░░░░░░░░░░░░░░░░░░░░░░    8 / 31
+Cards    ████████░░░░░░░░░░░░░░░░░░░░░░   16 / 58
 ```
 
 | | |
 |---|---|
-| **Phase** | 2 of 8 — Auth & Design System · ✅ **complete** |
-| **Last completed** | Sprint 7 — *Roles gate the UI and the API* — **5 of 5 points**, both cards at estimate |
-| **Up next** | **Sprint 8** — `D-2` Dockerfiles (2) · `S-1` Catalog domain (3) |
-| **Next milestone** | **M1 Hello, containerised** — Sprint 9, **11 Oct 2026** · *downgraded from "Hello, deployed"* |
-| **Schedule** | On plan. **Phase 3 suspended** — see revision 4 below. Dates deliberately not re-cut; reconciled at the end-of-Sprint-9 re-baseline. |
-| **Tests** | **253 green** (133 unit · 35 architecture · 39 integration · 46 web) — see the note below |
+| **Phase** | 4 of 8 — Instructor Studio · started early (Phase 3 suspended) |
+| **Last completed** | Sprint 8 — *Courses exist, and the app ships in a container* — **4 of 5 points**, `D-2` partial |
+| **Up next** | **Sprint 9** — `D-0` sign-off · `S-2` Course CRUD (2) · **plus the `D-2` remainder** |
+| **Next milestone** | **M1 Hello, containerised** — Sprint 9, **11 Oct 2026** · ⚠️ **at risk** — see `R10` |
+| **Schedule** | **Phase 3 suspended** (revision 4). Dates not re-cut; reconciled at the end-of-Sprint-9 re-baseline. |
+| **Tests** | **321 green** (201 unit · 35 architecture · 39 integration · 46 web) — all four suites re-run this sprint |
 | **Build** | Clean, warnings-as-errors |
-| **Open branches** | **None.** Sprint 7 merged as PR #12. |
-| **Carried work** | **None.** |
+| **Open branches** | `feat/s-1-catalog-domain` — **needs a PR** (carries `S-1` and the `D-2` part that works) |
+| **Carried work** | **`D-2` remainder — 1 pt.** The .NET images do not build; the SDK pin has no public image. Named in `R10`, carried into Sprint 9, **not** silently dropped. |
 
 ### Phases
 
@@ -71,6 +71,8 @@ Cards    ████████░░░░░░░░░░░░░░░�
 | `A-6` | Admin grant-instructor | 2 | `feat/a-3-bff-session` | ✅ PR #11 |
 | `A-5` | Route guards + login/register | 3 | `feat/a-5-route-guards` | ✅ PR #12 |
 | `SP-1` | Spike: YouTube IFrame API | 2 | `feat/a-5-route-guards` | ✅ PR #12 |
+| `S-1` | Catalog domain + invariants + migration | 3 | `feat/s-1-catalog-domain` | ⬜ **open — complete, unmerged** |
+| `D-2` | Dockerfiles for api + web | 1 of 2 | `feat/s-1-catalog-domain` | ⬜ **open — 🟡 partial** |
 
 **The last card merge on `main` is PR #12 (`171e62f`)** — named by PR rather than by tip SHA, which
 a docs commit invalidates. PRs #1–#8, #11 and #12 merged and every branch deleted. **All fifteen
@@ -85,7 +87,8 @@ delivered cards are on `main`, and there is no open branch.** Sprint 8 branches 
 | **R3** Velocity below 5 pts/week | 🔴 **Still unmeasured after seven sprints.** All seven ran as single sittings. Sprint 7 is a clean 5/5 at estimate, which is more evidence about *estimates* than about pace. Re-baseline checkpoint is end of Sprint 9. |
 | **R4** Life happens | ⬜ 4 weeks of slack built in (2 holiday + 2 buffer) |
 | **R9** First deploy deferred *(new, 2026-08-10)* | 🟡 **Mitigating.** `D-0` research pulled forward and done the same day — [`10-adr-hosting.md`](../design/10-adr-hosting.md) recommends Render + Cloudflare R2, **pending sign-off**. Goes 🟢 when the ADR is accepted and `D-1`/`D-3` have real estimates; goes back 🔴 if it sits unsigned past Sprint 9. Original entry:  Hosting reopened; Phase 3 suspended pending `D-0`. The plan deployed early on purpose — to hit managed-identity, connection-string and CORS problems now rather than alongside the player in February. That risk is now live and **grows with every sprint**: deploy at Sprint 16 and the first attempt must get object storage, pre-signed upload, the migration job and two apps right at once, instead of two nearly-empty apps. Mitigation: `D-0` is scheduled Sprint 9, not parked. |
-| **R5** Scope creep | 🟢 **Nothing carried**, two sprints running. `SP-1`'s code was thrown away as the card required — only the notes are committed. |
+| **R10** SDK pin has no public image *(new, 2026-08-10)* | 🔴 **Open — blocks `D-2`, `D-3` and M1.** `global.json` pins `10.0.400-preview.0.26322.102`. `mcr.microsoft.com/dotnet/sdk:10.0` ships **10.0.302** (band 3xx) and the nightly preview tag ships **10.0.100-rc.1** (band 1xx). `rollForward` only rolls *up* within a band, so neither satisfies it and `dotnet restore` fails in the image. Locally only `9.0.200` and the preview are installed. **Fix is a toolchain decision, not code** — see the `D-2` card. |
+| **R5** Scope creep | 🟢 **Nothing carried** from Sprints 6–7; **`D-2` carries 1 pt** out of Sprint 8, named and counted. `SP-1`'s code was thrown away as the card required — only the notes are committed. |
 | **R8** Design rabbit hole | 🟢 `W-1` came in at estimate. One accent colour, shadcn defaults everywhere else, and no time spent on Studio CSS. Next design work is `W-4`, Sprint 27. |
 
 ---
@@ -101,6 +104,7 @@ delivered cards are on `main`, and there is no open branch.** Sprint 8 branches 
 | 5 | Sep 7–13 | 5 | 3 | 3.0 | 🟡 `A-3` partial — sign-out defect. `A-4` was already delivered in `A-2`. Integration tests carried **again**. |
 | 6 | Sep 14–20 | 5 | 8 | 8.0 | ✅ `A-3` sign-out fix (1) · `IT-1` harness (2) · `W-1` (3) · `A-6` (2). **8 against a 5-point plan** — two of those points are Sprint 4/5 debt being repaid, so the sprint did ~6 points of new work and cleared the backlog. Still a single sitting. |
 | 7 | Sep 21–27 | 5 | 5 | 5.0 | ✅ `A-5` (3) · `SP-1` (2). Both at estimate. **Phase 2 closes on plan**, nothing carried. Still a single sitting. |
+| 8 | Sep 28–Oct 4 | 5 | 4 | 4.0 | 🟡 `S-1` (3) at estimate · `D-2` **1 of 2** — the web image ships and runs; the .NET images cannot build because `global.json` pins an SDK with no public image. **1 point carried.** |
 
 > 1 point ≈ 2 focused hours. Record **actual** points as hours ÷ 2, honestly — an inflated
 > actual hides a velocity problem until it is expensive to discover.
@@ -115,7 +119,13 @@ delivered cards are on `main`, and there is no open branch.** Sprint 8 branches 
 > touched no backend code, so the figure carries forward from `A-6`'s verified run — but it is
 > carried, not re-measured, and that is worth knowing before trusting it.
 
-**Rolling average:** **5.1 pts/sprint** over 7 sprints (36 delivered of 35 planned).
+**Rolling average:** **5.0 pts/sprint** over 8 sprints (40 delivered of 40 planned).
+
+**Sprint 8 is the first sprint to miss.** Four of five, and the miss is not an estimate problem —
+`S-1` landed exactly on 3. It is the first card that depended on something outside the codebase
+(a public SDK image) and found it missing. Worth noting because `R3` has always been about
+whether the *cadence* holds; this is a different failure mode and it should not be read as
+velocity decay.
 
 Read that carefully rather than cheerfully. Sprint 6's 8.0 is **debt repayment**, not throughput:
 3 of its points were work planned for Sprints 4 and 5 and not done then. Spread honestly across
@@ -1013,6 +1023,159 @@ Carried into `P-5` as residual risk rather than counted as closed.
 
 ---
 
+## Sprint 8 — Sep 28 – Oct 4, 2026
+
+**Goal:** *Courses exist, and the app ships in a container.*
+
+First sprint of Phase 4, pulled forward because Phase 3 is suspended (`08` revision 4).
+
+### `S-1` Catalog domain, invariants and migration
+
+| | |
+|---|---|
+| **Estimate** | 3 pts · **Actual** 3 pts |
+| **Area** | `api` |
+| **Branch** | `feat/s-1-catalog-domain` |
+| **PR** | ⬜ open |
+| **Status** | ✅ Done |
+
+**Acceptance criteria**
+- [x] `Course`, `Chapter`, `Lesson` per [02 §3](../design/02-domain-model.md), factory methods returning `Result`
+- [x] Publish invariants (§3.2) — all six, reported **as a list**
+- [x] Lesson content invariant (§3.3) — switching type clears the other side
+- [x] Dense 0-based `SortOrder`, whole-list reorder (§3.4)
+- [x] `Tags` as `text[]` with a GIN index (§3.5)
+- [x] `InitialCatalog` migration, registered in `Lms.MigrationService`
+- [x] **201 unit tests** (was 133); architecture tests still green
+
+**Verified against real PostgreSQL**
+```
+catalog.__ef_migrations_history_catalog  20260810100240_InitialCatalog
+catalog.courses   tags text[] not null · no xmin column (system column, as intended)
+  ix_courses_slug                UNIQUE btree (slug)
+  ix_courses_status_published_at btree (status, published_at)
+  ix_courses_tags                gin (tags)
+  ix_courses_instructor_id       btree (instructor_id)
+catalog.chapters  ix_chapters_course_id_sort_order  UNIQUE (course_id, sort_order)
+catalog.lessons   ix_lessons_chapter_id_sort_order  UNIQUE (chapter_id, sort_order)
+fk_chapters_courses_course_id  ON DELETE CASCADE
+```
+
+**A real bug the tests caught — and it would have shipped**
+
+`Slugify` used the textbook accent-stripper: `Normalize(FormD)`, drop the `NonSpacingMark`s,
+recompose. It produced `r-activit-avanc-e` from `Réactivité Avancée`.
+
+**`Directory.Build.props` sets `InvariantGlobalization=true`, which makes `string.Normalize()`
+a silent no-op** — it does not throw, it returns the input unchanged. So the decomposition never
+happens, no combining marks are ever found, and the accented characters fall through to the
+"replace anything non-alphanumeric with a hyphen" step.
+
+The failure mode is what makes it worth recording: the code compiles, passes every ASCII test,
+and mangles the first accented course title anyone writes — into a *public URL*, which is then
+frozen on publish. Replaced with an explicit fold table (plus `ß`→`ss`, `æ`→`ae`, `œ`→`oe`),
+with a regression test named after the trap. **Noted in `src/CLAUDE.md`** so the next person
+reaching for `Normalize` finds out before shipping.
+
+**Decisions**
+1. **`PublishViolations()` returns a list; `Publish()` summarises it.** §3.2 requires the 422 to
+   name every problem — telling an author about one missing thing at a time turns publishing
+   into a guessing game. `Result` carries one `Error`, and a multi-error `Result` is not being
+   invented for a single caller (rule of two). `S-6` reads the list method directly.
+2. **"No required lesson" is only reported when lessons exist.** On an empty course it is noise
+   stacked on the errors that already say so.
+3. **Re-publishing keeps the original `PublishedAt`.** A brief unpublish to fix a typo must not
+   send a year-old course back to the top of whatever sorts on it.
+4. **Retitling does not regenerate the slug.** Silently moving a URL because someone fixed a
+   typo is surprising even on a draft.
+5. **The unique index on `slug` is the arbiter, not a pre-check** — a query-then-insert still
+   loses to a concurrent create. Same call as `A-6`'s instructor slug.
+6. **A title that slugifies to nothing is refused** rather than given a generated fallback.
+7. **The tag cap is applied after de-duplication**, so `["dotnet","DotNet"]` counts as one.
+8. **`EstimatedMinutes` rounds up.** A 90-second lesson reading as "0 minutes" is worse than "1".
+9. **`EnrollmentCount` clamps at zero.** It is denormalised from another module's events and so
+   eventually consistent; a duplicate unenrol must not produce −1.
+
+**Deviations from the design docs**
+- **`LessonAttachment` was not built.** [02 §3](../design/02-domain-model.md) lists it in the
+  Catalog schema, but the card is "Course/Chapter/Lesson", and attachments are `S-8` (Sprint 12).
+  Adding a table later is a migration, and the migration pipeline is already verifiable without
+  it — unlike `F-4`'s outbox, which was pulled forward precisely because nothing else proved it.
+
+---
+
+### `D-2` Dockerfiles for api + web — 🟡 **partial**
+
+| | |
+|---|---|
+| **Estimate** | 2 pts · **Actual 1 pt · 1 carried** |
+| **Area** | `infra` |
+| **Branch** | `feat/s-1-catalog-domain` |
+| **PR** | ⬜ open |
+| **Status** | 🟡 **Partial — the web image ships; the .NET images cannot be built** |
+
+**Done**
+- [x] `web/Dockerfile` — multi-stage, `npm ci`, dev dependencies dropped from the runtime layer
+- [x] **Built, run, and exercised**: `/`, `/login`, `/register` all 200, and `/my-learning` 307s
+      to `/login?redirect=%2Fmy-learning` **from inside the container** — `A-5`'s guard working
+      against a real image
+- [x] Runs as non-root (`uid=1000(node)`); 390 MB
+- [x] `.dockerignore` — keeps host `bin/`, `obj/`, `node_modules/` and `dist/` out, so a host
+      build for another RID cannot shadow the one the image just produced
+- [x] `web/server.mjs` production entry — see below
+
+**Not done, and why**
+- [ ] `src/Lms.Api/Dockerfile` and `src/Lms.MigrationService/Dockerfile` are **written but do
+      not build.** `dotnet restore` fails with exit 155 before it reaches any C#.
+
+**The blocker — `R10`**
+
+`global.json` pins `10.0.400-preview.0.26322.102`.
+
+| Image | Ships |
+|---|---|
+| `mcr.microsoft.com/dotnet/sdk:10.0` | **10.0.302** — feature band 3xx |
+| `mcr.microsoft.com/dotnet/nightly/sdk:10.0-preview` | **10.0.100-rc.1** — band 1xx |
+
+`rollForward: latestPatch` only rolls **up within a band**, so neither satisfies a 4xx pin, and
+there is no public image that does. Locally, only `9.0.200` and the pinned preview are installed.
+**This is a toolchain decision, not a code fix**, so it was not made unilaterally — options are
+in the handover note below. It equally blocks `D-3` and therefore M1.
+
+**A second silent failure, found by running the image rather than building it**
+
+The first web image built cleanly, started, and **exited 0 within a second, logging nothing.**
+`vite build` emits a *web-standard fetch handler* at `dist/server/server.js` — it exports
+`{ fetch(request) }` and has no listener — so `node dist/server/server.js` evaluates the module
+and ends. In a container that is indistinguishable from a healthy start followed by a clean
+shutdown, and on a host with restart-on-exit it would have looked like a crash loop with an
+empty log.
+
+Fixed with `web/server.mjs`: `srvx` (already in the tree, and what the TanStack Start hosting
+guide names for this) adapts the fetch handler to Node, with `serveStatic` in front for
+`dist/client`. Deliberately **not** a Nitro/Vercel/Netlify preset — a preset bakes a deployment
+target into the build, and `D-0` has not chosen one. A plain Node process on `$PORT` is what
+every candidate in [10-adr-hosting.md](../design/10-adr-hosting.md) consumes.
+
+**Decisions**
+1. **The whole source tree is copied before restore, not a list of fifteen `.csproj` paths.**
+   The list is a maintenance burden that breaks silently the first time a project is added, and
+   the cache win on a repo this size does not pay for it.
+2. **`npm ci`, never `install`** — a drifted lock file must fail the build, same rule as `F-6`.
+3. **A `Dockerfile` for `Lms.MigrationService` too**, though the card says "api + web". It is
+   five lines different from the API's, and `D-3`'s migration job — the requirement that
+   disqualifies a host if it cannot gate a rollout — has no image without it. Small, deliberate
+   pull-forward.
+4. **`0.0.0.0`, not localhost.** Binding loopback inside a container looks perfectly healthy
+   from within and is unreachable from outside.
+5. **Both runtime images run as a non-root user**, and application files stay root-owned, so the
+   process cannot rewrite its own code.
+
+**Not verified** — the API and migration images, obviously. Also no health-probe wiring or image
+scanning; both belong with `D-3` and the chosen host.
+
+---
+
 ## Card template
 
 ```markdown
@@ -1122,3 +1285,13 @@ Implementation decisions worth finding later. Full context lives in the card ent
 | 2026-08-10 | `SP-1` | Send progress on `pagehide` only — one departure fires three events, and `visibilitychange` fires constantly |
 | 2026-08-10 | `SP-1` | `onReady` fires before `onError`, so it is not a signal that the video is playable |
 | 2026-08-10 | `SP-1` | A ten-line forward-delta clamp defeats the casual scrub — worth shipping, but it is **not** a security control |
+| 2026-08-10 | `S-1` | **`InvariantGlobalization=true` makes `string.Normalize` a silent no-op** — the textbook accent-stripper mangles accented titles into public URLs |
+| 2026-08-10 | `S-1` | `PublishViolations()` returns the full list; `Publish()` summarises it. No multi-error `Result` invented for one caller |
+| 2026-08-10 | `S-1` | Re-publishing keeps the original `PublishedAt`; a typo fix must not re-sort a year-old course as new |
+| 2026-08-10 | `S-1` | Retitling never regenerates the slug — silently moving a URL is surprising even on a draft |
+| 2026-08-10 | `S-1` | The tag cap is applied after de-duplication, so case variants count once |
+| 2026-08-10 | `S-1` | `EnrollmentCount` clamps at zero — it is eventually consistent from another module's events |
+| 2026-08-10 | `D-2` | **The built web output is a fetch handler, not a server.** `node dist/server/server.js` exits 0 silently; `web/server.mjs` + `srvx` is the missing listener |
+| 2026-08-10 | `D-2` | No Nitro/Vercel/Netlify preset — a preset bakes a deploy target into the build before `D-0` has chosen one |
+| 2026-08-10 | `D-2` | Copy the whole source tree before restore; a list of `.csproj` paths breaks silently when a project is added |
+| 2026-08-10 | `D-2` | **The pinned preview SDK exists in no public image** — `R10`, and it blocks `D-3` and M1 |

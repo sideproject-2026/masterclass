@@ -1,3 +1,5 @@
+using Lms.Modules.Catalog;
+using Lms.Modules.Catalog.Infrastructure;
 using Lms.Modules.Identity;
 using Lms.Modules.Identity.Infrastructure;
 using Lms.Modules.Notifications;
@@ -17,11 +19,13 @@ builder.Services.AddOpenTelemetry()
 // authentication. Add a line here when a module gains a DbContext.
 builder.Services.AddIdentityPersistence(builder.Configuration);
 builder.Services.AddNotificationsPersistence(builder.Configuration);
+builder.Services.AddCatalogPersistence(builder.Configuration);
 
 // The runner resolves DbContext, not the concrete types, so it stays agnostic of how
 // many modules exist.
 builder.Services.AddScoped<DbContext>(sp => sp.GetRequiredService<IdentityModuleDbContext>());
 builder.Services.AddScoped<DbContext>(sp => sp.GetRequiredService<NotificationsDbContext>());
+builder.Services.AddScoped<DbContext>(sp => sp.GetRequiredService<CatalogDbContext>());
 
 var host = builder.Build();
 await host.RunAsync();

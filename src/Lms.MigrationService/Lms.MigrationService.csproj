@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lms.ServiceDefaults\Lms.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\Modules\Lms.Modules.Catalog\Lms.Modules.Catalog.csproj" />
     <ProjectReference Include="..\Modules\Lms.Modules.Identity\Lms.Modules.Identity.csproj" />
     <ProjectReference Include="..\Modules\Lms.Modules.Notifications\Lms.Modules.Notifications.csproj" />
   </ItemGroup>
