@@ -239,7 +239,7 @@ The riskiest part of the build, deliberately scheduled early. If the BFF pattern
 | Card | State | Pts | Notes |
 |---|---|---:|---|
 | `D-2` Dockerfiles for api + web | ✅ **scheduled — Sprint 8** | 2 | Provider-agnostic. Every candidate host consumes a container, and this is verifiable locally against the AppHost's own Postgres. |
-| `D-0` **Spike: choose the hosting target** | 🔵 **scheduled — Sprint 9** | 2 | Timeboxed, output is an ADR. **Blocks `D-1` and `D-3`.** |
+| `D-0` **Spike: choose the hosting target** | 🟡 **research done — awaiting sign-off** | 2 | Pulled forward and run 2026-08-10. [`10-adr-hosting.md`](10-adr-hosting.md) recommends **Render + Cloudflare R2**. **The card does not close until §8 of that ADR says ACCEPTED** — the decision is the owner's, not the researcher's. |
 | `D-1` Provision the target environment | ⏸️ unscheduled | ~5 | Was "Bicep: RG, Postgres Flexible Server, Storage, Key Vault, Container Apps env + 2 apps". The IaC tool and the resource list both follow from `D-0`. Estimate provisional. |
 | `D-3` CD: build/push, migration job, deploy | ⏸️ unscheduled | ~2 | The migration job must still gate the API deploy — see below. Estimate provisional. |
 
@@ -279,7 +279,7 @@ The largest phase. **Moved up from Sprints 10–16 at Revision 4**, because susp
 | Sprint | Dates | Goal | Cards | Pts |
 |---|---|---|---|---|
 | **8** | Sep 28–Oct 4 | *Courses exist, and the app ships in a container.* | `D-2` Dockerfiles for api + web — 2 `infra`<br>`S-1` Catalog domain: Course/Chapter/Lesson + invariants + migration — 3 `api` | 5 |
-| **9** | Oct 5–11 | *The hosting question is answered.* | `D-0` **Spike: choose the hosting target** — 2 `infra`<br>`S-2` Course CRUD endpoints — 2 `api` | 4 |
+| **9** | Oct 5–11 | *The hosting question is answered.* | `D-0` **Spike: choose the hosting target** — 2 `infra` · *research done 2026-08-10, awaiting sign-off*<br>`S-2` Course CRUD endpoints — 2 `api` | 4 |
 | **10** | Oct 12–18 | *A course has structure.* | `S-3` Chapter CRUD + reorder — 2 `api`<br>`S-4` Lesson CRUD + move — 3 `api` | 5 |
 | **11** | Oct 19–25 | *A lesson has content, and publish has teeth.* | `S-5` Video (YouTube URL parse/validate) + Reading, content invariant — 3 `api`<br>`S-6` Publish/unpublish/archive + full 422 invariant report — 2 `api` | 5 |
 | **12** | Oct 26–Nov 1 | *Files upload without touching the API.* | `S-7` Media Module: pre-signed upload + thumbnail flow — 3 `api`<br>`S-8` Attachments: upload-url, confirm, delete — 2 `api` | 5 |
