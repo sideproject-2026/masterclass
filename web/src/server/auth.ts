@@ -1,5 +1,15 @@
 import { createServerFn } from '@tanstack/react-start'
 
+import {
+  credentialsSchema,
+  currentUserSchema,
+  registrationSchema,
+} from '#/features/auth/schemas'
+import type {
+  AuthState,
+  Credentials,
+  Registration,
+} from '#/features/auth/schemas'
 import { apiFetch, apiPost } from './api'
 import type { TokenResponse } from './api'
 import { readSession, sessionFromTokens, writeSession } from './session'
@@ -11,18 +21,6 @@ import { readSession, sessionFromTokens, writeSession } from './session'
  * returned shapes deliberately contain **no tokens** — see artifacts/design/04-adr-authentication.md §3.
  */
 
-export type CurrentUser = {
-  id: string
-  email: string
-  displayName: string
-  roles: Array<string>
-  instructorSlug: string | null
-}
-
-export type AuthState =
-  | { signedIn: true; user: CurrentUser }
-  | { signedIn: false }
-
 export type AuthResult = { ok: true } | { ok: false; error: string }
 
 /**
@@ -32,7 +30,7 @@ export type AuthResult = { ok: true } | { ok: false; error: string }
  * sealed cookie and the browser is told only whether it worked.
  */
 export const login = createServerFn({ method: 'POST' })
-  .validator((data: { email: string; password: string }) => data)
+  .validator((data: Credentials) => credentialsSchema.parse(data))
   .handler(async ({ data }): Promise<AuthResult> => {
     const result = await apiPost<TokenResponse>('/api/auth/login', {
       email: data.email,
@@ -46,6 +44,42 @@ export const login = createServerFn({ method: 'POST' })
     }
 
     writeSession(sessionFromTokens(result.data))
+    return { ok: true }
+  })
+
+/**
+ * Creates a student account and signs it in.
+ *
+ * The sign-in is a second server-side call, invisible to the browser: the credentials are
+ * already in hand, and sending someone who just proved them to a login form to type them again
+ * is friction with nothing behind it. If registration succeeds and the sign-in somehow does
+ * not, the account still exists — so that path reports success and lets the login page handle
+ * it, rather than implying the registration failed and inviting a duplicate attempt.
+ */
+export const register = createServerFn({ method: 'POST' })
+  .validator((data: Registration) => registrationSchema.parse(data))
+  .handler(async ({ data }): Promise<AuthResult> => {
+    const created = await apiPost('/api/auth/register', {
+      email: data.email,
+      password: data.password,
+      displayName: data.displayName,
+    })
+
+    if (!created.ok) {
+      // 409 for a taken address, 400 for the password policy. Both are safe to show: the
+      // caller supplied the address, so this tells them nothing they did not already know.
+      return { ok: false, error: created.detail }
+    }
+
+    const tokens = await apiPost<TokenResponse>('/api/auth/login', {
+      email: data.email,
+      password: data.password,
+    })
+
+    if (tokens.ok) {
+      writeSession(sessionFromTokens(tokens.data))
+    }
+
     return { ok: true }
   })
 
@@ -64,8 +98,17 @@ export const getCurrentUser = createServerFn({ method: 'GET' }).handler(
       return { signedIn: false }
     }
 
-    const result = await apiFetch<CurrentUser>('/api/me')
+    const result = await apiFetch<unknown>('/api/me')
 
-    return result.ok ? { signedIn: true, user: result.data } : { signedIn: false }
+    if (!result.ok) {
+      return { signedIn: false }
+    }
+
+    // Parsed, not cast. The guards branch on `roles`; a payload whose shape drifted would
+    // otherwise reach them as `undefined` and quietly decide access. Failing to parse means
+    // signed out, which fails closed.
+    const user = currentUserSchema.safeParse(result.data)
+
+    return user.success ? { signedIn: true, user: user.data } : { signedIn: false }
   },
 )

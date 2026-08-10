@@ -10,11 +10,35 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthedRouteImport } from './routes/_authed'
+import { Route as InstructorRouteImport } from './routes/_instructor'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as RegisterRouteImport } from './routes/register'
 import { Route as SignOutRouteImport } from './routes/sign-out'
+import { Route as AuthedMyLearningRouteImport } from './routes/_authed/my-learning'
+import { Route as InstructorStudioIndexRouteImport } from './routes/_instructor/studio/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthedRoute = AuthedRouteImport.update({
+  id: '/_authed',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InstructorRoute = InstructorRouteImport.update({
+  id: '/_instructor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignOutRoute = SignOutRouteImport.update({
@@ -22,30 +46,68 @@ const SignOutRoute = SignOutRouteImport.update({
   path: '/sign-out',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthedMyLearningRoute = AuthedMyLearningRouteImport.update({
+  id: '/my-learning',
+  path: '/my-learning',
+  getParentRoute: () => AuthedRoute,
+} as any)
+const InstructorStudioIndexRoute = InstructorStudioIndexRouteImport.update({
+  id: '/studio/',
+  path: '/studio/',
+  getParentRoute: () => InstructorRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/sign-out': typeof SignOutRoute
+  '/my-learning': typeof AuthedMyLearningRoute
+  '/studio/': typeof InstructorStudioIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/sign-out': typeof SignOutRoute
+  '/my-learning': typeof AuthedMyLearningRoute
+  '/studio': typeof InstructorStudioIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authed': typeof AuthedRouteWithChildren
+  '/_instructor': typeof InstructorRouteWithChildren
+  '/login': typeof LoginRoute
+  '/register': typeof RegisterRoute
   '/sign-out': typeof SignOutRoute
+  '/_authed/my-learning': typeof AuthedMyLearningRoute
+  '/_instructor/studio/': typeof InstructorStudioIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sign-out'
+  fullPaths:
+    '/' | '/login' | '/register' | '/sign-out' | '/my-learning' | '/studio/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sign-out'
-  id: '__root__' | '/' | '/sign-out'
+  to: '/' | '/login' | '/register' | '/sign-out' | '/my-learning' | '/studio'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authed'
+    | '/_instructor'
+    | '/login'
+    | '/register'
+    | '/sign-out'
+    | '/_authed/my-learning'
+    | '/_instructor/studio/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthedRoute: typeof AuthedRouteWithChildren
+  InstructorRoute: typeof InstructorRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  RegisterRoute: typeof RegisterRoute
   SignOutRoute: typeof SignOutRoute
 }
 
@@ -58,6 +120,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authed': {
+      id: '/_authed'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_instructor': {
+      id: '/_instructor'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof InstructorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sign-out': {
       id: '/sign-out'
       path: '/sign-out'
@@ -65,11 +155,52 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignOutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authed/my-learning': {
+      id: '/_authed/my-learning'
+      path: '/my-learning'
+      fullPath: '/my-learning'
+      preLoaderRoute: typeof AuthedMyLearningRouteImport
+      parentRoute: typeof AuthedRoute
+    }
+    '/_instructor/studio/': {
+      id: '/_instructor/studio/'
+      path: '/studio'
+      fullPath: '/studio/'
+      preLoaderRoute: typeof InstructorStudioIndexRouteImport
+      parentRoute: typeof InstructorRoute
+    }
   }
 }
 
+interface AuthedRouteChildren {
+  AuthedMyLearningRoute: typeof AuthedMyLearningRoute
+}
+
+const AuthedRouteChildren: AuthedRouteChildren = {
+  AuthedMyLearningRoute: AuthedMyLearningRoute,
+}
+
+const AuthedRouteWithChildren =
+  AuthedRoute._addFileChildren(AuthedRouteChildren)
+
+interface InstructorRouteChildren {
+  InstructorStudioIndexRoute: typeof InstructorStudioIndexRoute
+}
+
+const InstructorRouteChildren: InstructorRouteChildren = {
+  InstructorStudioIndexRoute: InstructorStudioIndexRoute,
+}
+
+const InstructorRouteWithChildren = InstructorRoute._addFileChildren(
+  InstructorRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthedRoute: AuthedRouteWithChildren,
+  InstructorRoute: InstructorRouteWithChildren,
+  LoginRoute: LoginRoute,
+  RegisterRoute: RegisterRoute,
   SignOutRoute: SignOutRoute,
 }
 export const routeTree = rootRouteImport

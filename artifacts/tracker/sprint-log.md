@@ -2,7 +2,7 @@
 
 Progress board and recorded actuals. Updated as the **last action of every card**.
 
-*Last updated: 2026-08-09 · after Sprint 5*
+*Last updated: 2026-08-10 · Sprint 6 merged as PR #11, Sprint 7 opened*
 
 ---
 
@@ -18,12 +18,12 @@ Cards    ███████░░░░░░░░░░░░░░░░�
 |---|---|
 | **Phase** | 2 of 8 — Auth & Design System · only `A-5` and `SP-1` remain |
 | **Last completed** | Sprint 6 — *Every future screen inherits a look* — **8 of 5 points**, clearing two sprints of debt |
-| **Up next** | **Sprint 7** — `A-5` route guards + login/register pages (3) · `SP-1` YouTube IFrame spike (2) |
+| **In progress** | **Sprint 7** — `A-5` route guards + login/register pages (3) · `SP-1` YouTube IFrame spike (2) |
 | **Next milestone** | **M1 Hello, deployed** — Sprint 9, **11 Oct 2026** |
 | **Schedule** | On plan. Not re-dated — see the re-baseline below. |
 | **Tests** | **214 green** (133 unit · 35 architecture · 39 integration · 8 web) |
 | **Build** | Clean, warnings-as-errors |
-| **Open branches** | `feat/a-3-bff-session` — **carries all of Sprint 6 and needs a PR** |
+| **Open branches** | `feat/a-5-route-guards` — Sprint 7 in progress |
 | **Carried work** | **None.** |
 
 ### Phases
@@ -64,13 +64,13 @@ Cards    ███████░░░░░░░░░░░░░░░░�
 | `F-6` | CI workflow | 1 | `feat/f-6-ci` | ✅ PR #6 |
 | `A-1` | Identity: users, roles, register/login | 3 | `feat/a-1-identity-module` | ✅ PR #7 |
 | `A-2` | JWT validation, policies, me/refresh/logout | 2 | `feat/a-2-jwt-policies` | ✅ PR #8 |
-| `A-3` | BFF session cookie | 4 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
-| `IT-1` | Integration test harness | 2 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
-| `W-1` | Design system + app shell | 3 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
-| `A-6` | Admin grant-instructor | 2 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
+| `A-3` | BFF session cookie | 4 | `feat/a-3-bff-session` | ✅ PR #11 |
+| `IT-1` | Integration test harness | 2 | `feat/a-3-bff-session` | ✅ PR #11 |
+| `W-1` | Design system + app shell | 3 | `feat/a-3-bff-session` | ✅ PR #11 |
+| `A-6` | Admin grant-instructor | 2 | `feat/a-3-bff-session` | ✅ PR #11 |
 
-**`main` is at `95f8596`.** PRs #1–#8 merged and their branches deleted; `feat/a-3-bff-session`
-is the only open branch. Later cards branch fresh off `main`, no longer stacked.
+**`main` is at `8f4d00c`.** PRs #1–#8 and #11 merged and their branches deleted; all thirteen
+delivered cards are on `main`. Sprint 7 branches fresh off it.
 
 ### Open risks
 

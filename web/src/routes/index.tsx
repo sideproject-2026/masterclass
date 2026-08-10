@@ -1,10 +1,8 @@
-import { createFileRoute, useRouter } from '@tanstack/react-router'
-import { useState } from 'react'
+import { Link, createFileRoute } from '@tanstack/react-router'
 
 import { Markdown } from '#/components/markdown'
 import { Button } from '#/components/ui/button'
 import { getApiHealth } from '#/features/health/query'
-import { login } from '#/server/auth'
 
 export const Route = createFileRoute('/')({
   loader: async () => ({ health: await getApiHealth() }),
@@ -41,12 +39,19 @@ function Home() {
             <p className="mt-1 text-xs text-muted-foreground">
               Roles: {auth.user.roles.join(', ') || 'none'}
             </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Sign out is in the header.
-            </p>
+            <Button asChild variant="outline" size="sm" className="mt-3">
+              <Link to="/my-learning">My Learning</Link>
+            </Button>
           </div>
         ) : (
-          <SignInForm />
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button asChild size="sm">
+              <Link to="/register">Create an account</Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/login">Sign in</Link>
+            </Button>
+          </div>
         )}
       </section>
 
@@ -70,60 +75,5 @@ function Home() {
         </dl>
       </section>
     </>
-  )
-}
-
-/*
-  Scaffolding. A-5 (Sprint 7) replaces this with the real sign-in and register pages. It exists
-  so A-3's session layer is exercised rather than merely written — and it is what found the
-  sign-out defect.
-*/
-function SignInForm() {
-  const router = useRouter()
-  const [error, setError] = useState<string | null>(null)
-  const [busy, setBusy] = useState(false)
-
-  async function onSignIn(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    setBusy(true)
-    setError(null)
-
-    const form = new FormData(event.currentTarget)
-    const result = await login({
-      data: {
-        email: String(form.get('email') ?? ''),
-        password: String(form.get('password') ?? ''),
-      },
-    })
-
-    setBusy(false)
-    if (result.ok) {
-      await router.invalidate()
-    } else {
-      setError(result.error)
-    }
-  }
-
-  return (
-    <form onSubmit={onSignIn} className="mt-4 grid max-w-sm gap-2 text-sm">
-      <input
-        name="email"
-        type="email"
-        placeholder="email"
-        required
-        className="rounded-md border bg-background px-2 py-1"
-      />
-      <input
-        name="password"
-        type="password"
-        placeholder="password"
-        required
-        className="rounded-md border bg-background px-2 py-1"
-      />
-      <Button type="submit" size="sm" disabled={busy} className="justify-self-start">
-        Sign in
-      </Button>
-      {error ? <p className="text-xs text-destructive">{error}</p> : null}
-    </form>
   )
 }
