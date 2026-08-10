@@ -60,6 +60,19 @@ https://www.youtube-nocookie.com/embed/{id}?rel=0&modestbranding=1&enablejsapi=1
 - `rel=0` limits end-of-video recommendations to the same channel. It **cannot** disable them entirely; YouTube removed that capability.
 - `enablejsapi=1` is required for the progress tracking below.
 
+**Build that URL with the player's `host` option, not by hand** ([`SP-1`](../spikes/sp-1-youtube-iframe-api.md)):
+
+```js
+new YT.Player('player', {
+  videoId: id,
+  host: 'https://www.youtube-nocookie.com',
+  playerVars: { rel: 0, modestbranding: 1, enablejsapi: 1, origin: location.origin },
+})
+```
+
+Writing the `<iframe>` in JSX and attaching `new YT.Player(existingIframe)` is the version that
+silently reverts to `www.youtube.com` — the nocookie property is lost without any error.
+
 ### 2.4 Progress tracking
 
 R6 needs watch progress, and YouTube does not push it to you. Use the **YouTube IFrame Player API**:
@@ -67,11 +80,19 @@ R6 needs watch progress, and YouTube does not push it to you. Use the **YouTube 
 1. Load the iframe API, construct a player bound to the embed.
 2. On `onStateChange → PLAYING`, start a 15-second interval that reads `player.getCurrentTime()`.
 3. Post `{ positionSeconds, watchedSeconds }` to `POST /api/learn/lessons/{id}/progress` ([`03 §5`](03-api-design.md#post-apilearnlessonslessonidprogress)).
-4. Also post on `PAUSED`, on `ENDED`, and on `visibilitychange`/`beforeunload` (use `navigator.sendBeacon` for the unload case — a normal fetch will be cancelled).
+4. Also post on `PAUSED`, on `ENDED`, and on **`pagehide`** — via `navigator.sendBeacon`, because a normal fetch is cancelled.
 5. Server keeps `watchedSeconds` monotonic, so seeking backwards never reduces credit.
 6. Auto-complete at ≥90% watched.
 
-Known rough edge: `getCurrentTime()` reports position, not *watched* time, so a student can drag the scrubber to the end and be credited with completion. Solving that properly means tracking watched intervals and rejecting jumps — real work, and disproportionate for a platform with no certificate and no compliance requirement. **Accepted for MVP.** If completion ever gates something that matters, implement interval tracking then.
+Three things [`SP-1`](../spikes/sp-1-youtube-iframe-api.md) measured that change how step 4 is written:
+
+- **`pagehide` only.** One departure fires `beforeunload`, `pagehide` *and* `visibilitychange` within 15ms of each other — three identical writes. `beforeunload` is also unreliable on mobile and blocks bfcache, and `visibilitychange` fires every time the visitor glances at another window (26 beacons before playback even started). Dedupe further by skipping the send when the position has not moved.
+- **Wrap the payload in a `Blob`.** `sendBeacon(url, string)` sends `text/plain`, which a JSON-bound minimal API answers with **415** — invisibly, since `sendBeacon` returns `true` for *queued*, never for *accepted*. Use `new Blob([json], { type: 'application/json' })`.
+- **`onReady` does not mean playable.** A video with embedding disabled fires `onReady` and *then* `onError` (code `150`). Drive the error state from `onError`.
+
+Known rough edge: `getCurrentTime()` reports position, not *watched* time, so a student can drag the scrubber to the end and be credited with completion. Solving it properly means server-side interval tracking — real work, and disproportionate for a platform with no certificate and no compliance requirement. **Accepted for MVP.**
+
+`SP-1` did find that ~10 lines of client-side forward-delta clamping (`if (delta > 0 && delta < 2)`) credits nothing for a 495-second scrub, and `P-5` should ship it. **It is not a security control**: the client is untrusted and can post any `watchedSeconds` it likes. It fixes the casual case and changes the honest default; the hole stays open until interval tracking exists.
 
 ### 2.5 Alternatives considered
 
