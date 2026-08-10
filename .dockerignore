@@ -1,0 +1,21 @@
+# Build outputs and dependencies are produced inside the image, never copied into it.
+# Copying bin/ and obj/ in is not just slow — a host build for a different RID lands in the
+# image and shadows the one the Dockerfile just produced.
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+
+.git/
+.github/
+.vs/
+.vscode/
+.idea/
+
+artifacts/
+scripts/
+**/*.md
+**/.env
+**/.env.*
+**/*.user
+**/TestResults/
