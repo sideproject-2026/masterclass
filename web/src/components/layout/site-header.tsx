@@ -2,7 +2,8 @@ import { Link } from '@tanstack/react-router'
 
 import { ThemeToggle } from '#/components/theme-toggle'
 import { Button } from '#/components/ui/button'
-import type { AuthState } from '#/server/auth'
+import { canUseStudio } from '#/features/auth/access'
+import type { AuthState } from '#/features/auth/schemas'
 
 /**
  * The application header.
@@ -23,7 +24,7 @@ export function SiteHeader({ auth }: { auth: AuthState }) {
 
         <ThemeToggle />
 
-        {auth.signedIn ? <SignedIn auth={auth} /> : null}
+        {auth.signedIn ? <SignedIn auth={auth} /> : <SignedOut />}
       </div>
     </header>
   )
@@ -32,6 +33,16 @@ export function SiteHeader({ auth }: { auth: AuthState }) {
 function SignedIn({ auth }: { auth: Extract<AuthState, { signedIn: true }> }) {
   return (
     <div className="flex items-center gap-2">
+      {/*
+        Shown on the role, not on instructorSlug — a revoked instructor keeps their slug by
+        design (A-6), and would otherwise be offered a link that answers 403.
+      */}
+      {canUseStudio(auth) ? (
+        <Button asChild variant="ghost" size="sm">
+          <Link to="/studio">Studio</Link>
+        </Button>
+      ) : null}
+
       {/*
         The name is the first thing to go at 375px: it is confirmation, not navigation, and
         sign-out has to stay reachable on a phone.
@@ -46,6 +57,19 @@ function SignedIn({ auth }: { auth: Extract<AuthState, { signedIn: true }> }) {
           Sign out
         </Button>
       </form>
+    </div>
+  )
+}
+
+function SignedOut() {
+  return (
+    <div className="flex items-center gap-2">
+      <Button asChild variant="ghost" size="sm">
+        <Link to="/login">Sign in</Link>
+      </Button>
+      <Button asChild size="sm">
+        <Link to="/register">Register</Link>
+      </Button>
     </div>
   )
 }

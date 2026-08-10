@@ -111,6 +111,7 @@ Guards are UX; the API enforces the same rules ([`03 §7`](03-api-design.md#7-au
 - **The YouTube embed is an iframe with a server-validated 11-character id** ([`05 §2.2`](05-adr-video-and-storage.md#22-url-parsing)). Never interpolate an unvalidated string into an iframe `src`.
 - **No access token in client code, ever.** If you find yourself passing a token to a component, the BFF boundary has been breached.
 - **CSP** with `frame-src https://www.youtube-nocookie.com`, `img-src` limited to the CDN origin, and no `unsafe-inline` for scripts.
+  `script-src` must also allow **`https://www.youtube.com`** — the IFrame API is served from `www.youtube.com/iframe_api` even when the frame itself is nocookie ([`SP-1`](../spikes/sp-1-youtube-iframe-api.md)). Easy to miss, and the symptom is a player that never initialises.
 
 ---
 

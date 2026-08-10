@@ -2,28 +2,28 @@
 
 Progress board and recorded actuals. Updated as the **last action of every card**.
 
-*Last updated: 2026-08-09 · after Sprint 5*
+*Last updated: 2026-08-10 · after Sprint 7*
 
 ---
 
 ## Status at a glance
 
 ```
-Points   ███████░░░░░░░░░░░░░░░░░░░░░░░   31 / 145   (21%)
-Sprints  ██████░░░░░░░░░░░░░░░░░░░░░░░░    6 / 31
-Cards    ███████░░░░░░░░░░░░░░░░░░░░░░░   13 / 58
+Points   ████████░░░░░░░░░░░░░░░░░░░░░░   36 / 145   (25%)
+Sprints  ███████░░░░░░░░░░░░░░░░░░░░░░░    7 / 31
+Cards    ████████░░░░░░░░░░░░░░░░░░░░░░   15 / 58
 ```
 
 | | |
 |---|---|
-| **Phase** | 2 of 8 — Auth & Design System · only `A-5` and `SP-1` remain |
-| **Last completed** | Sprint 6 — *Every future screen inherits a look* — **8 of 5 points**, clearing two sprints of debt |
-| **Up next** | **Sprint 7** — `A-5` route guards + login/register pages (3) · `SP-1` YouTube IFrame spike (2) |
+| **Phase** | 2 of 8 — Auth & Design System · ✅ **complete** |
+| **Last completed** | Sprint 7 — *Roles gate the UI and the API* — **5 of 5 points**, both cards at estimate |
+| **Up next** | **Sprint 8** — Phase 3, Deploy (`D-1`…`D-3`) → **M1** |
 | **Next milestone** | **M1 Hello, deployed** — Sprint 9, **11 Oct 2026** |
-| **Schedule** | On plan. Not re-dated — see the re-baseline below. |
-| **Tests** | **214 green** (133 unit · 35 architecture · 39 integration · 8 web) |
+| **Schedule** | On plan. Not re-dated — re-baseline checkpoint is end of Sprint 9. |
+| **Tests** | **253 green** (133 unit · 35 architecture · 39 integration · 46 web) — see the note below |
 | **Build** | Clean, warnings-as-errors |
-| **Open branches** | `feat/a-3-bff-session` — **carries all of Sprint 6 and needs a PR** |
+| **Open branches** | `feat/a-5-route-guards` — **complete, needs a PR** (carries `A-5` and `SP-1`) |
 | **Carried work** | **None.** |
 
 ### Phases
@@ -31,8 +31,8 @@ Cards    ███████░░░░░░░░░░░░░░░░�
 | # | Phase | Sprints | Pts | Status |
 |---|---|---|---:|---|
 | 1 | Foundation | 1–3 | 15 | ✅ **Done** — `F-1`…`F-7` |
-| 2 | Auth & Design System | 4–7 | 20 | 🔵 **In progress** — `A-1`…`A-4`, `A-6`, `W-1` done; `A-5` and `SP-1` remain |
-| 3 | Deploy | 8–9 | 9 | ⬜ `D-1`…`D-3` → **M1** |
+| 2 | Auth & Design System | 4–7 | 20 | ✅ **Done** — `A-1`…`A-6`, `W-1`, `SP-1` |
+| 3 | Deploy | 8–9 | 9 | 🔵 **Next** — `D-1`…`D-3` → **M1** |
 | 4 | Instructor Studio | 10–16 | 35 | ⬜ `S-1`…`S-12`, `W-2` → **M2** |
 | 5 | Catalog & Enrollment | 17–19, 22 | 20 | ⬜ `C-1`…`C-9`, `W-3` → **M3** |
 | 6 | Player & Completion | 23–26 | 21 | ⬜ `P-1`…`P-8` → **M4** |
@@ -64,23 +64,26 @@ Cards    ███████░░░░░░░░░░░░░░░░�
 | `F-6` | CI workflow | 1 | `feat/f-6-ci` | ✅ PR #6 |
 | `A-1` | Identity: users, roles, register/login | 3 | `feat/a-1-identity-module` | ✅ PR #7 |
 | `A-2` | JWT validation, policies, me/refresh/logout | 2 | `feat/a-2-jwt-policies` | ✅ PR #8 |
-| `A-3` | BFF session cookie | 4 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
-| `IT-1` | Integration test harness | 2 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
-| `W-1` | Design system + app shell | 3 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
-| `A-6` | Admin grant-instructor | 2 | `feat/a-3-bff-session` | ⬜ **open — complete, unmerged** |
+| `A-3` | BFF session cookie | 4 | `feat/a-3-bff-session` | ✅ PR #11 |
+| `IT-1` | Integration test harness | 2 | `feat/a-3-bff-session` | ✅ PR #11 |
+| `W-1` | Design system + app shell | 3 | `feat/a-3-bff-session` | ✅ PR #11 |
+| `A-6` | Admin grant-instructor | 2 | `feat/a-3-bff-session` | ✅ PR #11 |
+| `A-5` | Route guards + login/register | 3 | `feat/a-5-route-guards` | ⬜ **open — complete, unmerged** |
+| `SP-1` | Spike: YouTube IFrame API | 2 | `feat/a-5-route-guards` | ⬜ **open — complete, unmerged** |
 
-**`main` is at `95f8596`.** PRs #1–#8 merged and their branches deleted; `feat/a-3-bff-session`
-is the only open branch. Later cards branch fresh off `main`, no longer stacked.
+**`main` is at `8f4d00c`.** PRs #1–#8 and #11 merged and their branches deleted; thirteen of the
+fifteen delivered cards are on `main`. `feat/a-5-route-guards` branched fresh off it and carries
+Sprint 7.
 
 ### Open risks
 
 | Risk | State |
 |---|---|
 | **R1** BFF session/refresh pattern | 🟢 **Retired.** Sealing, reading, tamper resistance, transparent refresh and now sign-out are all proven in a browser. The pattern did not fight us; a 204-handling bug in our own HTTP wrapper did. |
-| **R2** YouTube IFrame progress tracking | 🟡 Spike `SP-1` scheduled Sprint 7, four months before the real card |
-| **R3** Velocity below 5 pts/week | 🔴 **Still unmeasured after six sprints.** All six ran as single sittings. Sprint 6's 8.0 is debt repayment, not throughput, and must not be read as headroom. Re-baseline checkpoint is end of Sprint 9. |
+| **R2** YouTube IFrame progress tracking | 🟢 **Retired by `SP-1`.** Nothing in the API fought us; the manual-mark-complete fallback is not needed and `P-5` stays at 4 points. Three residuals are named rather than closed — mobile Safari, background-tab timer throttling, autoplay — and carried into `P-5`. |
+| **R3** Velocity below 5 pts/week | 🔴 **Still unmeasured after seven sprints.** All seven ran as single sittings. Sprint 7 is a clean 5/5 at estimate, which is more evidence about *estimates* than about pace. Re-baseline checkpoint is end of Sprint 9. |
 | **R4** Life happens | ⬜ 4 weeks of slack built in (2 holiday + 2 buffer) |
-| **R5** Scope creep | 🟢 **Nothing carried.** Both items closed in Sprint 6 — the sign-out fix and the integration suite that had slipped twice. |
+| **R5** Scope creep | 🟢 **Nothing carried**, two sprints running. `SP-1`'s code was thrown away as the card required — only the notes are committed. |
 | **R8** Design rabbit hole | 🟢 `W-1` came in at estimate. One accent colour, shadcn defaults everywhere else, and no time spent on Studio CSS. Next design work is `W-4`, Sprint 27. |
 
 ---
@@ -95,12 +98,22 @@ is the only open branch. Later cards branch fresh off `main`, no longer stacked.
 | 4 | Aug 31–Sep 6 | 5 | 5 | 5.0 | ✅ `A-1` + `A-2`. **Integration-test project carried to Sprint 5** — see the caveat. |
 | 5 | Sep 7–13 | 5 | 3 | 3.0 | 🟡 `A-3` partial — sign-out defect. `A-4` was already delivered in `A-2`. Integration tests carried **again**. |
 | 6 | Sep 14–20 | 5 | 8 | 8.0 | ✅ `A-3` sign-out fix (1) · `IT-1` harness (2) · `W-1` (3) · `A-6` (2). **8 against a 5-point plan** — two of those points are Sprint 4/5 debt being repaid, so the sprint did ~6 points of new work and cleared the backlog. Still a single sitting. |
-| 7 | Sep 21–27 | 5 | — | — | ⬜ `A-5` route guards + login/register pages (3) · `SP-1` YouTube IFrame spike (2) |
+| 7 | Sep 21–27 | 5 | 5 | 5.0 | ✅ `A-5` (3) · `SP-1` (2). Both at estimate. **Phase 2 closes on plan**, nothing carried. Still a single sitting. |
 
 > 1 point ≈ 2 focused hours. Record **actual** points as hours ÷ 2, honestly — an inflated
 > actual hides a velocity problem until it is expensive to discover.
 
-**Rolling average:** **5.2 pts/sprint** over 6 sprints (31 delivered of 30 planned).
+> **Test-count note, Sprint 7.** The dashboard read **214** while its own breakdown summed to
+> 215; the total was wrong, not the parts. Corrected to **253** = 133 unit + 35 architecture +
+> 39 integration + 46 web.
+>
+> Unit (133), architecture (35) and web (46) were **re-run and verified this sprint**. The
+> **39 integration tests were not re-run**: they require rebuilding `Lms.Api`, and a running
+> AppHost holds a file lock on its DLLs, so `dotnet test` fails to build the solution. Sprint 7
+> touched no backend code, so the figure carries forward from `A-6`'s verified run — but it is
+> carried, not re-measured, and that is worth knowing before trusting it.
+
+**Rolling average:** **5.1 pts/sprint** over 7 sprints (36 delivered of 35 planned).
 
 Read that carefully rather than cheerfully. Sprint 6's 8.0 is **debt repayment**, not throughput:
 3 of its points were work planned for Sprints 4 and 5 and not done then. Spread honestly across
@@ -840,6 +853,164 @@ hosts concurrently. Writing the same bug twice in one sprint is the argument for
 
 ---
 
+## Sprint 7 — Sep 21–27, 2026
+
+**Goal:** *Roles gate the UI and the API.*
+**Demo:** Register → sign in on a styled page → DevTools shows the session cookie is `HttpOnly`
+and no token is reachable from JS. Admin grants Instructor; the Studio link appears.
+
+### `A-5` Route guards, login and register pages
+
+| | |
+|---|---|
+| **Estimate** | 3 pts · **Actual** 3 pts |
+| **Area** | `web` |
+| **Branch** | `feat/a-5-route-guards` |
+| **PR** | ⬜ open |
+| **Status** | ✅ Done |
+
+**Acceptance criteria**
+- [x] `_authed.tsx` — signed-out visitor redirected to `/login?redirect=<where they were going>`
+- [x] `_instructor.tsx` — signed-in non-instructor gets a **403 page**, not a redirect loop
+- [x] Styled login and register pages replacing `A-3`'s scaffolding form
+- [x] Header shows Sign in / Register signed out, and the Studio link for instructors
+- [x] Zod at the boundary — forms, search params, and the `/api/me` response
+- [x] 375px, light **and** dark, keyboard reachable, no console warnings from our code
+- [x] **46 web tests** (was 8); lint, typecheck and build clean
+
+**Verified in a browser against the AppHost**
+```
+register empty form   3 field errors, no request sent
+register valid        201 + auto sign-in, landed on /
+document.cookie       empty while signed in; localStorage empty; no token in sessionStorage
+/my-learning signed out  307 → /login?redirect=%2Fmy-learning
+/studio signed out       307 → /login?redirect=%2Fstudio
+/studio as student       403 page, URL unchanged, no loop
+grant instructor      Studio link appears in header; /studio renders
+wrong password        role=alert "Email or password is incorrect.", no cookie written
+correct password      landed back on /studio — the redirect survived the round trip
+signed in → /login?redirect=https://evil.example/steal   → landed on /, not evil.example
+375px light + dark    app overflow 0px; error text oklch(0.704) on oklch(0.145)
+```
+
+**Shipped**
+- `features/auth/` — `schemas.ts` (credentials, registration, `/api/me`, redirect), `access.ts`
+  (`hasRole`, `canUseStudio`), `hooks.ts` (`useAuthForm`), four components
+- `routes/` — `_authed.tsx`, `_instructor.tsx`, `login.tsx`, `register.tsx`, and two placeholder
+  children (`_authed/my-learning.tsx`, `_instructor/studio/index.tsx`)
+- `server/auth.ts` — a `register` server function; `/api/me` now parsed, not cast
+- shadcn `input` and `label`; Zod added — the first card that needed it
+- 38 new tests
+
+**Decisions**
+1. **The `redirect` param is an open-redirect defence, and it lives in the schema.** Only a
+   same-origin absolute path is accepted; `//host`, `/\host` and control characters are rejected
+   because they read as paths and resolve as absolute URLs. Putting it in
+   `redirectSearchSchema` rather than at each call site means no future caller can forget it. A
+   hostile value falls back to `/` via `.catch` rather than raising — clamp, don't reject.
+2. **`.optional()`, not `.default('/')`.** A default made the router *materialise* it: every
+   visit to `/login` answered a 307 to `/login?redirect=%2F` before rendering. Found by curling
+   the route, not by looking at it. `destinationFrom()` supplies the fallback at the read site.
+3. **Sign-in is a document navigation, like sign-out.** `window.location.assign(destination)`
+   rather than `router.navigate`. The identity behind every cached loader has just changed, and
+   a full navigation rebuilds that rather than trusting an invalidation to catch all of it. It
+   also reaches an arbitrary validated path without casting a string into the router's typed
+   route union.
+4. **A signed-in non-instructor gets 403, not a redirect.** Sending an authenticated student to
+   a login form is a loop: they sign in successfully, return, and are bounced again with no
+   explanation.
+5. **The Studio link keys off the role, not `instructorSlug`.** See the deviation below.
+6. **The sign-in form does not enforce the password policy.** Only non-empty. Enforcing the
+   10-character minimum would publish the policy to anyone who opens the page and would lock
+   out any account whose password predates a policy change. Length is the API's business and
+   its answer is one indistinguishable 401.
+7. **`/api/me` is parsed with Zod.** The guards branch on `roles`; a payload whose shape drifted
+   would otherwise arrive as `undefined` and silently decide access. A parse failure means
+   signed out, which fails closed.
+8. **Placeholder pages under both guards.** A guard with nothing behind it is a guard nobody has
+   watched work — the `A-3` scaffolding-form argument, which is what found the sign-out defect.
+   `C-7` and `S-1` delete the bodies.
+
+**Deviations from the design docs**
+- **`03 §3` said `instructorSlug` non-null is how the web app decides to show the Studio link.**
+  That stopped being true in `A-6`, which deliberately keeps the profile and slug on revoke so
+  course pages still name the author and nobody inherits a public URL. A revoked instructor
+  therefore still has a slug, and keying on it would offer them a Studio that answers 403.
+  **Doc corrected**; `canUseStudio` keys on the `Instructor` role, with a regression test.
+- **Registration signs the user in automatically.** The plan's demo line reads "Register → log
+  in", which suggests two steps. The credentials are already in hand server-side, and making
+  someone who just proved them type them again is friction with nothing behind it. If the
+  registration succeeds and the follow-up sign-in does not, the card reports success — the
+  account exists, and implying otherwise invites a duplicate attempt.
+
+**Known consequence, not a defect**
+A newly granted instructor sees the Studio immediately, because `/api/me` reads roles from the
+database — but the access token in their session cookie still carries the old role claims for up
+to 15 minutes, so `/api/studio/*` would answer 403 until it refreshes. Self-healing and bounded
+by design (`04 §3.1`: the token lifetime *is* the revocation window). Named here so `S-1` treats
+a 403 from Studio as a real state rather than a bug.
+
+**Pre-existing gap, left for `W-4`**
+Every page load logs *"a notFoundError was encountered on the route with ID `__root__`, but a
+notFoundComponent option was not configured"*. Cause: there is no favicon, so `/favicon.ico`
+404s on each load. A real 404 currently renders TanStack's bare `<p>Not Found</p>` outside the
+app shell. Not introduced here — `notFoundComponent` has never been configured — and error
+states are `W-4` (Sprint 27). Not absorbed into this card.
+
+---
+
+### `SP-1` Spike: YouTube IFrame API
+
+| | |
+|---|---|
+| **Estimate** | 2 pts · **Actual** 2 pts |
+| **Area** | `web` |
+| **Branch** | `feat/a-5-route-guards` |
+| **PR** | ⬜ open |
+| **Status** | ✅ Done — **risk R2 retired** |
+
+Full writeup: [`artifacts/spikes/sp-1-youtube-iframe-api.md`](../spikes/sp-1-youtube-iframe-api.md).
+
+**Timeboxed and thrown away as the card required.** The harness was a standalone Node server and
+one HTML page in a scratch directory outside the repo, so there is nothing to delete from `web/`
+and nothing that can rot into production. Only the notes are committed.
+
+**What it settled**
+- `getCurrentTime()` is accurate — 0.99–1.03s per second over 30+ ticks, no drift. The ADR's
+  15-second interval is comfortably safe.
+- `getDuration()` is available at `onReady`, before playback (634.6s), so the 90% threshold does
+  not depend on `Lesson.DurationSeconds`.
+- `sendBeacon` delivers on unload with correct final values.
+
+**Five things the design docs had wrong or unsaid**
+1. The nocookie embed needs the player's **`host` option**. Building the iframe yourself and
+   attaching `YT.Player` to it silently reverts to `www.youtube.com` — the property is lost with
+   no error.
+2. `sendBeacon(url, string)` sends **`text/plain`**, which a JSON-bound minimal API answers with
+   415 — invisibly, because `sendBeacon` returns `true` for *queued*, never *accepted*. Wrap the
+   payload in a `Blob` with an explicit type.
+3. **One departure fires three events** — `beforeunload`, `pagehide` and `visibilitychange`
+   within 15ms, three identical writes. Send on `pagehide` only. `visibilitychange` alone
+   produced 26 beacons before playback had even started.
+4. **`onReady` does not mean playable.** A video with embedding disabled fires `onReady` and
+   *then* `onError` (code 150). Error states must be driven by `onError`.
+5. **CSP `script-src` needs `https://www.youtube.com`**, not just `frame-src` for nocookie — the
+   API script is served from the main domain.
+
+**The scrub hole is cheaper to close than `05 §2.4` assumed.** Ten lines of forward-delta
+clamping credited **nothing** for a 495-second seek (position 539s, watched 52s). `P-5` should
+ship it. **It is not a security control** and the writeup says so plainly — the client is
+untrusted and can post any `watchedSeconds` it likes. The ADR's acceptance of the hole stands;
+only the honest default changes.
+
+**Not tested, and named as such** — mobile Safari (no device; this is where the original worry
+lived), background-tab timer throttling (cited, not measured), autoplay without a prior gesture.
+Carried into `P-5` as residual risk rather than counted as closed.
+
+**Docs updated:** `05 §2.3`, `05 §2.4`, `06 §2.2`.
+
+---
+
 ## Card template
 
 ```markdown
@@ -936,3 +1107,16 @@ Implementation decisions worth finding later. Full context lives in the card ent
 | 2026-08-09 | `A-6` | **The seeder must grant `Student` too** — "every registered user holds Student" is what makes `AuthPolicies.Student` mean "authenticated" |
 | 2026-08-09 | `A-6` | `ILIKE` over `ToUpper().Contains()` — same SQL, states the intent, and CA1862 cannot read expression trees |
 | 2026-08-09 | `A-6` | `revoke-instructor` is 204 not 200; design doc corrected to the `Result<Unit>` convention from `A-2` |
+| 2026-08-10 | `A-5` | The `?redirect=` open-redirect defence lives in the schema, so no call site can forget it; `//host`, `/\host` and control chars all rejected |
+| 2026-08-10 | `A-5` | `.optional()` not `.default('/')` — a default made the router 307 `/login` to `/login?redirect=%2F` on every visit |
+| 2026-08-10 | `A-5` | Sign-in navigates the document, like sign-out: identity changed, so rebuild client state rather than invalidate it |
+| 2026-08-10 | `A-5` | A signed-in non-instructor gets a 403 page; redirecting them to login is a loop they cannot escape |
+| 2026-08-10 | `A-5` | The sign-in form checks non-empty only — enforcing the password policy would publish it and lock out pre-policy accounts |
+| 2026-08-10 | `A-5` | `/api/me` is parsed, not cast; a drifted shape must fail closed rather than reach a guard as `undefined` |
+| 2026-08-10 | `A-5` | **Studio link keys on the `Instructor` role, not `instructorSlug`** — `A-6` keeps the slug on revoke, so the slug would offer a 403 |
+| 2026-08-10 | `A-5` | A freshly granted instructor sees Studio before their token carries the role — bounded by the 15-minute lifetime, and `S-1` must expect the 403 |
+| 2026-08-10 | `SP-1` | Nocookie embeds need `YT.Player`'s `host` option; hand-building the iframe silently reverts to `www.youtube.com` |
+| 2026-08-10 | `SP-1` | `sendBeacon` needs a `Blob` with an explicit type, or it sends `text/plain` and a JSON endpoint 415s it invisibly |
+| 2026-08-10 | `SP-1` | Send progress on `pagehide` only — one departure fires three events, and `visibilitychange` fires constantly |
+| 2026-08-10 | `SP-1` | `onReady` fires before `onError`, so it is not a signal that the video is playable |
+| 2026-08-10 | `SP-1` | A ten-line forward-delta clamp defeats the casual scrub — worth shipping, but it is **not** a security control |

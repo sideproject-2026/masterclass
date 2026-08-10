@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 
 import { SiteHeader } from '#/components/layout/site-header'
-import type { AuthState } from '#/server/auth'
+import type { AuthState } from '#/features/auth/schemas'
 
 /**
  * Header, content, footer — the frame every page from Sprint 14 onward renders inside.

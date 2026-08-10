@@ -202,7 +202,11 @@ Always assigns the `Student` role. There is no way to self-register as an instru
 
 **200** → `{ "id", "email", "displayName", "roles": ["Student","Instructor"], "instructorSlug": "jane-doe" | null }`
 
-`instructorSlug` non-null is what the web app uses to decide whether to show the Studio link.
+`instructorSlug` is the instructor's public URL segment. It is **not** the signal for showing the
+Studio link — the `Instructor` **role** is. `A-6` deliberately keeps the profile and the slug when
+a grant is revoked, so that course pages still name the author and nobody inherits someone else's
+public URL; a revoked instructor therefore still has a slug, and keying the link off it would
+offer them a Studio that answers 403. See `canUseStudio` in `web/src/features/auth/access.ts`.
 
 ---
 
