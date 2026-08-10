@@ -2,7 +2,7 @@
 
 Progress board and recorded actuals. Updated as the **last action of every card**.
 
-*Last updated: 2026-08-10 · after Sprint 7, merged as PR #12*
+*Last updated: 2026-08-10 · after Sprint 8, merged as PR #13*
 
 ---
 
@@ -23,7 +23,7 @@ Cards    ████████░░░░░░░░░░░░░░░�
 | **Schedule** | **Phase 3 suspended** (revision 4). Dates not re-cut; reconciled at the end-of-Sprint-9 re-baseline. |
 | **Tests** | **321 green** (201 unit · 35 architecture · 39 integration · 46 web) — all four suites re-run this sprint |
 | **Build** | Clean, warnings-as-errors |
-| **Open branches** | `feat/s-1-catalog-domain` — **needs a PR** (carries `S-1` and the `D-2` part that works) |
+| **Open branches** | **None.** Sprint 8 merged as PR #13. |
 | **Carried work** | **`D-2` remainder — 1 pt.** The .NET images do not build; the SDK pin has no public image. Named in `R10`, carried into Sprint 9, **not** silently dropped. |
 
 ### Phases
@@ -71,12 +71,13 @@ Cards    ████████░░░░░░░░░░░░░░░�
 | `A-6` | Admin grant-instructor | 2 | `feat/a-3-bff-session` | ✅ PR #11 |
 | `A-5` | Route guards + login/register | 3 | `feat/a-5-route-guards` | ✅ PR #12 |
 | `SP-1` | Spike: YouTube IFrame API | 2 | `feat/a-5-route-guards` | ✅ PR #12 |
-| `S-1` | Catalog domain + invariants + migration | 3 | `feat/s-1-catalog-domain` | ⬜ **open — complete, unmerged** |
-| `D-2` | Dockerfiles for api + web | 1 of 2 | `feat/s-1-catalog-domain` | ⬜ **open — 🟡 partial** |
+| `S-1` | Catalog domain + invariants + migration | 3 | `feat/s-1-catalog-domain` | ✅ PR #13 |
+| `D-2` | Dockerfiles for api + web | 1 of 2 | `feat/s-1-catalog-domain` | 🟡 PR #13 — **partial, 1 pt carried** |
 
-**The last card merge on `main` is PR #12 (`171e62f`)** — named by PR rather than by tip SHA, which
-a docs commit invalidates. PRs #1–#8, #11 and #12 merged and every branch deleted. **All fifteen
-delivered cards are on `main`, and there is no open branch.** Sprint 8 branches fresh off it.
+**The last card merge on `main` is PR #13 (`4c3cb45`)** — named by PR rather than by tip SHA, which
+a docs commit invalidates. PRs #1–#8 and #11–#13 merged and every branch deleted. **Every card
+entry below is on `main` and there is no open branch** — 16 complete, plus `D-2` merged partial
+with 1 point carried. Sprint 9 branches fresh off it.
 
 ### Open risks
 
@@ -1036,7 +1037,7 @@ First sprint of Phase 4, pulled forward because Phase 3 is suspended (`08` revis
 | **Estimate** | 3 pts · **Actual** 3 pts |
 | **Area** | `api` |
 | **Branch** | `feat/s-1-catalog-domain` |
-| **PR** | ⬜ open |
+| **PR** | ✅ #13 merged |
 | **Status** | ✅ Done |
 
 **Acceptance criteria**
@@ -1111,7 +1112,7 @@ reaching for `Normalize` finds out before shipping.
 | **Estimate** | 2 pts · **Actual 1 pt · 1 carried** |
 | **Area** | `infra` |
 | **Branch** | `feat/s-1-catalog-domain` |
-| **PR** | ⬜ open |
+| **PR** | ✅ #13 merged |
 | **Status** | 🟡 **Partial — the web image ships; the .NET images cannot be built** |
 
 **Done**
