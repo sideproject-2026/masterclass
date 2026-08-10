@@ -2,7 +2,7 @@
 
 Progress board and recorded actuals. Updated as the **last action of every card**.
 
-*Last updated: 2026-08-10 · after Sprint 7*
+*Last updated: 2026-08-10 · after Sprint 7, merged as PR #12*
 
 ---
 
@@ -23,7 +23,7 @@ Cards    ████████░░░░░░░░░░░░░░░�
 | **Schedule** | On plan. Not re-dated — re-baseline checkpoint is end of Sprint 9. |
 | **Tests** | **253 green** (133 unit · 35 architecture · 39 integration · 46 web) — see the note below |
 | **Build** | Clean, warnings-as-errors |
-| **Open branches** | `feat/a-5-route-guards` — **complete, needs a PR** (carries `A-5` and `SP-1`) |
+| **Open branches** | **None.** Sprint 7 merged as PR #12. |
 | **Carried work** | **None.** |
 
 ### Phases
@@ -68,12 +68,12 @@ Cards    ████████░░░░░░░░░░░░░░░�
 | `IT-1` | Integration test harness | 2 | `feat/a-3-bff-session` | ✅ PR #11 |
 | `W-1` | Design system + app shell | 3 | `feat/a-3-bff-session` | ✅ PR #11 |
 | `A-6` | Admin grant-instructor | 2 | `feat/a-3-bff-session` | ✅ PR #11 |
-| `A-5` | Route guards + login/register | 3 | `feat/a-5-route-guards` | ⬜ **open — complete, unmerged** |
-| `SP-1` | Spike: YouTube IFrame API | 2 | `feat/a-5-route-guards` | ⬜ **open — complete, unmerged** |
+| `A-5` | Route guards + login/register | 3 | `feat/a-5-route-guards` | ✅ PR #12 |
+| `SP-1` | Spike: YouTube IFrame API | 2 | `feat/a-5-route-guards` | ✅ PR #12 |
 
-**`main` is at `8f4d00c`.** PRs #1–#8 and #11 merged and their branches deleted; thirteen of the
-fifteen delivered cards are on `main`. `feat/a-5-route-guards` branched fresh off it and carries
-Sprint 7.
+**The last card merge on `main` is PR #12 (`171e62f`)** — named by PR rather than by tip SHA, which
+a docs commit invalidates. PRs #1–#8, #11 and #12 merged and every branch deleted. **All fifteen
+delivered cards are on `main`, and there is no open branch.** Sprint 8 branches fresh off it.
 
 ### Open risks
 
@@ -378,7 +378,7 @@ Migration process had already exited when the API came up; `/health/ready` → `
 | **Estimate** | 2 pts · **Actual** 2 pts |
 | **Area** | `api` |
 | **Branch** | `feat/f-5-architecture-tests` |
-| **PR** | ⬜ open — merge after `F-4` |
+| **PR** | ✅ #4 merged |
 | **Status** | ✅ Done |
 
 **Acceptance criteria**
@@ -413,7 +413,7 @@ Then reverted. A guardrail nobody has watched fail is not a guardrail.
 | **Estimate** | 2 pts · **Actual** 2 pts |
 | **Area** | `web` |
 | **Branch** | `feat/f-7-web-scaffold` |
-| **PR** | ⬜ open — merge after `F-5` |
+| **PR** | ✅ #5 merged |
 | **Status** | ✅ Done |
 
 **Acceptance criteria**
@@ -442,7 +442,7 @@ Then reverted. A guardrail nobody has watched fail is not a guardrail.
 | **Estimate** | 1 pt · **Actual** 1 pt |
 | **Area** | `infra` |
 | **Branch** | `feat/f-6-ci` |
-| **PR** | ⬜ open — merge after `F-7`; first run of the workflow |
+| **PR** | ✅ #6 merged — first run of the workflow |
 | **Status** | ✅ Done |
 
 **Acceptance criteria**
@@ -454,7 +454,7 @@ Then reverted. A guardrail nobody has watched fail is not a guardrail.
 
 **Decisions** — `npm ci` over `install` so a stale lock file fails the build; Release build inherits `TreatWarningsAsErrors`, which is also what makes NU1903 advisories fail; architecture tests run in CI, so boundaries are enforced mechanically rather than by review.
 
-**Not yet verified** — the workflow has not run on GitHub. It is verified locally step by step; the first real run happens when the branch is pushed.
+~~**Not yet verified** — the workflow has not run on GitHub.~~ **Resolved.** It has run on every PR since #6; twelve PRs have now gone through it.
 
 ---
 
@@ -866,7 +866,7 @@ and no token is reachable from JS. Admin grants Instructor; the Studio link appe
 | **Estimate** | 3 pts · **Actual** 3 pts |
 | **Area** | `web` |
 | **Branch** | `feat/a-5-route-guards` |
-| **PR** | ⬜ open |
+| **PR** | ✅ #12 merged |
 | **Status** | ✅ Done |
 
 **Acceptance criteria**
@@ -966,7 +966,7 @@ states are `W-4` (Sprint 27). Not absorbed into this card.
 | **Estimate** | 2 pts · **Actual** 2 pts |
 | **Area** | `web` |
 | **Branch** | `feat/a-5-route-guards` |
-| **PR** | ⬜ open |
+| **PR** | ✅ #12 merged |
 | **Status** | ✅ Done — **risk R2 retired** |
 
 Full writeup: [`artifacts/spikes/sp-1-youtube-iframe-api.md`](../spikes/sp-1-youtube-iframe-api.md).
