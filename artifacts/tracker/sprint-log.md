@@ -18,9 +18,9 @@ Cards    ████████░░░░░░░░░░░░░░░�
 |---|---|
 | **Phase** | 2 of 8 — Auth & Design System · ✅ **complete** |
 | **Last completed** | Sprint 7 — *Roles gate the UI and the API* — **5 of 5 points**, both cards at estimate |
-| **Up next** | **Sprint 8** — Phase 3, Deploy (`D-1`…`D-3`) → **M1** |
-| **Next milestone** | **M1 Hello, deployed** — Sprint 9, **11 Oct 2026** |
-| **Schedule** | On plan. Not re-dated — re-baseline checkpoint is end of Sprint 9. |
+| **Up next** | **Sprint 8** — `D-2` Dockerfiles (2) · `S-1` Catalog domain (3) |
+| **Next milestone** | **M1 Hello, containerised** — Sprint 9, **11 Oct 2026** · *downgraded from "Hello, deployed"* |
+| **Schedule** | On plan. **Phase 3 suspended** — see revision 4 below. Dates deliberately not re-cut; reconciled at the end-of-Sprint-9 re-baseline. |
 | **Tests** | **253 green** (133 unit · 35 architecture · 39 integration · 46 web) — see the note below |
 | **Build** | Clean, warnings-as-errors |
 | **Open branches** | **None.** Sprint 7 merged as PR #12. |
@@ -32,8 +32,8 @@ Cards    ████████░░░░░░░░░░░░░░░�
 |---|---|---|---:|---|
 | 1 | Foundation | 1–3 | 15 | ✅ **Done** — `F-1`…`F-7` |
 | 2 | Auth & Design System | 4–7 | 20 | ✅ **Done** — `A-1`…`A-6`, `W-1`, `SP-1` |
-| 3 | Deploy | 8–9 | 9 | 🔵 **Next** — `D-1`…`D-3` → **M1** |
-| 4 | Instructor Studio | 10–16 | 35 | ⬜ `S-1`…`S-12`, `W-2` → **M2** |
+| 3 | Deploy | — | 9 | ⏸️ **Suspended** — `D-2` moved to Sprint 8; new `D-0` hosting spike in Sprint 9; `D-1`/`D-3` unscheduled pending it |
+| 4 | Instructor Studio | 8–15 | 35 | 🔵 **Next** — `S-1`…`S-12`, `W-2` → **M2** |
 | 5 | Catalog & Enrollment | 17–19, 22 | 20 | ⬜ `C-1`…`C-9`, `W-3` → **M3** |
 | 6 | Player & Completion | 23–26 | 21 | ⬜ `P-1`…`P-8` → **M4** |
 | 7 | Design pass | 27–28 | 10 | ⬜ `W-4`, `W-5`, `C-8` |
@@ -45,7 +45,8 @@ Cards    ████████░░░░░░░░░░░░░░░�
 
 | | Milestone | Sprint | Date | Status |
 |---|---|---|---|---|
-| **M1** | Hello, deployed | 9 | 11 Oct 2026 | ⬜ |
+| **M1** | Hello, **containerised** *(was "deployed")* | 9 | 11 Oct 2026 | ⬜ |
+| **M1b** | Hello, deployed | TBD | **TBD — after `D-0`** | ⬜ |
 | **M2** | An instructor can publish | 16 | 29 Nov 2026 | ⬜ |
 | **M3** | A student can find and enroll | 22 | 10 Jan 2027 | ⬜ |
 | **M4** | MVP feature-complete | 26 | 7 Feb 2027 | ⬜ |
@@ -83,6 +84,7 @@ delivered cards are on `main`, and there is no open branch.** Sprint 8 branches 
 | **R2** YouTube IFrame progress tracking | 🟢 **Retired by `SP-1`.** Nothing in the API fought us; the manual-mark-complete fallback is not needed and `P-5` stays at 4 points. Three residuals are named rather than closed — mobile Safari, background-tab timer throttling, autoplay — and carried into `P-5`. |
 | **R3** Velocity below 5 pts/week | 🔴 **Still unmeasured after seven sprints.** All seven ran as single sittings. Sprint 7 is a clean 5/5 at estimate, which is more evidence about *estimates* than about pace. Re-baseline checkpoint is end of Sprint 9. |
 | **R4** Life happens | ⬜ 4 weeks of slack built in (2 holiday + 2 buffer) |
+| **R9** First deploy deferred *(new, 2026-08-10)* | 🔴 **Open.** Hosting reopened; Phase 3 suspended pending `D-0`. The plan deployed early on purpose — to hit managed-identity, connection-string and CORS problems now rather than alongside the player in February. That risk is now live and **grows with every sprint**: deploy at Sprint 16 and the first attempt must get object storage, pre-signed upload, the migration job and two apps right at once, instead of two nearly-empty apps. Mitigation: `D-0` is scheduled Sprint 9, not parked. |
 | **R5** Scope creep | 🟢 **Nothing carried**, two sprints running. `SP-1`'s code was thrown away as the card required — only the notes are committed. |
 | **R8** Design rabbit hole | 🟢 `W-1` came in at estimate. One accent colour, shadcn defaults everywhere else, and no time spent on Studio CSS. Next design work is `W-4`, Sprint 27. |
 

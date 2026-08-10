@@ -123,6 +123,24 @@ IVideoProvider
 
 ## 3. Decision: blob storage — **Azure, not Firebase**
 
+> ⚠️ **Premise reopened 2026-08-10 (`08` revision 4).** A load-bearing argument below is *"the app is
+> .NET 10 on Azure with Azure Database for PostgreSQL and Key Vault, so a second cloud is a second
+> billing relationship, IAM model and credential"*. That argument is **conditional on Azure**, and
+> Azure is no longer a settled choice — `D-0` (Sprint 9) decides.
+>
+> **What does not change:** the shape. Two buckets, one public-read behind a CDN and one private;
+> the browser uploads **directly** with a short-lived, write-only, content-type-and-size-scoped
+> credential; the API never proxies bytes; read credentials are minted per request after the
+> enrolment gate and never persisted. Every S3-compatible store can do all of that.
+>
+> **What is Azure-specific and must be re-read after `D-0`:** "user-delegation SAS", "managed
+> identity", "Entra ID", "Azure Front Door". Their generic equivalents are "pre-signed URL",
+> "workload identity / instance role", and "any CDN". `S-7` is in Sprint 12, comfortably after
+> `D-0`, so nothing needs deciding today.
+>
+> **Still true regardless of host:** the Firebase rejection. It rested on a second IAM model and a
+> long-lived service-account JSON, and that stays a bad trade whoever hosts the app.
+
 Two containers in one Azure Storage account:
 
 | Container | Access | Holds | Delivery |

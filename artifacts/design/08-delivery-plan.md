@@ -120,6 +120,17 @@ Total: **~11h/week**. The plan assumes **5 points/week**, where 1 point ≈ 2 ho
 
 This is what the "re-baseline" mechanism in §2.3 is for — it happened at review time rather than at Sprint 3.
 
+**Revision 4 — hosting reopened, Phase 3 suspended (2026-08-10, after Sprint 7).** Azure is no longer a settled decision; alternatives are being considered. `D-1` (Bicep) and `D-3` (CD) were written *as Azure* — Bicep, Container Apps, Key Vault, managed identity — and none of that survives a change of provider, so building them now risks throwing away 7 points. Phase 3 is **suspended, not cut**:
+
+- **`D-2` (Dockerfiles) moves to Sprint 8.** Containers are the one part of the deploy story that every candidate host consumes, so it is the only Phase 3 card that is provider-agnostic and locally verifiable today.
+- **`D-0` (hosting spike) is new**, 2 pts, and blocks `D-1`/`D-3`. Same shape as `SP-1`: timeboxed, output is an ADR, not code.
+- **`D-1` and `D-3` are unscheduled** until `D-0` answers. Their point values are provisional — a PaaS with a Dockerfile-push deploy is cheaper than Bicep; a VPS you administer yourself is dearer.
+- **Phase 4 starts at Sprint 8** instead of Sprint 10.
+
+**Dates are deliberately not re-cut.** §2.3 says not to re-date on a weak velocity sample, and seven sprints of single sittings is still exactly that. Suspending Phase 3 puts ~7 points of slack into the calendar; that slack is reconciled at the **end-of-Sprint-9 re-baseline checkpoint that already exists**, once `D-0` has made the remaining deploy work estimable. Re-dating M2–M5 before then would be inventing precision.
+
+**The cost, recorded rather than glossed.** Phase 3's placement was an argument, not an accident: *"Deploying before the features exist is deliberate. The alternative is discovering managed-identity, connection-string, and CORS problems in February while also debugging the player."* That risk is now real and it grows — the later the first deploy, the more surface it has to get right at once. `D-0` should be treated as urgent for that reason, not parked.
+
 ### 2.3 Estimation basis and the honesty caveat
 
 **1 point ≈ 2 focused hours.** Total scope: **145 points ≈ 29 working sprints**.
@@ -148,10 +159,11 @@ gantt
     Identity + BFF + design system :a1, after f1, 28d
 
     section Deploy
-    Bicep + CD pipeline           :d1, after a1, 14d
+    Dockerfiles + hosting spike   :d1, after a1, 14d
+    Provision + CD (unscheduled)  :crit, d2, after s1, 7d
 
     section Studio
-    Catalog domain + authoring UI :s1, after d1, 49d
+    Catalog domain + authoring UI :s1, after a1, 56d
 
     section Catalog
     Browse + search + enroll      :c1, after s1, 21d
@@ -173,12 +185,15 @@ gantt
 
 | # | Milestone | Sprint | Date | You can demonstrate |
 |---|---|---|---|---|
-| **M1** | Hello, deployed | 9 | **11 Oct 2026** | Register and log in on a real Azure URL, on a styled page. |
+| **M1** | ~~Hello, deployed~~ → **Hello, containerised** | 9 | **11 Oct 2026** | Register and log in against the api and web **containers**, running from their own images — plus a written hosting decision (`D-0`). **See the honesty note below.** |
+| **M1b** | **Hello, deployed** | TBD | **TBD — after `D-0`** | Register and log in on a real public URL. Cannot be dated until the host is chosen. |
 | **M2** | An instructor can publish | 16 | **29 Nov 2026** | Author a full course with video + reading lessons and publish it. |
 | **M3** | A student can find and enroll | 22 | **10 Jan 2027** | Browse signed out, watch a preview, register, enroll, see it in My Learning. |
 | **M4** | **MVP feature-complete** | 26 | **7 Feb 2027** | The whole loop, R1–R8. Functional, not yet pretty. |
 | **M5** | **Launch-ready** | 31 | **14 Mar 2027** | Designed, hardened, tested end-to-end, monitored, backups rehearsed. |
 | — | Buffer exhausted | 33 | 28 Mar 2027 | If you are past here, re-baseline rather than push. |
+
+> **M1 was downgraded, and it should be read as a downgrade.** The original M1 existed to prove that a real deployment works — TLS, secrets, connection strings from the environment, a migration job, CORS between two hosted origins. **A container running on your laptop proves none of those.** It proves the image builds and the app starts, which is worth having and is not the same thing. The de-risking M1 was there to do now happens at **M1b**, on a date that does not exist yet. Every sprint between here and M1b carries that risk. This is the cost of Revision 4, and it is written down so that "M1 ✅" cannot later be read as "deployment is proven."
 
 > **M4 is deliberately "works but plain."** That is the point of the design track — you get a functioning product first, then make the public surface good, rather than polishing screens whose data model is still moving.
 
@@ -217,30 +232,65 @@ The riskiest part of the build, deliberately scheduled early. If the BFF pattern
 
 > `W-1` is the highest-leverage card in the plan. Every screen from Sprint 14 onward inherits it, and if the tokens are not set here, "make it consistent later" becomes a rewrite. `SP-1` retires risk **R2** four months before you need the real thing — throw the code away, keep the notes.
 
-### Phase 3 — Deploy · Sprints 8–9 · 9 pts
+### Phase 3 — Deploy · ⏸️ **suspended** · 2 pts scheduled, ~7 pts unscheduled
+
+**Reopened at Revision 4.** Azure is no longer settled. `D-1` and `D-3` were written *as Azure* — Bicep, Container Apps, Key Vault, managed identity — and none of that survives a change of provider, so they are not built until the target is chosen.
+
+| Card | State | Pts | Notes |
+|---|---|---:|---|
+| `D-2` Dockerfiles for api + web | ✅ **scheduled — Sprint 8** | 2 | Provider-agnostic. Every candidate host consumes a container, and this is verifiable locally against the AppHost's own Postgres. |
+| `D-0` **Spike: choose the hosting target** | 🔵 **scheduled — Sprint 9** | 2 | Timeboxed, output is an ADR. **Blocks `D-1` and `D-3`.** |
+| `D-1` Provision the target environment | ⏸️ unscheduled | ~5 | Was "Bicep: RG, Postgres Flexible Server, Storage, Key Vault, Container Apps env + 2 apps". The IaC tool and the resource list both follow from `D-0`. Estimate provisional. |
+| `D-3` CD: build/push, migration job, deploy | ⏸️ unscheduled | ~2 | The migration job must still gate the API deploy — see below. Estimate provisional. |
+
+**Two constraints survive any hosting choice**, and `D-0` must not select a host that cannot meet them:
+
+1. **Migrations run as a job that gates the API deploy**, never on startup. Startup migration races across replicas ([`06 §5`](06-tech-stack.md)). A host with no way to run a one-shot job before a rollout is disqualified.
+2. **Secrets come from somewhere that is not the repo**, reachable by the running app without a checked-in key.
+
+**🏁 M1 is redefined — see [§3.1](#31-milestones).** It can no longer mean "log in at a real URL", because there is no longer a decided place for that URL to be.
+
+#### `D-0` — Spike: choose the hosting target · 2 pts · Sprint 9
+
+Same discipline as [`SP-1`](../spikes/sp-1-youtube-iframe-api.md), which worked: **timeboxed, and the output is a written decision, not infrastructure.** Do not start provisioning inside this card.
+
+**Must answer, because these are what `D-1`/`D-3` are made of:**
+
+| Question | Why it decides the card size |
+|---|---|
+| Where do the two containers run? | A push-a-container PaaS makes `D-1` almost nothing; a VPS you administer makes it larger than 5 and adds ongoing patching you did not previously own |
+| Managed Postgres, or one you run? | Backups, PITR and failover are either someone's product or your weekend |
+| Object storage with **pre-signed direct upload**? | Non-negotiable — [`05 §5`](05-adr-video-and-storage.md) has the browser upload straight to storage. A host without it changes the Media Module design, not just its deployment |
+| Can it run a **one-shot job that gates the rollout**? | The migration job. A host that cannot do this is disqualified, not worked around |
+| Secret storage reachable without a checked-in key | — |
+| Cost at zero traffic, and at 100 students | The reason this is being reopened at all |
+| Exit cost | The point of PostgreSQL over Azure SQL was portability ([`01 §7.2`](01-architecture.md)). Do not spend that on the host |
+
+**Deliverable:** `artifacts/design/10-adr-hosting.md` — the choice, the two runners-up, what each would have cost, and the disqualifiers. Then `D-1` and `D-3` get real estimates and a sprint.
+
+**Non-goal:** re-litigating PostgreSQL, .NET or TanStack Start. This card picks *where it runs*, nothing else.
+
+> Phase 3's original placement was an argument: *"Deploying before the features exist is deliberate. The alternative is discovering managed-identity, connection-string, and CORS problems in February while also debugging the player."* Suspending it does not make that argument wrong — it makes it a debt. `D-0` is how the debt stops growing.
+
+### Phase 4 — Instructor Studio · Sprints 8–15 · 35 pts
+
+The largest phase. **Moved up from Sprints 10–16 at Revision 4**, because suspending `D-1`/`D-3` took ~7 points out of the front of the queue. Four sprints of API, then three of UI on top of it.
 
 | Sprint | Dates | Goal | Cards | Pts |
 |---|---|---|---|---|
-| **8** | Sep 28–Oct 4 | *Infrastructure exists.* | `D-1` Bicep: RG, Postgres Flexible Server, Storage, Key Vault, Container Apps env + 2 apps — 5 `infra` | 5 |
-| **9** | Oct 5–11 | *A push to main goes live.* | `D-2` Dockerfiles for api + web — 2 `infra`<br>`D-3` CD: build/push, migration job, deploy revision — 2 `infra` | 4 |
+| **8** | Sep 28–Oct 4 | *Courses exist, and the app ships in a container.* | `D-2` Dockerfiles for api + web — 2 `infra`<br>`S-1` Catalog domain: Course/Chapter/Lesson + invariants + migration — 3 `api` | 5 |
+| **9** | Oct 5–11 | *The hosting question is answered.* | `D-0` **Spike: choose the hosting target** — 2 `infra`<br>`S-2` Course CRUD endpoints — 2 `api` | 4 |
+| **10** | Oct 12–18 | *A course has structure.* | `S-3` Chapter CRUD + reorder — 2 `api`<br>`S-4` Lesson CRUD + move — 3 `api` | 5 |
+| **11** | Oct 19–25 | *A lesson has content, and publish has teeth.* | `S-5` Video (YouTube URL parse/validate) + Reading, content invariant — 3 `api`<br>`S-6` Publish/unpublish/archive + full 422 invariant report — 2 `api` | 5 |
+| **12** | Oct 26–Nov 1 | *Files upload without touching the API.* | `S-7` Media Module: pre-signed upload + thumbnail flow — 3 `api`<br>`S-8` Attachments: upload-url, confirm, delete — 2 `api` | 5 |
+| **13** | Nov 2–8 | *Studio exists, and it is safe.* | `W-2` **Wireframe pass — Studio screens** (low-fi, 30 min each, throwaway) — 1 `web`<br>`S-9` Course list + settings form — 2 `web`<br>`S-12` Ownership checks + two-instructor test + stats — 2 `api` | 5 |
+| **14** | Nov 9–15 | *The curriculum is editable.* | `S-10` Curriculum tree + drag reorder (dnd-kit, two levels) — 5 `web` | 5 |
+| **15** | Nov 16–22 | *Authoring is complete.* | `S-11` Lesson editor: video/reading toggle, markdown preview, thumbnail + attachment widgets — 5 `web` | 5 |
+| **16** | Nov 23–29 | — | **Held.** The landing slot for `D-1`/`D-3` once `D-0` has sized them. | ~7 |
 
-**🏁 M1 — Demo:** Log in at a real `*.azurecontainerapps.io` URL.
+> **Sprint 16 is held, not free.** Phase 4 finishing a sprint early is **borrowed time, not earned** — the ~7 deferred deploy points have to land somewhere, and this is the first slot where they can. M2 therefore keeps its original **29 Nov** date rather than moving up to 22 Nov. If `D-0` comes back cheaper than ~7 points, that turns into real slack at the Sprint 9 re-baseline. If it comes back dearer — a VPS you administer yourself, rather than a push-a-container PaaS — the overflow is visible here instead of silently eating M3.
 
-> Deploying before the features exist is deliberate. The alternative is discovering managed-identity, connection-string, and CORS problems in February while also debugging the player.
-
-### Phase 4 — Instructor Studio · Sprints 10–16 · 35 pts
-
-The largest phase. Four sprints of API, then three of UI on top of it.
-
-| Sprint | Dates | Goal | Cards | Pts |
-|---|---|---|---|---|
-| **10** | Oct 12–18 | *Courses exist.* | `S-1` Catalog domain: Course/Chapter/Lesson + invariants + migration — 3 `api`<br>`S-2` Course CRUD endpoints — 2 `api` | 5 |
-| **11** | Oct 19–25 | *A course has structure.* | `S-3` Chapter CRUD + reorder — 2 `api`<br>`S-4` Lesson CRUD + move — 3 `api` | 5 |
-| **12** | Oct 26–Nov 1 | *A lesson has content, and publish has teeth.* | `S-5` Video (YouTube URL parse/validate) + Reading, content invariant — 3 `api`<br>`S-6` Publish/unpublish/archive + full 422 invariant report — 2 `api` | 5 |
-| **13** | Nov 2–8 | *Files upload without touching the API.* | `S-7` Media Module: user-delegation SAS + thumbnail flow — 3 `api`<br>`S-8` Attachments: upload-url, confirm, delete — 2 `api` | 5 |
-| **14** | Nov 9–15 | *Studio exists, and it is safe.* | `W-2` **Wireframe pass — Studio screens** (low-fi, 30 min each, throwaway) — 1 `web`<br>`S-9` Course list + settings form — 2 `web`<br>`S-12` Ownership checks + two-instructor test + stats — 2 `api` | 5 |
-| **15** | Nov 16–22 | *The curriculum is editable.* | `S-10` Curriculum tree + drag reorder (dnd-kit, two levels) — 5 `web` | 5 |
-| **16** | Nov 23–29 | *Authoring is complete.* | `S-11` Lesson editor: video/reading toggle, markdown preview, thumbnail + attachment widgets — 5 `web` | 5 |
+> **`S-7` no longer says "user-delegation SAS".** That is Azure Storage's mechanism. The requirement is provider-neutral — *the browser uploads directly to object storage with a short-lived credential, and the API never proxies the bytes* ([`05 §5`](05-adr-video-and-storage.md)). S3-compatible stores call it a pre-signed URL. `D-0` decides which, and `S-7` is in Sprint 12, comfortably after.
 
 **🏁 M2 — Demo:** Create a course, two chapters, four lessons (2 YouTube + 2 markdown), upload a thumbnail and a PDF, fail publish on an empty chapter, fix it, publish.
 
@@ -360,7 +410,7 @@ A card is **Done** when:
 - [ ] `Lms.ArchitectureTests` green
 - [ ] No new compiler or lint warnings
 - [ ] **UI cards:** works at 375px wide, and in both light and dark themes
-- [ ] Deployed to Azure and working there (from M1 onward — **not** "works locally")
+- [ ] ~~Deployed to Azure and working there (from M1 onward — **not** "works locally")~~ **Suspended at Revision 4** — there is no deploy target yet. Reinstated as "deployed to the chosen host and working there" from **M1b** onward. Until then this line is not satisfiable, and no card should be marked green as if it were.
 - [ ] Design docs updated if the API contract or model changed
 - [ ] Merged to `main`, branch deleted
 

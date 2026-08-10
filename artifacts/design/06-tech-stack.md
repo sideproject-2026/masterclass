@@ -117,14 +117,23 @@ Guards are UX; the API enforces the same rules ([`03 §7`](03-api-design.md#7-au
 
 ## 3. Infrastructure & delivery
 
+> ⚠️ **Reopened 2026-08-10. Everything in this table marked *provisional* is a proposal, not a decision.**
+> Azure is no longer settled; `D-0` ([`08 §Phase 3`](08-delivery-plan.md)) chooses the host and writes
+> `10-adr-hosting.md`. Until then, **do not build against these rows** — they are kept as the leading
+> candidate and as a record of what was previously reasoned, not as instructions.
+>
+> The three rows that are **not** provisional are requirements rather than products, and any candidate
+> host must satisfy them.
+
 | Concern | Choice | Why | Alternative |
 |---|---|---|---|
-| **Compute** | Azure Container Apps — `api` and `web` | Scale-to-zero on non-prod, revision-based rollouts, no cluster to run. | App Service if Container Apps is unfamiliar; AKS is unjustifiable at this size. |
-| **Migrations** | Container Apps Job running `Lms.MigrationService`, gating the API deploy | Startup migration races across replicas. This is not a style preference. | — |
-| **Secrets** | Key Vault + managed identity | Nothing in config files, nothing in the repo. | Container Apps secrets for non-prod. |
-| **CDN** | Azure Front Door | Fronts both apps and the public asset container; TLS and WAF included. | Cloudflare. |
-| **IaC** | **Bicep** | Native to Azure, no state file to manage. | Terraform if you are already multi-cloud. |
-| **CI/CD** | GitHub Actions | Build → test → arch-test → image push → migration job → deploy revision. | Azure DevOps. |
+| **Compute** | 🟡 *Provisional:* Azure Container Apps — `api` and `web` | Scale-to-zero on non-prod, revision-based rollouts, no cluster to run. | **Open.** Any host that runs two containers and can gate a rollout on a job. |
+| **Migrations** | ✅ **Requirement:** a one-shot job running `Lms.MigrationService`, **gating the API deploy** | Startup migration races across replicas. This is not a style preference, and it is not negotiable by hosting choice. | — |
+| **Secrets** | ✅ **Requirement:** secret storage the running app can reach without a key in the repo | Nothing in config files, nothing in the repo. | Key Vault, or the chosen host's equivalent. |
+| **Object storage** | ✅ **Requirement:** direct browser upload via a short-lived pre-signed credential | [`05 §5`](05-adr-video-and-storage.md) — the API must never proxy the bytes. Azure calls it user-delegation SAS; S3-compatible stores call it a pre-signed URL. | Any S3-compatible store. |
+| **CDN** | 🟡 *Provisional:* Azure Front Door | Fronts both apps and the public asset container; TLS and WAF included. | Cloudflare. |
+| **IaC** | 🟡 *Provisional:* Bicep | Native to Azure, no state file to manage. **Bicep only makes sense if the answer is Azure** — this row follows `D-0`, it does not lead it. | Terraform, Pulumi, or the host's own CLI if the estate is small enough not to warrant IaC. |
+| **CI/CD** | ✅ GitHub Actions | Build → test → arch-test → image push → migration job → deploy. Already running since `F-6`. | Unaffected by `D-0`. |
 | **Local dev** | **Aspire AppHost** orchestrating **PostgreSQL 17** and **Azurite** in Docker, with **persistent data volumes** | One command starts everything with connection strings wired. Data survives restarts. See §3.1. | — |
 
 ### 3.1 Local development with Aspire

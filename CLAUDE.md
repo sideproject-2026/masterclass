@@ -1,7 +1,7 @@
 # Learning Management System
 
 Engineering-focused LMS (dometrain-style). Instructors author courses; students browse, enrol, and work through them.
-**Modular monolith** — .NET 10 API + TanStack Start web, PostgreSQL, Azure.
+**Modular monolith** — .NET 10 API + TanStack Start web, PostgreSQL. **Hosting is undecided** — `D-0` (Sprint 9) picks it. Azure is the leading candidate, not a settled choice; don't write provider-specific infrastructure until that card lands.
 
 **Status:** design complete, no code yet. First card is `F-1` in [artifacts/design/08-delivery-plan.md](artifacts/design/08-delivery-plan.md).
 
